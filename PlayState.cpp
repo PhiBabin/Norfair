@@ -83,13 +83,13 @@ void PlayState::loop(){
     bool inutile;
     if(m_map->collisionGeneral(m_playerOne->GetPlayerRect(),inutile)){
          cout<<"this is shit"<<endl;
-         sleep(1);
+         //sleep(1);
          ///exit(0);
     }
- //! Déplacement du personnage
-    //movePlayer(*m_playerOne);
+ //! Déplacement du personnage 1
+    movePlayer(*m_playerOne);
     m_playerOne->mapCollision(&(m_gameEngine->m_app));
- //! Déplacement de la vue
+ //! Déplacement du personnage 2
  // moveView(*m_playerOne);
     movePlayer(*m_playerTwo);
  //! Déplacement des objets

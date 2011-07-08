@@ -15,14 +15,11 @@ You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.*/
 
-//#include "includes.hpp"
 #ifndef PLAYER_HPP_INCLUDED
 #define PLAYER_HPP_INCLUDED;
 class MapTile;
-//class GameEngine;
 class Player:public ImgAnim{
     public:
-        //Player();
         Player(sf::Image &img, vector<sf::Image*> *imgManag, MapTile **map,bool machineGun,bool fireBall);
         sf::FloatRect GetViewRect();
         sf::FloatRect GetPlayerRect();
@@ -42,15 +39,12 @@ class Player:public ImgAnim{
         void SetOnFire();
         float GetVelx();
         float GetVely();
-//        void SetVely(float vely);
         void BottomCollision(bool is);
         bool GetBottomCollision() const;
         void ResetVely();
         void Shoot();
         void drawing(sf::RenderWindow* app);
     private:
-       // sf::Image *m_imgArm;
-        //sf::Image *m_imgBullet;
         ImgAnim *m_arm;
         ImgAnim m_lifeBarre;
         ImgAnim m_vieBarre;

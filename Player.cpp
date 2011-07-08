@@ -23,11 +23,9 @@ Player::Player(sf::Image &img, vector<sf::Image*> *imgManag,MapTile **map,bool m
  ,m_vieBarre(*imgManag->at(LIFEID),LIFENBRCOLUMN,LIFENBRLIGNE)
  ,m_map(map){
     setDelay(0.2);
-   // m_imgBullet=m_imgManag->at(FIREID);
      if(fireBall)m_arm=new ImgAnim(*imgManag->at(ARMMID),ARMMNBRCOLUMN,ARMMNBRLIGNE);
      else m_arm=new ImgAnim(*imgManag->at(ARMMID),ARMMNBRCOLUMN,ARMMNBRLIGNE);
     m_arm->setDelay(0.2);
-    //ImgAnim m_arm(m_imgManag->at(ARMMID),ARMMNBRCOLUMN,ARMMNBRLIGNE);
 }
 
 sf::FloatRect Player::GetPlayerRect(){
@@ -77,10 +75,9 @@ void Player::mapCollision(sf::RenderWindow* app){
     R=(playerRect.Left+playerRect.Width-1)/TILEWIDTH;
 
     if(L<0)L=0;
-    if(R>(*m_map)->m_height)
-    R=(*m_map)->m_height;
+    if(R>(*m_map)->m_width)R=(*m_map)->m_width;
     if(T<0)T=0;
-    if(B>(*m_map)->m_width)B=(*m_map)->m_width;
+    if(B>(*m_map)->m_height)B=(*m_map)->m_height;
 
     TL=(*m_map)->collisionTile(L,T);
     TR=(*m_map)->collisionTile(R,T);

@@ -24,11 +24,9 @@ m_app(App),m_playerOne(playerOne),m_playerTwo(playerTwo) ,m_imgManag(imgManag),m
     loadMap( tileset,image_schema,image_corr,tileprop);
 }
  bool MapTile::collisionTile(float x, float y){
-     cout<<m_playerOne->GetVely()<<endl;
     return m_tileSet.at(x).at(y).solid;
  }
  vector<GameObject*> * MapTile::getMapObject(){
-//    vector <GameObject*>::iterator it = vec.begin();
     return &m_mapObject ;
  }
 
