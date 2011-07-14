@@ -249,7 +249,7 @@ void Player::UnlockJump(){
     m_vely=0;
 }
 void Player::Shoot(){
-    if(m_lastShot.GetElapsedTime()>0.5 && m_fireBall){
+    if(m_lastShot.GetElapsedTime()/1000.f>0.5 && m_fireBall){
         float velx=0,vely=0;
         int row=0;
         if(m_lookUp==HAUT ){
@@ -280,7 +280,7 @@ void Player::Shoot(){
         m_listObject->back()->setAnimRow(row);
         m_lastShot.Reset();
     }
-    if(m_lastShot.GetElapsedTime()>0.2 && m_machineGun){
+    if(m_lastShot.GetElapsedTime()/1000.f>0.2 && m_machineGun){
         float velx=0,vely=0;
         if(m_lookUp==HAUT ){
             if(m_moving==BOUGE){

@@ -38,9 +38,8 @@ void GameEngine::loop(){
    cout<<"********************"<<endl;
    cout<<"*GameEngine::loop start*"<<endl;
     while(m_app.IsOpened()&&m_running){
-        while(anUpdateClock.GetElapsedTime() > anUpdateNext){
-            sf::Event event;
-            while(m_app.PollEvent(event)){
+        sf::Event event;
+        while(m_app.PollEvent(event)){
                 switch(event.Type){
                   case sf::Event::Closed:       // Window closed
                     m_running=false;
@@ -56,8 +55,6 @@ void GameEngine::loop(){
                   default:                      // Current active state will handle
                     m_gameState[0]->GetEvents(event);
               }
-            }
-            anUpdateNext += 1.f/m_updateRate;
         }
         m_gameState[0]->loop();
         m_app.Clear();

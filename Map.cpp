@@ -48,7 +48,7 @@ m_app(App),m_playerOne(playerOne),m_playerTwo(playerTwo) ,m_imgManag(imgManag),m
             if(!(x>=m_width or y>=m_height)){
                 if(m_tileSet[x][y].kill)kill=true;
                 if(m_tileSet[x][y].solid){
-                   sf::FloatRect  theTile(x*TILEWIDTH,y*TILEHEIGHT,(x+1)*TILEWIDTH,(y+1)*TILEHEIGHT);
+                    sf::FloatRect  theTile(x*TILEWIDTH,y*TILEHEIGHT,TILEWIDTH,TILEHEIGHT);
                     if(playerRect.Intersects(theTile)||theTile.Intersects(playerRect)) return true;
                 }
             }
@@ -75,7 +75,7 @@ m_app(App),m_playerOne(playerOne),m_playerTwo(playerTwo) ,m_imgManag(imgManag),m
             if(!(x>=m_width or y>=m_height)){
                 if(m_tileSet[x][y].solid){
 
-                    sf::FloatRect  theTile(x*TILEWIDTH,y*TILEHEIGHT,(x+1)*TILEWIDTH,(y+1)*TILEHEIGHT);
+                    sf::FloatRect  theTile(x*TILEWIDTH,y*TILEHEIGHT,TILEWIDTH,TILEHEIGHT);
                     if(playerRect.Intersects(theTile)||theTile.Intersects(playerRect)){
                         CollisionVertical=true;
                         if(y*TILEHEIGHT<=playerRect.Top+playerRect.Height&&y*TILEHEIGHT>=playerRect.Top){
@@ -116,7 +116,7 @@ m_app(App),m_playerOne(playerOne),m_playerTwo(playerTwo) ,m_imgManag(imgManag),m
         for(int x=minWidth;x<=maxWidth;x++){
             if(!(x>=m_width or y>=m_height)){
                 if(m_tileSet[x][y].solid){
-                    sf::FloatRect  theTile(x*TILEWIDTH,y*TILEHEIGHT,(x+1)*TILEWIDTH,(y+1)*TILEHEIGHT);
+                    sf::FloatRect  theTile(x*TILEWIDTH,y*TILEHEIGHT,TILEWIDTH,TILEHEIGHT);
                     if(playerRect.Intersects(theTile)||theTile.Intersects(playerRect)){
                         CollisionHorizontal= true;
                         if(x*TILEWIDTH>=playerRect.Left&&x*TILEWIDTH<=playerRect.Left+playerRect.Width){

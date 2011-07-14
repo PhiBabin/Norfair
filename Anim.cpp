@@ -88,12 +88,12 @@ bool Anim::isPlaying() const
 
 void Anim::setDelay(const float &delay)
 {
-	m_delay=delay/1000.f;
+	m_delay=delay;
 }
 
 float Anim::delay() const
 {
-	return m_delay;
+	return m_delay*1000.f;
 }
 
 unsigned int Anim::currentFrame() const

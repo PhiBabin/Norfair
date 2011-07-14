@@ -21,7 +21,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
     Construction des éléments du jeu
 **/
 PlayState::PlayState(GameEngine* theGameEngine): m_playerOne(0),m_playerTwo(0),m_map(0),m_maxMove(0,0,200,200){
-//    m_camera.SetFromRect(m_maxMove);
     m_imgManag.resize(20);
     addImg(MAGOPATH,MAGOID);
     addImg(SQUELPATH,SQUELID);
@@ -88,7 +87,7 @@ void PlayState::loop(){
     }
  //! Déplacement du personnage 1
     movePlayer(*m_playerOne);
-    m_playerOne->mapCollision(&(m_gameEngine->m_app));
+    //m_playerOne->mapCollision(&(m_gameEngine->m_app));
  //! Déplacement du personnage 2
  // moveView(*m_playerOne);
     movePlayer(*m_playerTwo);
