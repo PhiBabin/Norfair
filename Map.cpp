@@ -187,12 +187,12 @@ void MapTile::loadMap(const char* tileset,const char* image_schema,const char* i
     m_width=tilesetImg.GetWidth();
     m_height=tilesetImg.GetHeight();
     //! On crée un vector de tile et on les fait corresponds à un pixel
-    for(unsigned int it=0;it<image_schemaImg.GetWidth();it++){
-        for(unsigned int it2=0;it2<image_schemaImg.GetHeight();it2++){
+    for(unsigned int it2=0;it2<image_schemaImg.GetHeight();it2++){
+        for(unsigned int it=0;it<image_schemaImg.GetWidth();it++){
             Type newTile;
             newTile.colorPix = image_schemaImg.GetPixel(it, it2);
             newTile.zoneRect=sf::IntRect(it*TILEWIDTH, it2*TILEHEIGHT, TILEWIDTH, TILEHEIGHT);
-            m_typeList.insert(m_typeList.end(),newTile);
+            if(image_schemaImg.GetPixel(it, it2)!=sf::Color(42,42,42))m_typeList.insert(m_typeList.end(),newTile);
         }
     }
     //! On charge le fichier des propriétés de la map

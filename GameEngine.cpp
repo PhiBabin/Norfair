@@ -32,9 +32,8 @@ void GameEngine::init(){
     Boucle du Moteur
 **/
 void GameEngine::loop(){
-    sf::Clock anUpdateClock;
-    anUpdateClock.Reset();
-    float anUpdateNext = anUpdateClock.GetElapsedTime();
+    //! Set the seed
+    srand((unsigned)time(0));
    cout<<"********************"<<endl;
    cout<<"*GameEngine::loop start*"<<endl;
     while(m_app.IsOpened()&&m_running){

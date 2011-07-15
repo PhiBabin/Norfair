@@ -34,7 +34,6 @@ PlayState::PlayState(GameEngine* theGameEngine): m_playerOne(0),m_playerTwo(0),m
 	addImg(EXP3PATH,EXP3ID);
     m_playerOne= new Player(*m_imgManag.at(MAGOID), &m_imgManag, &m_map, false, true);
     m_playerTwo= new Player(*m_imgManag.at(SQUELID), &m_imgManag, &m_map, true, false);
-
     m_gameEngine=theGameEngine;
     m_map =new MapTile(&(*m_gameEngine).m_app,MAPPATH,CORRPATH,TILEPATH,PROPPATH,&m_imgManag,m_playerOne,m_playerTwo);
 
@@ -75,14 +74,14 @@ void PlayState::loop(){
 
     if(Input.IsKeyDown(sf::Key::V))m_playerOne->Degat(4);
     if(Input.IsKeyDown(sf::Key::B))m_playerOne->Degat(-6);
-    if(Input.IsKeyDown(sf::Key::Z))m_map->getMapObject()->push_back(new GameAnim(*m_imgManag[EXP3ID],4,1));
-///    m_mapObject->back()->SetPosition(m_playerOne->GetPosition().x+3.f +sf::Randomizer::Random(-3, 3),m_playerOne->GetPosition().y+3.f+sf::Randomizer::Random(-8, 8));
-///    m_mapObject->back()->setDelay(0.1);cout<< m_mapObject->size()<<endl;}
+    if(Input.IsKeyDown(sf::Key::Z)){m_map->getMapObject()->push_back(new GameAnim(*m_imgManag[EXP3ID],4,1));
+    m_mapObject->back()->SetPosition(m_playerOne->GetPosition().x+3.f +rand() *-3.f /RAND_MAX + 3.f,m_playerOne->GetPosition().y+3.f+rand() *-8.f /RAND_MAX + 8.f);
+    m_mapObject->back()->setDelay(0.1);cout<< m_mapObject->size()<<endl;}
     bool inutile;
     if(m_map->collisionGeneral(m_playerOne->GetPlayerRect(),inutile)){
          cout<<"this is shit"<<endl;
          //sleep(1);
-         ///exit(0);
+         exit(0);
     }
  //! Déplacement du personnage 1
     movePlayer(*m_playerOne);
@@ -199,13 +198,16 @@ void PlayState::moveObject(){
     for(int i=0;i<m_mapObject->size();i++){
         if(m_mapObject->at(i)->isCollision()){
             //! On affiche détermine le rectangle de l'object
-            sf::FloatRect Rect=m_mapObject->at(i)->GetMovedRect(m_mapObject->at(i)->GetVelx()*m_gameEngine->m_app.GetFrameTime()/1000,m_mapObject->at(i)->GetVely()*m_gameEngine->m_app.GetFrameTime()/1000);
+            sf::FloatRect Rect=m_mapObject->at(i)->GetMovedRect(m_mapObject->at(i)->GetVelx()/1000.f*m_gameEngine->m_app.GetFrameTime(),m_mapObject->at(i)->GetVely()/1000.f*m_gameEngine->m_app.GetFrameTime());
             //! On vérifie si l'object touche le joueur si oui on supprimer l'objet et crée un animation d'un explosion
             if((m_playerOne->GetPlayerRect().Intersects(Rect) && m_mapObject->at(i)->collisionEffect(*m_playerOne))     //! Joueur1
                ||m_playerTwo->GetPlayerRect().Intersects(Rect) && m_mapObject->at(i)->collisionEffect(*m_playerTwo)){   //! Joueur 2
                 //! On crée l'animation
                 m_map->getMapObject()->push_back(new GameAnim(*m_imgManag[EXPID],EXPNBRCOLUMN,EXPNBRLIGNE));
-                m_mapObject->back()->SetPosition(m_mapObject->at(i)->GetPosition().x,m_mapObject->at(i)->GetPosition().y);
+                m_mapObject->back()->SetPosition((m_playerTwo->GetPosition()));
+                if(m_playerOne->GetPlayerRect().Intersects(Rect) && m_mapObject->at(i)->collisionEffect(*m_playerOne))
+                m_mapObject->back()->SetPosition((m_playerOne->GetPosition()));
+                m_mapObject->back()->Move(0,5);
                 m_mapObject->back()->setDelay(0.1);
                 //! On crée libère la mémoire de le l'instance de l'objet
                 delete m_mapObject->at(i);
@@ -213,7 +215,7 @@ void PlayState::moveObject(){
                 m_mapObject->erase( m_mapObject->begin() + i );
             }
             else if(!m_map->collisionGeneral(Rect,inutile))
-                m_mapObject->at(i)->Move(m_mapObject->at(i)->GetVelx()*m_gameEngine->m_app.GetFrameTime()/1000,m_mapObject->at(i)->GetVely()*m_gameEngine->m_app.GetFrameTime()/1000);
+                m_mapObject->at(i)->Move(Rect.Left-m_mapObject->at(i)->GetPosition().x,Rect.Top-m_mapObject->at(i)->GetPosition().y);
             else {
                 m_map->getMapObject()->push_back(new GameAnim(*m_imgManag[EXP2ID],EXP2NBRCOLUMN,EXP2NBRLIGNE));
                 m_mapObject->back()->SetPosition(m_mapObject->at(i)->GetPosition().x,m_mapObject->at(i)->GetPosition().y);

@@ -251,35 +251,34 @@ void Player::UnlockJump(){
 void Player::Shoot(){
     if(m_lastShot.GetElapsedTime()/1000.f>0.5 && m_fireBall){
         float velx=0,vely=0;
-        int row=0;
+        int rotation=0;
         if(m_lookUp==HAUT ){
             if(m_moving==BOUGE){
-                row=2;
+                rotation=-45;
                 velx=141.42;
                 vely=-141.42;
                 if(m_direction==GAUCHE){
-                    row=3;
+                    rotation=45;
                     velx=-141.42;
                 }
             }
             else{
-                row=4;
+                rotation=-90;
                 vely=-200;
             }
         }
         else{
             velx=-200;
             if(m_direction==DROITE)velx=200;
-            else row=1;
+            else rotation=0;
         }
         //m_arm->setAnimRow(2);
         m_arm->play();
         m_listObject->push_back(new GameBullet(*m_imgManag->at(FIREID),FIRENBRCOLUMN,FIRENBRLIGNE,20,true,this,velx,vely));
         m_listObject->back()->SetPosition(GetPosition());
         m_listObject->back()->setDelay(0.1);
-       // if(row==2) m_listObject->back()->SetRotation(45.f);
-        //else
-        m_listObject->back()->setAnimRow(row);
+        m_listObject->back()->SetRotation(rotation);
+        m_listObject->back()->FlipX(m_direction);
         m_lastShot.Reset();
     }
     if(m_lastShot.GetElapsedTime()/1000.f>0.2 && m_machineGun){

@@ -48,9 +48,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 //! Carte
 #define MAPPATH "levelArenaLarg.png" //Chemin vers la carte
-#define TILEPATH "tileimage_NorAdvan3.png" //Chemin vers les tiles
-#define PROPPATH "tileprop5.txt" //Chemin vers les propriétés des tiles
-#define CORRPATH "tile5.png" //Chemin vers les correspondances
+#define TILEPATH "tilesimage.png" //Chemin vers les tiles
+#define PROPPATH "tilesprop.txt" //Chemin vers les propriétés des tiles
+#define CORRPATH "tile.png" //Chemin vers les correspondances
 //! Personnage
 #define MAGOID 1 // ID de ce sprite
 #define MAGOPATH "sprite_mago4.png" //Chemin vers le sprite du personnage
@@ -68,7 +68,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #define ARMMNBRLIGNE  2 //Nombre de ligne du sprite
 //! Barre de vie
 #define VIEID 3 // ID de ce sprite
-#define VIEPATH "barre_vie2.png" //Chemin vers  le sprite
+#define VIEPATH "barre_vie.png" //Chemin vers  le sprite
 #define VIENBRCOLUMN  1 //Nombre de colone du sprite
 #define VIENBRLIGNE  11 //Nombre de ligne du sprite
 #define LIFEID 4 // ID de ce sprite
@@ -81,7 +81,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #define FIREID 5 // ID de ce sprite
 #define FIREPATH "fireball2.png" //Chemin vers  le sprite
 #define FIRENBRCOLUMN 6 //Nombre de colone du sprite
-#define FIRENBRLIGNE 5 //Nombre de ligne du sprite
+#define FIRENBRLIGNE 1 //Nombre de ligne du sprite
 
 #define SHOTID 10 // ID de ce sprite
 #define SHOTPATH "shot2.png" //Chemin vers  le sprite
