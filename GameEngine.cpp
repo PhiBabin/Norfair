@@ -57,7 +57,7 @@ void GameEngine::loop(){
               }
         }
         m_gameState[0]->loop();
-        m_app.Clear();
+        m_app.Clear(sf::Color(183, 210, 215, 255));
 
       // cout<<"********************"<<endl;
        cout<<"***PlayState::draw**"<<endl;

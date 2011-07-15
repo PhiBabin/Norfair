@@ -138,24 +138,6 @@ m_app(App),m_playerOne(playerOne),m_playerTwo(playerTwo) ,m_imgManag(imgManag),m
  }
 void MapTile::draw(){
     cout<<"FPS="<<1.f/(m_app->GetFrameTime()/1000)<<"Joueur 1 x="<<m_playerOne->GetPosition().x<<" y="<<m_playerOne->GetPosition().y<<" vely="<<m_playerOne->GetVely()<<" velx="<<m_playerOne->GetVelx()<<endl;
-//    unsigned char typeNbr;
-//    //! On déterminer se que la Vue voit des tiles
-//    sf::FloatRect views=m_app->GetView().GetRect();
-//    int maxHeight, minHeight, maxWidth, minWidth;
-//    minHeight=views.Top/TILEHEIGHT-1;
-//    maxHeight=views.Bottom/TILEHEIGHT+1;
-//    minWidth=views.Left/TILEWIDTH-1;
-//    maxWidth=views.Right/TILEWIDTH+1;
-//    if(minHeight<0)minHeight=0;
-//    if(maxHeight>m_height)maxHeight=m_height;
-//    if(minWidth<0)minWidth=0;
-//    if(maxWidth>m_width)maxWidth=m_width;
-//    //! On affiche les tile de la carte
-//    for(int y=minHeight;y<maxHeight;y++){
-//        for(int x=minWidth;x<maxWidth;x++){
-//            if(m_tileSet[x][y].visible)m_app->Draw(m_tileSet[x][y].tile);
-//        }
-//    }
     m_app->Draw(sf::Sprite(m_map.GetImage()));
     //! On affiche le personnage et ces éléments
     m_app->Draw(*m_playerOne);

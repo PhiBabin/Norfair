@@ -48,6 +48,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 //! Carte
 #define MAPPATH "levelArenaLarg.png" //Chemin vers la carte
+#define TILEPATH "tileimage_NorAdvan3.png" //Chemin vers les tiles
+#define PROPPATH "tileprop5.txt" //Chemin vers les propriétés des tiles
+#define CORRPATH "tile5.png" //Chemin vers les correspondances
 //! Personnage
 #define MAGOID 1 // ID de ce sprite
 #define MAGOPATH "sprite_mago4.png" //Chemin vers le sprite du personnage

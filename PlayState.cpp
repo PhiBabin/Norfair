@@ -36,7 +36,7 @@ PlayState::PlayState(GameEngine* theGameEngine): m_playerOne(0),m_playerTwo(0),m
     m_playerTwo= new Player(*m_imgManag.at(SQUELID), &m_imgManag, &m_map, true, false);
 
     m_gameEngine=theGameEngine;
-    m_map =new MapTile(&(*m_gameEngine).m_app,MAPPATH,"tile5.png","tileimage_NorAdvan2.png","tileprop5.txt",&m_imgManag,m_playerOne,m_playerTwo);
+    m_map =new MapTile(&(*m_gameEngine).m_app,MAPPATH,CORRPATH,TILEPATH,PROPPATH,&m_imgManag,m_playerOne,m_playerTwo);
 
     m_mapObject=m_map->getMapObject();
     m_playerOne->SetMapObject(m_mapObject);
@@ -57,7 +57,6 @@ void PlayState::init(){
     Exécution des éléments
 **/
 void PlayState::loop(){
-
     /**
         Gestion des entrées claviers
     */

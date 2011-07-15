@@ -24,7 +24,6 @@ m_setOnFire(setOnFire){
          m_colHeight=img.GetHeight()/nbrLigne;
          m_colWidth=img.GetWidth()/nbrFrame;
      }
-     cout<<"="<<m_colHeight<<"/"<<m_colWidth<<endl;
      m_velx=velx;
      m_vely=vely;
     m_isLoop=false;

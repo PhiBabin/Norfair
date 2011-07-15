@@ -42,10 +42,10 @@ int GameObject::GetVely()const{
     return m_vely;
 }
 sf::FloatRect GameObject::GetRect()const {
-    return  sf::FloatRect(GetPosition().x,GetPosition().y,GetPosition().x+m_colWidth,GetPosition().y+m_colWidth);
+    return  sf::FloatRect(GetPosition().x,GetPosition().y,m_colWidth,m_colHeight);
 }
 sf::FloatRect GameObject::GetMovedRect(const float moveX,const float moveY)const{
-    return sf::FloatRect(GetPosition().x+moveX,GetPosition().y+moveY,GetPosition().x+m_colWidth+moveX,GetPosition().y+m_colWidth+moveY);
+    return sf::FloatRect(GetPosition().x+moveX,GetPosition().y+moveY,m_colWidth,m_colHeight);
 }
 
 bool GameObject::isDraw(){

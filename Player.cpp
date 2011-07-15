@@ -277,6 +277,8 @@ void Player::Shoot(){
         m_listObject->push_back(new GameBullet(*m_imgManag->at(FIREID),FIRENBRCOLUMN,FIRENBRLIGNE,20,true,this,velx,vely));
         m_listObject->back()->SetPosition(GetPosition());
         m_listObject->back()->setDelay(0.1);
+       // if(row==2) m_listObject->back()->SetRotation(45.f);
+        //else
         m_listObject->back()->setAnimRow(row);
         m_lastShot.Reset();
     }
@@ -321,6 +323,5 @@ void Player::Shoot(){
 //        }
         m_arm->SetPosition(GetPosition());
         if(!m_machineGun)app->Draw(*m_arm);
-        //app->Draw(m_imgArm);
 
     }
