@@ -30,9 +30,10 @@ class MapTile{
         MapTile(sf::RenderWindow *App,const char* tileset,const char* image_schema,const char* image_corr,const char* tileprop,vector<sf::Image*> *imgManag,Player *playerOne, Player *playerTwo);
 		void loadMap(const char* tileset,const char* image_schema,const char* image_corr,const char* tileprop);		//loads the map from a file
 		void draw();
-        Type & operator () (int X, int Y);
+        vector<Type> & operator [] (int X);
         unsigned char findType(sf::Color Pix);
         bool collisionTile(float x,float y);
+        Type Tile(float x, float y);
         vector<GameObject*> * getMapObject();
 
         bool collisionGeneral(const sf::FloatRect playerRect,bool &kill);

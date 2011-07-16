@@ -47,7 +47,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #define PLAYERCOLLISIONHEIGHT 18 //18
 
 //! Carte
-#define MAPPATH "levelArenaLarg.png" //Chemin vers la carte
+#define MAPPATH "levelDonjon.png" //Chemin vers la carte
 #define TILEPATH "tilesimage.png" //Chemin vers les tiles
 #define PROPPATH "tilesprop.txt" //Chemin vers les propriétés des tiles
 #define CORRPATH "tile.png" //Chemin vers les correspondances
@@ -88,6 +88,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #define SHOTNBRCOLUMN 16 //Nombre de colone du sprite
 #define SHOTNBRLIGNE 1 //Nombre de ligne du sprite
 //! Explosion & cie
+#define FLASHID 12 // ID de ce sprite
+#define FLASHPATH "flash.png" //Chemin vers  l'explosion
+#define FLASHNBRCOLUMN 5 //Nombre de colone de l'explosion
+#define FLASHNBRLIGNE 1 //Nombre de ligne de l'explosion
+
 #define EXPID 7 // ID de ce sprite
 #define EXPPATH "explosion.png" //Chemin vers  l'explosion
 #define EXPNBRCOLUMN 6 //Nombre de colone de l'explosion

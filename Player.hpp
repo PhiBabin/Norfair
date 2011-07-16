@@ -25,11 +25,9 @@ class Player:public ImgAnim{
         sf::FloatRect GetPlayerRect();
         sf::FloatRect GetMovedPlayerRect(const float moveX,const float moveY);
         void Gravity(sf::RenderWindow &app);
-        void ResolveUp(float ry);
-        void ResolveDown(float ry);
-        void ResolveLeft(float rx);
-        void ResolveRight(float rx);
-        void mapCollision(sf::RenderWindow* app);
+        bool collisionGeneral(const sf::FloatRect playerRect,bool &kill);
+        bool collisionHorizontal(const sf::FloatRect playerRect, bool &gauche, bool &droite,int &solidLimit);
+        bool collisionVertical(const sf::FloatRect playerRect, bool &haut, bool &bas,int &solidLimit);
         void Jump();
         void UnlockJump();
         void Turn(bool left, bool right);
@@ -39,6 +37,8 @@ class Player:public ImgAnim{
         void SetOnFire();
         float GetVelx();
         float GetVely();
+        void SetVelx(float nx);
+        void SetVely(float ny);
         void BottomCollision(bool is);
         bool GetBottomCollision() const;
         void ResetVely();

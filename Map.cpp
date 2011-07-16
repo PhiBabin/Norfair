@@ -21,10 +21,13 @@ MapTile::MapTile(sf::RenderWindow *App,const char* tileset,const char* image_sch
 m_app(App),m_playerOne(playerOne),m_playerTwo(playerTwo) ,m_imgManag(imgManag),m_height(0){
 
 
-    loadMap( tileset,image_schema,image_corr,tileprop);
+    loadMap(tileset,image_schema,image_corr,tileprop);
 }
  bool MapTile::collisionTile(float x, float y){
     return m_tileSet.at(x).at(y).solid;
+ }
+Type MapTile::Tile(float x, float y){
+    return m_tileSet.at(x).at(y);
  }
  vector<GameObject*> * MapTile::getMapObject(){
     return &m_mapObject ;
@@ -54,8 +57,6 @@ m_app(App),m_playerOne(playerOne),m_playerTwo(playerTwo) ,m_imgManag(imgManag),m
             }
         }
     }
-    //cout<<"Stop Blabla2"<<endl;
-    //return Collision;
     return false;
  }
  bool MapTile::collisionVertical(const sf::FloatRect playerRect, bool &haut, bool &bas,int &solidLimit){
@@ -161,8 +162,8 @@ void MapTile::draw(){
         else m_app->Draw(*(m_mapItems.at(i)));
     }
 }
-Type & MapTile::operator () (int X, int Y){
-    return m_tileSet.at(X).at(Y);
+vector<Type> & MapTile::operator [] (int X){
+    return m_tileSet.at(X);
 }
  unsigned char MapTile::findType(sf::Color Pix){
         for(unsigned char it=0;it<m_typeList.size();it++){

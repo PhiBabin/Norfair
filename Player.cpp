@@ -38,134 +38,6 @@ sf::FloatRect Player::GetViewRect(){
    return sf::FloatRect(GetPosition().x-SCREENWIDTH/8,GetPosition().y-SCREENHEIGHT/8,GetPosition().x+SCREENWIDTH/8,GetPosition().y+SCREENHEIGHT/8);
 }
 
-//! Reposition le player pour une collision sur le sol
-void Player::ResolveUp(float ry){
-    if(m_vely>0) m_vely=0;
-    m_colBot=false;
-    m_jumpLock=false;
-    SetPosition(GetPosition().x,ry*TILEHEIGHT-PLAYERCOLLISIONHEIGHT);
-}
-void Player::ResolveDown(float ry){
-    if(m_vely<0) m_vely=0;
-    SetPosition(GetPosition().x,(ry+1)*TILEHEIGHT);
-}
-void Player::ResolveLeft(float rx){
-    if(m_velx>0) m_velx=0;
-    SetPosition(rx*TILEWIDTH-PLAYERCOLLISIONWIDTH,GetPosition().y);
-}
-void Player::ResolveRight(float rx){
-    if(m_velx<0) m_velx=0;
-    SetPosition((rx+1)*TILEWIDTH,GetPosition().y);
-}
-void Player::mapCollision(sf::RenderWindow* app){
-    int T,L,B,R;
-    bool TL,TR,BL,BR;
-    m_colBot=true;
-    m_jumpLock=true;
-
-    m_vely+=GRAVITY/1000.f*app->GetFrameTime();
-    float movHor=m_velx/1000.f*app->GetFrameTime();
-    float movVer=m_vely/1000.f*app->GetFrameTime();
-    //cout<<"frame="<<app->GetFrameTime()/1000.f<<" vely="<<m_vely<<" movey="<<movVer<<endl;
-    sf::FloatRect playerRect=GetMovedPlayerRect(movHor,movVer);
-    Move(movHor,movVer);
-    T=playerRect.Top/TILEHEIGHT;
-    L=playerRect.Left/TILEWIDTH;
-    B=(playerRect.Top+playerRect.Height-1)/TILEHEIGHT;
-    R=(playerRect.Left+playerRect.Width-1)/TILEWIDTH;
-
-    if(L<0)L=0;
-    if(R>(*m_map)->m_width)R=(*m_map)->m_width;
-    if(T<0)T=0;
-    if(B>(*m_map)->m_height)B=(*m_map)->m_height;
-
-    TL=(*m_map)->collisionTile(L,T);
-    TR=(*m_map)->collisionTile(R,T);
-    BL=(*m_map)->collisionTile(L,B);
-    BR=(*m_map)->collisionTile(R,B);
-
-    if(!BL && !BR && !TL && !TR){
-        return;
-    }
-    else if(BL && BR && TL && TR){
-        ResolveUp(B);
-    }
-    else if(TL&&TR&&BR){
-        ResolveDown(T);
-        ResolveLeft(R);
-    }
-    else if(TL&&TR&&BL){
-        ResolveDown(T);
-        ResolveRight(L);
-    }
-    else if(BL&&BR&&TR){
-        ResolveUp(B);
-        ResolveLeft(R);
-    }
-    else if(BL&&BR&&TL){
-        ResolveUp(B);
-        ResolveRight(L);
-    }
-    else if(BL&&BR){
-        ResolveUp(B);
-    }
-    else if(TL&&TR){
-        ResolveDown(T);
-    }
-    else if(BL&&TL){
-        ResolveRight(L);
-    }
-    else if(BR&&TR){
-        ResolveLeft(R);
-    }
-    else if (TR){
-        float xoff = PLAYERCOLLISIONWIDTH+GetPosition().x-(R)*TILEWIDTH;
-//        float yoff = (T)*TILEWIDTH-GetPosition().y;
-        float yoff = (T-1)*TILEWIDTH-GetPosition().y;
-        if(xoff>yoff){
-            ResolveDown(T);
-            cout<<xoff<<" "<<yoff<<endl;
-        }
-        else{
-            ResolveLeft(R);
-            cout<<xoff<<" "<<yoff<<endl;
-        }
-    }
-    else if (TL){
-        float xoff = (L+1)*TILEWIDTH-GetPosition().x;
-        float yoff = (T-1)*TILEWIDTH-GetPosition().y;
-        if(xoff>yoff){
-            ResolveDown(T);
-            cout<<xoff<<" "<<yoff<<endl;
-        }
-        else{
-            ResolveRight(L);
-            cout<<xoff<<" "<<yoff<<endl;
-        }
-    }
-    else if (BR){
-//        float xoff = (R-1)*TILEWIDTH-PLAYERCOLLISIONWIDTH-GetPosition().x;
-        float xoff = PLAYERCOLLISIONWIDTH+GetPosition().x-(R)*TILEWIDTH;
-        float yoff = (GetPosition().y+PLAYERCOLLISIONHEIGHT)-B*TILEHEIGHT;
-        if(xoff>yoff){
-            ResolveUp(B);
-        }
-        else{
-            ResolveLeft(R);
-        }
-    }
-    else if (BL){
-        float xoff = (L+1)*TILEWIDTH-GetPosition().x;
-        float yoff = (GetPosition().y+PLAYERCOLLISIONHEIGHT)-B*TILEHEIGHT;
-        if(xoff>yoff){
-            ResolveUp(B);
-        }
-        else{
-            ResolveRight(L);
-        }
-    }
-
-}
 void Player::Gravity(sf::RenderWindow &app){
         m_vely+=GRAVITY*app.GetFrameTime()/1000;
 }
@@ -194,7 +66,7 @@ void Player::Turn(bool left, bool right){
         }
         m_arm->setAnimRow(1);
         m_arm->play();
-		play();
+        play();
         m_velx=-150.f;
     }
     else if(!left&&right){
@@ -202,9 +74,9 @@ void Player::Turn(bool left, bool right){
         m_direction=DROITE;
         if(m_colBot)setAnimRow(0);
         else setAnimRow(2);
-		play();
+        play();
         m_arm->setAnimRow(0);
-		m_arm->play();
+        m_arm->play();
         m_velx=150.f;
     }
     else{
@@ -214,11 +86,105 @@ void Player::Turn(bool left, bool right){
         else if(animRow()<2) setAnimRow(animRow()+2);
         else setAnimRow(animRow());
         stop();
-		//if(m_arm->animRow()<2)m_arm->stop();
-		m_arm->stop();
+m_arm->stop();
         m_velx=0;
     }
 }
+ bool Player::collisionGeneral(const sf::FloatRect playerRect,bool &kill){
+    int maxHeight, minHeight, maxWidth, minWidth;
+    bool Collision=false;
+    minHeight=playerRect.Top/TILEHEIGHT;
+    minWidth=playerRect.Left/TILEWIDTH;
+    maxHeight=(playerRect.Top+playerRect.Height-1)/TILEHEIGHT;
+    maxWidth=(playerRect.Left+playerRect.Width-1)/TILEWIDTH;
+
+    if(minHeight<0)minHeight=0;
+    if(maxHeight>(*m_map)->m_height)maxHeight=(*m_map)->m_height;
+    if(minWidth<0)minWidth=0;
+    if(maxWidth>(*m_map)->m_width)maxWidth=(*m_map)->m_width;
+    for(int y=minHeight;y<=maxHeight;y++){
+        for(int x=minWidth;x<=maxWidth;x++){
+            if(!(x>=(*m_map)->m_width or y>=(*m_map)->m_height)){
+                if((*m_map)->Tile(x,y).kill)kill=true;
+                if((*m_map)->Tile(x,y).solid){
+                    sf::FloatRect  theTile(x*TILEWIDTH,y*TILEHEIGHT,TILEWIDTH,TILEHEIGHT);
+                    if(playerRect.Intersects(theTile)||theTile.Intersects(playerRect)) return true;
+                }
+            }
+        }
+    }
+    return false;
+ }
+ bool Player::collisionVertical(const sf::FloatRect playerRect, bool &haut, bool &bas,int &solidLimit){
+    int maxHeight, minHeight, maxWidth, minWidth;
+    bool CollisionVertical=false;
+    minHeight=playerRect.Top/TILEHEIGHT;
+    minWidth=playerRect.Left/TILEWIDTH;
+    maxHeight=(playerRect.Top+playerRect.Height-1)/TILEHEIGHT;
+    maxWidth=(playerRect.Left+playerRect.Width-1)/TILEWIDTH;
+
+    if(minHeight<0)minHeight=0;
+    if(maxHeight>(*m_map)->m_height)maxHeight=(*m_map)->m_height;
+    if(minWidth<0)minWidth=0;
+    if(maxWidth>(*m_map)->m_width)maxWidth=(*m_map)->m_width;
+    for(int y=minHeight;y<=maxHeight;y++){
+        for(int x=minWidth;x<=maxWidth;x++){
+            if(!(x>=(*m_map)->m_width or y>=(*m_map)->m_height)){
+                if((*m_map)->Tile(x,y).solid){
+
+                    sf::FloatRect  theTile(x*TILEWIDTH,y*TILEHEIGHT,TILEWIDTH,TILEHEIGHT);
+                    if(playerRect.Intersects(theTile)||theTile.Intersects(playerRect)){
+                        CollisionVertical=true;
+                        if(y*TILEHEIGHT<=playerRect.Top+playerRect.Height&&y*TILEHEIGHT>=playerRect.Top){
+                            bas=true;
+                            solidLimit=y;
+                        }
+                        if((y+1)*TILEHEIGHT>=playerRect.Top&&(y+1)*TILEHEIGHT<=playerRect.Top+playerRect.Height){
+                            haut=true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return CollisionVertical;
+ }
+ bool Player::collisionHorizontal(const sf::FloatRect playerRect, bool &gauche, bool &droite,int &solidLimit){
+    int maxHeight, minHeight, maxWidth, minWidth;
+    bool CollisionHorizontal=false;
+    minHeight=playerRect.Top/TILEHEIGHT;
+    minWidth=playerRect.Left/TILEWIDTH;
+    maxHeight=(playerRect.Top+playerRect.Height-1)/TILEHEIGHT;
+    maxWidth=(playerRect.Left+playerRect.Width-1)/TILEWIDTH;
+
+    if(minHeight<0)minHeight=0;
+    if(maxHeight>(*m_map)->m_height)maxHeight=(*m_map)->m_height;
+    if(minWidth<0)minWidth=0;
+    if(maxWidth>(*m_map)->m_width)maxWidth=(*m_map)->m_width;
+    for(int y=minHeight;y<=maxHeight;y++){
+        for(int x=minWidth;x<=maxWidth;x++){
+            if(!(x>=(*m_map)->m_width or y>=(*m_map)->m_height)){
+                if((*m_map)->Tile(x,y).solid){
+                    sf::FloatRect  theTile(x*TILEWIDTH,y*TILEHEIGHT,TILEWIDTH,TILEHEIGHT);
+                    if(playerRect.Intersects(theTile)||theTile.Intersects(playerRect)){
+                        CollisionHorizontal= true;
+                        if(x*TILEWIDTH>=playerRect.Left&&x*TILEWIDTH<=playerRect.Left+playerRect.Width){
+                            cout<<" ====Droit==";
+                            droite=true;
+                            solidLimit=x;
+                        }
+                        if((x+1)*TILEWIDTH<=playerRect.Left+playerRect.Width&&(x+1)*TILEWIDTH>=playerRect.Left){
+                            cout<<" ====Gauche==";
+                            gauche=true;
+                            solidLimit=x;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return CollisionHorizontal;
+ }
 void Player::SetMapObject(vector<GameObject*> *listObject){
     m_listObject=listObject;
 }
@@ -233,6 +199,12 @@ float Player::GetVelx(){
 }
 float Player::GetVely(){
     return m_vely;
+}
+void Player::SetVelx(float nx){
+    m_velx=nx;
+}
+void Player::SetVely(float ny){
+    m_vely=ny;
 }
 void Player::BottomCollision(bool is){
     m_colBot=is;
@@ -255,11 +227,11 @@ void Player::Shoot(){
         if(m_lookUp==HAUT ){
             if(m_moving==BOUGE){
                 rotation=-45;
-                velx=141.42;
-                vely=-141.42;
+                vely=-141;
+                velx=141;
                 if(m_direction==GAUCHE){
                     rotation=45;
-                    velx=-141.42;
+                    velx=-141;
                 }
             }
             else{
@@ -270,15 +242,18 @@ void Player::Shoot(){
         else{
             velx=-200;
             if(m_direction==DROITE)velx=200;
-            else rotation=0;
         }
-        //m_arm->setAnimRow(2);
         m_arm->play();
+//        m_listObject->push_back(new GameBullet(*m_imgManag->at(FLASHID),FLASHNBRCOLUMN,FLASHNBRLIGNE,0,false,this,velx,vely));
+//        m_listObject->back()->SetPosition(GetPosition());
+//        m_listObject->back()->setDelay(0.1);
+
         m_listObject->push_back(new GameBullet(*m_imgManag->at(FIREID),FIRENBRCOLUMN,FIRENBRLIGNE,20,true,this,velx,vely));
         m_listObject->back()->SetPosition(GetPosition());
         m_listObject->back()->setDelay(0.1);
+        if(!(m_lookUp==HAUT && m_moving==IMMOBILE))m_listObject->back()->FlipX(m_direction);
+        else m_listObject->back()->FlipX(false);
         m_listObject->back()->SetRotation(rotation);
-        m_listObject->back()->FlipX(m_direction);
         m_lastShot.Reset();
     }
     if(m_lastShot.GetElapsedTime()/1000.f>0.2 && m_machineGun){
@@ -299,6 +274,7 @@ void Player::Shoot(){
             velx=-300;
             if(m_direction==DROITE)velx=300;
         }
+
         m_listObject->push_back(new GameBullet(*m_imgManag->at(SHOTID),SHOTNBRCOLUMN,SHOTNBRLIGNE,5,false,this,velx,vely));
         m_listObject->back()->SetPosition(GetPosition());
         m_listObject->back()->setDelay(0.04);

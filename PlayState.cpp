@@ -29,6 +29,7 @@ PlayState::PlayState(GameEngine* theGameEngine): m_playerOne(0),m_playerTwo(0),m
 	addImg(ARMMPATH,ARMMID);
 	addImg(VIEPATH,VIEID);
 	addImg(LIFEPATH,LIFEID);
+	addImg(FLASHPATH,FLASHID);
 	addImg(EXPPATH,EXPID);
 	addImg(EXP2PATH,EXP2ID);
 	addImg(EXP3PATH,EXP3ID);
@@ -163,18 +164,16 @@ void PlayState::movePlayer(Player &player){
     bool kill=false;
     int limitVer=0;
     int limitHor=0;
-    if(!m_map->collisionHorizontal(player.GetMovedPlayerRect(movHorTest,0),gauche,droite,limitHor)){
+    if(!player.collisionHorizontal(player.GetMovedPlayerRect(movHorTest,0),gauche,droite,limitHor)){
        movHor=movHorTest;
     }
     else{
         if(gauche)movHor=(((limitHor+1)*TILEWIDTH))-player.GetPosition().x;
         if(droite)movHor=(((limitHor)*TILEWIDTH))-PLAYERCOLLISIONWIDTH-player.GetPosition().x;
-        //if(droite)movHor=-m_playerOne->GetPosition().x+((limitHor)*TILEWIDTH)-1-PLAYERCOLLISIONWIDTH;
     }
 
-    if(!m_map->collisionVertical(player.GetMovedPlayerRect(0,movVerTest),haut,bas,limitVer)){
+    if(!player.collisionVertical(player.GetMovedPlayerRect(0,movVerTest),haut,bas,limitVer)){
         player.Gravity(m_gameEngine->m_app);
-//        player.Move(0,GRAVITY*m_gameEngine->m_app.GetFrameTime());
         movVer=movVerTest;
     }
     else{
@@ -188,8 +187,8 @@ void PlayState::movePlayer(Player &player){
         }
     }
 
-    if(!m_map->collisionVertical(player.GetMovedPlayerRect(movHor,movVer),haut,bas,limitVer)&&!m_map->collisionHorizontal(player.GetMovedPlayerRect(movHor,movVer),gauche,droite,limitHor)/*&&
-       !m_map->collisionGeneral(player.GetMovedPlayerRect(movHor,movVer),kill)*/&&movHor<TILEHEIGHT&&movVer<TILEWIDTH) player.Move(movHor,movVer);
+    if(!player.collisionGeneral(player.GetMovedPlayerRect(movHor,movVer),kill)&&movHor<TILEHEIGHT&&movVer<TILEWIDTH) player.Move(movHor,movVer);
+    else player.ResetVely();
     if(kill)player.Degat(200);
 }
 
