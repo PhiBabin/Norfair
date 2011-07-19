@@ -47,62 +47,62 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #define PLAYERCOLLISIONHEIGHT 18 //18
 
 //! Carte
-#define MAPPATH "levelDonjon.png" //Chemin vers la carte
-#define TILEPATH "tilesimage.png" //Chemin vers les tiles
+#define MAPPATH "img/levelDonjon.png" //Chemin vers la carte
+#define TILEPATH "img/tilesimage.png" //Chemin vers les tiles
 #define PROPPATH "tilesprop.txt" //Chemin vers les propriétés des tiles
-#define CORRPATH "tile.png" //Chemin vers les correspondances
+#define CORRPATH "img/tile.png" //Chemin vers les correspondances
 //! Personnage
 #define MAGOID 1 // ID de ce sprite
-#define MAGOPATH "sprite_mago4.png" //Chemin vers le sprite du personnage
+#define MAGOPATH "img/sprite_mago4.png" //Chemin vers le sprite du personnage
 #define MAGONBRCOLUMN 3 //Nombre de collone du sprite du personnage
 #define MAGONBRLIGNE 4 //Nombre de ligne du sprite du personnage
 
 #define SQUELID 2 // ID de ce sprite
-#define SQUELPATH "sprite_squel.png" //Chemin vers le sprite du personnage
+#define SQUELPATH "img/sprite_squel.png" //Chemin vers le sprite du personnage
 #define SQUELNBRCOLUMN 3 //Nombre de collone du sprite du personnage
 #define SQUELNBRLIGNE 4 //Nombre de ligne du sprite du personnage
 //! Bras
 #define ARMMID 6 // ID de ce sprite
-#define ARMMPATH "arm_mago2.png" //Chemin vers  le sprite
+#define ARMMPATH "img/arm_mago2.png" //Chemin vers  le sprite
 #define ARMMNBRCOLUMN  3 //Nombre de colone du sprite
 #define ARMMNBRLIGNE  2 //Nombre de ligne du sprite
 //! Barre de vie
 #define HPID 3 // ID de ce sprite
-#define HPPATH "barre_vie.png" //Chemin vers  le sprite
+#define HPPATH "img/barre_vie.png" //Chemin vers  le sprite
 #define HPNBRCOLUMN  1 //Nombre de colone du sprite
 #define HPNBRLIGNE  11 //Nombre de ligne du sprite
 #define VIEID 4 // ID de ce sprite
-#define VIEPATH "images/live.png" //Chemin vers  le sprite
+#define VIEPATH "img/live.png" //Chemin vers  le sprite
 #define VIENBRCOLUMN  1 //Nombre de colone du sprite
 #define VIENBRLIGNE  7 //Nombre de ligne du sprite
 
 #define STARTVIE  3 //Nombre de vie qu'a le joueur au début
 //! Arme
 #define FIREID 5 // ID de ce sprite
-#define FIREPATH "fireball2.png" //Chemin vers  le sprite
+#define FIREPATH "img/fireball2.png" //Chemin vers  le sprite
 #define FIRENBRCOLUMN 6 //Nombre de colone du sprite
 #define FIRENBRLIGNE 1 //Nombre de ligne du sprite
 
 #define SHOTID 10 // ID de ce sprite
-#define SHOTPATH "shot2.png" //Chemin vers  le sprite
+#define SHOTPATH "img/shot2.png" //Chemin vers  le sprite
 #define SHOTNBRCOLUMN 16 //Nombre de colone du sprite
 #define SHOTNBRLIGNE 1 //Nombre de ligne du sprite
 //! Explosion & cie
 #define FLASHID 12 // ID de ce sprite
-#define FLASHPATH "flash.png" //Chemin vers  l'explosion
+#define FLASHPATH "img/flash.png" //Chemin vers  l'explosion
 #define FLASHNBRCOLUMN 5 //Nombre de colone de l'explosion
 #define FLASHNBRLIGNE 1 //Nombre de ligne de l'explosion
 
 #define EXPID 7 // ID de ce sprite
-#define EXPPATH "explosion.png" //Chemin vers  l'explosion
+#define EXPPATH "img/explosion.png" //Chemin vers  l'explosion
 #define EXPNBRCOLUMN 6 //Nombre de colone de l'explosion
 #define EXPNBRLIGNE 3 //Nombre de ligne de l'explosion
 #define EXP2ID 8 // ID de ce sprite
-#define EXP2PATH "explosion2.png" //Chemin vers l'explosion
+#define EXP2PATH "img/explosion2.png" //Chemin vers l'explosion
 #define EXP2NBRCOLUMN 3 //Nombre de colone de l'explosion
 #define EXP2NBRLIGNE 1 //Nombre de ligne de l'explosion
 #define EXP3ID 9 // ID de ce sprite
-#define EXP3PATH "fire2.png" //Chemin vers l'explosion
+#define EXP3PATH "img/fire2.png" //Chemin vers l'explosion
 #define EXP3NBRCOLUMN  //Nombre de colone de l'explosion
 #define EXP3NBRLIGNE  //Nombre de ligne de l'explosion
 

@@ -93,7 +93,6 @@ void PlayState::loop(){
  //! Vérifie si les personnages sont vivant
     if(m_playerOne->IsDead())m_playerOne->SetPosition(m_map->m_spawnLocationOne);
     if(m_playerTwo->IsDead())m_playerTwo->SetPosition(m_map->m_spawnLocationTwo);
-
 }
 /**
     Pause le jeu
