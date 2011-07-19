@@ -33,7 +33,9 @@ class Player:public ImgAnim{
         void Turn(bool left, bool right);
         void TurnUp(bool up);
         void SetMapObject(vector<GameObject*> *listObject);
+        int GetVie();
         void Degat(int degats);
+        bool IsDead();
         void SetOnFire();
         float GetVelx();
         float GetVely();
@@ -46,12 +48,12 @@ class Player:public ImgAnim{
         void drawing(sf::RenderWindow* app);
     private:
         ImgAnim *m_arm;
-        ImgAnim m_lifeBarre;
         ImgAnim m_vieBarre;
+        ImgAnim m_hpBarre;
         vector<sf::Image*> *m_imgManag;
         MapTile **m_map;
+        int m_hp;
         int m_vie;
-        int m_live;
         int m_velx;
         int m_vely;
         bool m_jumpLock;

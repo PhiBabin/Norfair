@@ -40,10 +40,10 @@ class MapTile{
         bool collisionHorizontal(const sf::FloatRect playerRect, bool &gauche, bool &droite,int &solidLimit);
         bool collisionVertical(const sf::FloatRect playerRect, bool &haut, bool &bas,int &solidLimit);
 		int m_width, m_height;
-	private:
-        sf::RenderWindow *m_app;
 		sf::Vector2f m_spawnLocationOne;
 		sf::Vector2f m_spawnLocationTwo;
+	private:
+        sf::RenderWindow *m_app;
 		sf::Image m_ImgTypeTile;
 		sf::Sprite m_drawSprite;
 		vector <vector<Type> > m_tileSet;

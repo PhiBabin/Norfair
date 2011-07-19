@@ -28,7 +28,7 @@ PlayState::PlayState(GameEngine* theGameEngine): m_playerOne(0),m_playerTwo(0),m
 	addImg(SHOTPATH,SHOTID);
 	addImg(ARMMPATH,ARMMID);
 	addImg(VIEPATH,VIEID);
-	addImg(LIFEPATH,LIFEID);
+	addImg(HPPATH,HPID);
 	addImg(FLASHPATH,FLASHID);
 	addImg(EXPPATH,EXPID);
 	addImg(EXP2PATH,EXP2ID);
@@ -81,23 +81,23 @@ void PlayState::loop(){
     bool inutile;
     if(m_map->collisionGeneral(m_playerOne->GetPlayerRect(),inutile)){
          cout<<"this is shit"<<endl;
-         //sleep(1);
+         //! sleep(1);
          exit(0);
     }
  //! Déplacement du personnage 1
     movePlayer(*m_playerOne);
-    //m_playerOne->mapCollision(&(m_gameEngine->m_app));
  //! Déplacement du personnage 2
- // moveView(*m_playerOne);
     movePlayer(*m_playerTwo);
  //! Déplacement des objets
     moveObject();
-
+ //! Vérifie si les personnages sont vivant
+    if(m_playerOne->IsDead())m_playerOne->SetPosition(m_map->m_spawnLocationOne);
+    if(m_playerTwo->IsDead())m_playerTwo->SetPosition(m_map->m_spawnLocationTwo);
 
 }
 /**
-    Arrêt du jeu
-    Appelé lors d'un défocus ou d'un changement de state
+    Pause le jeu
+    Appelé lors d'un changement de state
 **/
 void PlayState::pause(){
 }

@@ -139,6 +139,7 @@ Type MapTile::Tile(float x, float y){
  }
 void MapTile::draw(){
     cout<<"FPS="<<1.f/(m_app->GetFrameTime()/1000)<<"Joueur 1 x="<<m_playerOne->GetPosition().x<<" y="<<m_playerOne->GetPosition().y<<" vely="<<m_playerOne->GetVely()<<" velx="<<m_playerOne->GetVelx()<<endl;
+    //! On affiche les tiles
     m_app->Draw(sf::Sprite(m_map.GetImage()));
     //! On affiche le personnage et ces éléments
     m_app->Draw(*m_playerOne);
@@ -232,11 +233,13 @@ void MapTile::loadMap(const char* tileset,const char* image_schema,const char* i
         for(int it2=0;it2< m_height;it2++){
             theTile=findType(tilesetImg.GetPixel(it, it2));
             if(theTile==typeSpawn1){
-                sf::Vector2f m_spawnLocationOne(it*TILEWIDTH ,(it2+1)*TILEHEIGHT-PLAYERCOLLISIONHEIGHT);
+                sf::Vector2f spawnLocationOne(it*TILEWIDTH ,(it2+1)*TILEHEIGHT-PLAYERCOLLISIONHEIGHT);
+                m_spawnLocationOne=spawnLocationOne;
                 m_playerOne->SetPosition(m_spawnLocationOne);
             }
             else if(theTile==typeSpawn2){
-                sf::Vector2f m_spawnLocationTwo(it*TILEWIDTH,(it2+1)*TILEHEIGHT-PLAYERCOLLISIONHEIGHT);
+                sf::Vector2f spawnLocationTwo(it*TILEWIDTH,(it2+1)*TILEHEIGHT-PLAYERCOLLISIONHEIGHT);
+                m_spawnLocationTwo=spawnLocationTwo;
                 m_playerTwo->SetPosition(m_spawnLocationTwo);
             }
             Type theNewTile= m_typeList[theTile];

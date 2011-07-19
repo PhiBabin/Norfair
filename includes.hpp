@@ -67,16 +67,16 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #define ARMMNBRCOLUMN  3 //Nombre de colone du sprite
 #define ARMMNBRLIGNE  2 //Nombre de ligne du sprite
 //! Barre de vie
-#define VIEID 3 // ID de ce sprite
-#define VIEPATH "barre_vie.png" //Chemin vers  le sprite
+#define HPID 3 // ID de ce sprite
+#define HPPATH "barre_vie.png" //Chemin vers  le sprite
+#define HPNBRCOLUMN  1 //Nombre de colone du sprite
+#define HPNBRLIGNE  11 //Nombre de ligne du sprite
+#define VIEID 4 // ID de ce sprite
+#define VIEPATH "images/live.png" //Chemin vers  le sprite
 #define VIENBRCOLUMN  1 //Nombre de colone du sprite
-#define VIENBRLIGNE  11 //Nombre de ligne du sprite
-#define LIFEID 4 // ID de ce sprite
-#define LIFEPATH "images/live.png" //Chemin vers  le sprite
-#define LIFENBRCOLUMN  1 //Nombre de colone du sprite
-#define LIFENBRLIGNE  7 //Nombre de ligne du sprite
+#define VIENBRLIGNE  7 //Nombre de ligne du sprite
 
-#define STARTLIVE  3 //Nombre de vie qu'a le joueur au début
+#define STARTVIE  3 //Nombre de vie qu'a le joueur au début
 //! Arme
 #define FIREID 5 // ID de ce sprite
 #define FIREPATH "fireball2.png" //Chemin vers  le sprite

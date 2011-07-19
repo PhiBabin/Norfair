@@ -17,10 +17,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "Player.hpp"
 Player::Player(sf::Image &img, vector<sf::Image*> *imgManag,MapTile **map,bool machineGun=false,bool fireBall=false):
- ImgAnim::ImgAnim(img,3,4),m_colBot(false),m_velx(0),m_vely(0),m_vie(100),m_live(3)
+ ImgAnim::ImgAnim(img,3,4),m_colBot(false),m_velx(0),m_vely(0),m_hp(100),m_vie(3)
  ,m_imgManag(imgManag),m_machineGun(machineGun),m_fireBall(fireBall)
- ,m_lifeBarre(*imgManag->at(VIEID),VIENBRCOLUMN,VIENBRLIGNE)
- ,m_vieBarre(*imgManag->at(LIFEID),LIFENBRCOLUMN,LIFENBRLIGNE)
+ ,m_hpBarre(*imgManag->at(HPID),HPNBRCOLUMN,HPNBRLIGNE)
+ ,m_vieBarre(*imgManag->at(VIEID),VIENBRCOLUMN,VIENBRLIGNE)
  ,m_map(map){
     setDelay(0.2);
      if(fireBall)m_arm=new ImgAnim(*imgManag->at(ARMMID),ARMMNBRCOLUMN,ARMMNBRLIGNE);
@@ -189,8 +189,19 @@ void Player::SetMapObject(vector<GameObject*> *listObject){
     m_listObject=listObject;
 }
 void Player::Degat(int degats){
-    m_vie-=degats;
+    m_hp-=degats;
  }
+int Player::GetVie(){
+    return m_vie;
+}
+bool Player::IsDead(){
+    if(m_hp<=0){
+        m_hp=100;
+        m_vie--;
+        return true;
+    }
+    else return false;
+}
 void Player::SetOnFire(){
     m_onFire=true;
  }
@@ -260,10 +271,10 @@ void Player::Shoot(){
         float velx=0,vely=0;
         if(m_lookUp==HAUT ){
             if(m_moving==BOUGE){
-                velx=200;
-                vely=-200;
+                velx=167;
+                vely=-167;
                 if(m_direction==GAUCHE){
-                    velx=-200;
+                    velx=-167;
                 }
             }
             else{
@@ -284,13 +295,13 @@ void Player::Shoot(){
 }
 
     void Player::drawing(sf::RenderWindow* app){
-        if(m_vie>0){
-            m_lifeBarre.SetPosition(GetPosition().x-3,GetPosition().y-13);
-            m_lifeBarre.setAnimRow(10-floor(m_vie/10));
-            app->Draw(m_lifeBarre);
+        if(m_hp>0){
+            m_hpBarre.SetPosition(GetPosition().x-3,GetPosition().y-13);
+            m_hpBarre.setAnimRow(10-floor(m_hp/10));
+            app->Draw(m_hpBarre);
         }
-        m_vieBarre.SetPosition(GetPosition().x-3+(-4*(STARTLIVE-3)),GetPosition().y-7);
-        m_vieBarre.setAnimRow(6-m_live);
+        m_vieBarre.SetPosition(GetPosition().x-3+(-4*(STARTVIE-3)),GetPosition().y-7);
+        m_vieBarre.setAnimRow(6-m_vie);
         app->Draw(m_vieBarre);
 //        if(m_lastShot.GetElapsedTime()<0.2 && m_arm->animRow()<2){
 //            if(m_direction==GAUCHE)m_arm->setAnimRow(3);
