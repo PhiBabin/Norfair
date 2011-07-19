@@ -24,8 +24,7 @@ GameEngine::GameEngine(sf::RenderWindow &app):m_app(app),m_updateRate(FRAME),m_r
     Initialisation du moteur
 **/
 void GameEngine::init(){
-   cout<<"********************"<<endl;
-   cout<<"**GameStates::Init**"<<endl;
+   cout<<"  /GameStates::Init"<<endl;
     m_gameState.push_back(new PlayState(this));
 }
 /**
@@ -34,40 +33,37 @@ void GameEngine::init(){
 void GameEngine::loop(){
     //! Set the seed
     srand((unsigned)time(0));
-   cout<<"********************"<<endl;
-   cout<<"*GameEngine::loop start*"<<endl;
+   cout<<"  /GameEngine::loop start"<<endl;
     while(m_app.IsOpened()&&m_running){
         sf::Event event;
         while(m_app.PollEvent(event)){
                 switch(event.Type){
-                  case sf::Event::Closed:       // Window closed
+                  case sf::Event::Closed:       //! Window closed
                     m_running=false;
                     break;
-                  case sf::Event::GainedFocus:  // Window gained focus
+                  case sf::Event::GainedFocus:  //! Window gained focus
                     m_gameState[0]->resume();
                     break;
-                  case sf::Event::LostFocus:    // Window lost focus
+                  case sf::Event::LostFocus:    //! Window lost focus
                     m_gameState[0]->pause();
                     break;
-                  case sf::Event::Resized:      // Window resized
+                  case sf::Event::Resized:      //! Window resized
                     break;
-                  default:                      // Current active state will handle
+                  default:                      //! Current active state will handle
                     m_gameState[0]->GetEvents(event);
               }
         }
         m_gameState[0]->loop();
         m_app.Clear(sf::Color(183, 210, 215, 255));
 
-      // cout<<"********************"<<endl;
-       cout<<"***PlayState::draw**"<<endl;
+        cout<<"  /PlayState::draw"<<endl;
         m_gameState[0]->draw();
         m_app.Display();
     }
-   cout<<"********************"<<endl;
-   cout<<"*GameEngine::loop stop*"<<endl;
+    m_app.Close();
+   cout<<"  /GameEngine::loop end"<<endl;
 }
 GameEngine::~GameEngine(){
-   cout<<"********************"<<endl;
-   cout<<"*GameEngine::delete*"<<endl;
+   cout<<"  /GameEngine::delete"<<endl;
 }
 

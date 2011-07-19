@@ -28,10 +28,8 @@ class PlayState: public GameState {
         virtual void GetEvents(sf::Event eventNew);
         virtual void draw();
         void addImg(const char* path,int id);
-        void showVector();
         void moveObject();
         void movePlayer(Player &player);
-        //void moveView(Player &player);
         virtual ~PlayState();
     private:
         Player *m_playerOne;
@@ -45,8 +43,7 @@ class PlayState: public GameState {
         sf::IntRect m_minMove;
         vector<sf::Image*> m_imgManag;
         vector<GameObject*> *m_mapObject;
-       // GameEngine *m_gameEngine;
-    //    sf::RenderWindow &m_app;
+        GameEngine *m_gameEngine;
 };
 
 #endif // PLAYSTATE_HPP

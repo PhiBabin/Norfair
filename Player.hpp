@@ -20,38 +20,56 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 class MapTile;
 class Player:public ImgAnim{
     public:
-        Player(sf::Image &img, vector<sf::Image*> *imgManag, MapTile **map,bool machineGun,bool fireBall);
+    //! Construteur
+        Player(sf::Image &img, vector<sf::Image*> *imgManag, MapTile **map,bool machineGun);
+    //! Affiche
+        void drawing(sf::RenderWindow* app);
+    //! Retourne le rectangle de Camera
         sf::FloatRect GetViewRect();
+    //! Retourne le rectangle de collision
         sf::FloatRect GetPlayerRect();
         sf::FloatRect GetMovedPlayerRect(const float moveX,const float moveY);
-        void Gravity(sf::RenderWindow &app);
+    //! Collision
         bool collisionGeneral(const sf::FloatRect playerRect,bool &kill);
         bool collisionHorizontal(const sf::FloatRect playerRect, bool &gauche, bool &droite,int &solidLimit);
         bool collisionVertical(const sf::FloatRect playerRect, bool &haut, bool &bas,int &solidLimit);
+        void BottomCollision(bool is);
+        bool GetBottomCollision() const;
+    //! Saut
         void Jump();
         void UnlockJump();
+    //! Tire
+        void Shoot();
+    //! Déplacement
         void Turn(bool left, bool right);
         void TurnUp(bool up);
+    //! Link la liste des entités
         void SetMapObject(vector<GameObject*> *listObject);
+    //! Vie et mort
         int GetVie();
         void Degat(int degats);
         bool IsDead();
+    //! I just want to kill stuff with FIRE!
         void SetOnFire();
+    //! Velocité
+        void Gravity(sf::RenderWindow &app);
         float GetVelx();
         float GetVely();
         void SetVelx(float nx);
         void SetVely(float ny);
-        void BottomCollision(bool is);
-        bool GetBottomCollision() const;
         void ResetVely();
-        void Shoot();
-        void drawing(sf::RenderWindow* app);
+    //! Pause et arrêt
+        void Pause();
+        void Resume();
     private:
         ImgAnim *m_arm;
         ImgAnim m_vieBarre;
         ImgAnim m_hpBarre;
         vector<sf::Image*> *m_imgManag;
+
         MapTile **m_map;
+        vector<GameObject*> *m_listObject;
+
         int m_hp;
         int m_vie;
         int m_velx;
@@ -64,7 +82,7 @@ class Player:public ImgAnim{
         bool m_onFire;
         bool m_machineGun;
         bool m_fireBall;
+
         PausableClock m_lastShot;
-        vector<GameObject*> *m_listObject;
 };
 #endif // PLAYER_HPP_INCLUDED

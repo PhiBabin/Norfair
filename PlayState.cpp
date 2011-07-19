@@ -33,8 +33,8 @@ PlayState::PlayState(GameEngine* theGameEngine): m_playerOne(0),m_playerTwo(0),m
 	addImg(EXPPATH,EXPID);
 	addImg(EXP2PATH,EXP2ID);
 	addImg(EXP3PATH,EXP3ID);
-    m_playerOne= new Player(*m_imgManag.at(MAGOID), &m_imgManag, &m_map, false, true);
-    m_playerTwo= new Player(*m_imgManag.at(SQUELID), &m_imgManag, &m_map, true, false);
+    m_playerOne= new Player(*m_imgManag.at(MAGOID), &m_imgManag, &m_map);
+    m_playerTwo= new Player(*m_imgManag.at(SQUELID), &m_imgManag, &m_map, true);
     m_gameEngine=theGameEngine;
     m_map =new MapTile(&(*m_gameEngine).m_app,MAPPATH,CORRPATH,TILEPATH,PROPPATH,&m_imgManag,m_playerOne,m_playerTwo);
 
@@ -90,9 +90,18 @@ void PlayState::loop(){
     movePlayer(*m_playerTwo);
  //! Déplacement des objets
     moveObject();
- //! Vérifie si les personnages sont vivant
+ //! On vérifie si les personnages sont vivant
     if(m_playerOne->IsDead())m_playerOne->SetPosition(m_map->m_spawnLocationOne);
     if(m_playerTwo->IsDead())m_playerTwo->SetPosition(m_map->m_spawnLocationTwo);
+//! On vérifie si ils ont encore des vies
+    if(m_playerOne->GetVie()<=0){
+        cout<<endl<<"Player 2 win!"<<endl<<endl;
+        m_gameEngine->m_app.Close();
+    }
+    if(m_playerTwo->GetVie()<=0){
+        cout<<endl<<"Player 1 win!"<<endl<<endl;
+        m_gameEngine->m_app.Close();
+    }
 }
 /**
     Pause le jeu
@@ -122,9 +131,6 @@ void PlayState::draw(){
     m_map->draw();
     float x= m_playerOne->GetPosition().x;
     float y= m_playerOne->GetPosition().y;
-   //! m_gameEngine->m_app.Draw(sf::Shape::Line(x+8, y+8,  x+8, 8+y+(m_playerOne->GetVely())*0.6666,1,sf::Color(0, 0, 0, 200)));
-   //! m_gameEngine->m_app.Draw(sf::Shape::Line(x+8, y+8,  x+8+(m_playerOne->GetVelx())*0.6666, 8+y,1,sf::Color(0, 0, 0, 200)));
-   //! m_gameEngine->m_app.Draw(sf::Shape::Line(x+8, y+8,  x+8+(m_playerOne->GetVelx())*0.6666, 8+y+(m_playerOne->GetVely())*0.6666,3,sf::Color(255, 0, 0, 200)));
 }
 
 /**
@@ -136,18 +142,6 @@ void PlayState::addImg(const char* path,int id){
 	m_imgManag.at(id)->SetSmooth(false);
 }
 
-/**
-    Affichage les vecteurs
-**/
-void PlayState::showVector(){
-    float x= m_playerOne->GetPosition().x;
-    float y= m_playerOne->GetPosition().y;
-    float x2= m_playerTwo->GetPosition().x;
-    float y2= m_playerTwo->GetPosition().y;
-    sf::Shape *vecPlayerOne;
-   // vecPlayerOne = sf::Shape::Line(x, y, x+m_playerOne->GetVelx, x+m_playerOne->GetVely,3,sf::Color(255, 255, 255, 200));
-
-}
 /**
     Déplacement d'un Player dans la map
 **/
@@ -191,6 +185,9 @@ void PlayState::movePlayer(Player &player){
     if(kill)player.Degat(200);
 }
 
+/**
+    Déplacement des objets
+**/
 void PlayState::moveObject(){
     bool inutile;
     for(int i=0;i<m_mapObject->size();i++){
@@ -225,56 +222,6 @@ void PlayState::moveObject(){
     }
 }
 
-
-//void PlayState::moveView(Player &player){
-//    float x1,x2,y1,y2;
-//    //sf::FloatRect newView;
-//    float screenRapport= SCREENHEIGHT/SCREENWIDTH;
-//    float screenRapport2= SCREENWIDTH/SCREENHEIGHT;
-//    if(m_playerOne->GetPosition().x>m_playerTwo->GetPosition().x){
-//        x2=m_playerOne->GetPosition().x+PLAYERCOLLISIONWIDTH;
-//        x1=m_playerTwo->GetPosition().x;
-//    }
-//    if(m_playerOne->GetPosition().x<m_playerTwo->GetPosition().x){
-//        x1=m_playerOne->GetPosition().x;
-//        x2=m_playerTwo->GetPosition().x+PLAYERCOLLISIONWIDTH;
-//    }
-//
-//    if(m_playerOne->GetPosition().y>m_playerTwo->GetPosition().y){
-//        y2=m_playerOne->GetPosition().y+PLAYERCOLLISIONHEIGHT;
-//        y1=m_playerTwo->GetPosition().y;
-//    }
-//    if(m_playerOne->GetPosition().y<m_playerTwo->GetPosition().y){
-//        y1=m_playerOne->GetPosition().y+PLAYERCOLLISIONHEIGHT;
-//        y2=m_playerTwo->GetPosition().y;
-//    }
-//    cout<<x1<<" "<<y1<<" "<<x2<<" "<<y2<<endl;
-//    m_camera.SetCenter((x2-x1)/2+x1,(y2-y1)/2+y1);
-//            cout<<"chus en haut"<<m_camera.GetRect().Top-y1<<" "<<m_camera.GetRect().Top<<endl;
-//    if(!m_camera.GetRect().Intersects(player.GetPlayerRect())){
-//        if(m_camera.GetRect().Top<y1-50){
-//            m_maxMove=sf::FloatRect(m_camera.GetRect().Left-(m_camera.GetRect().Top+50-y1)*screenRapport2,y1-50,m_camera.GetRect().Right,m_camera.GetRect().Bottom);
-//            //m_maxMove.Offset((player.GetPlayerRect().Top-m_maxMove.Top)*screenRapport2,player.GetPlayerRect().Top-m_maxMove.Top);
-//             m_camera.SetFromRect(m_maxMove);
-//
-//       }
-//
-//    }
-//    m_camera.SetCenter((x2-x1)/2+x1,(y2-y1)/2+y1);
-//        //cout << m_camera.GetRect().Left-(x2-x1)/2.f-200.f+x1<<endl;//-(x2-x1)/2.f-200.f+x1
-////    if(x2-x1>370.f || y2-y1>(370*screenRapport)|| 1==1){
-////        m_camera.SetCenter((x2-x1)/2+x1,(y2-y1)/2+y1);
-////        if(x2-x1>y2-y1)m_camera.SetHalfSize((x2-x1)/2+50,screenRapport*((x2-x1))/2+50);
-////        else m_camera.SetHalfSize(screenRapport2*((y2-y1))/2+50,(y2-y1)/2+50);
-////         //m_camera.SetFromRect(sf::FloatRect((x2-x1)/2.f*-0.8+x1,(y2-y1)/2.f*(-0.8*screenRapport)+y1,(x2-x1)/2.f*0.8+x1,(y2-y1)/2.f*(0.8*screenRapport)+y1));
-////    }
-////    else{//sf::FloatRect(x1-(0.1*400.f),x1+(1.1*400.f),(y1+(1.1*400.f)*screenRapport),(y1+(1.1*400.f)*screenRapport))
-////        //!if(y2-y1<(400*screenRapport))
-////        m_camera.SetFromRect(sf::FloatRect((x2-x1)/2.f-200.f+x1,(y2-y1)/2.f-(200*screenRapport)+y1,(x2-x1)/2.f+200.f+x1,(y2-y1)/2.f+(200*screenRapport)+y1));
-////        //!else m_camera.SetFromRect(sf::FloatRect((x2-x1)/2.f-(200.f*screenRapport2)+x1,(y2-y1)/2.f-(200.f*screenRapport)+y1,(x2-x1)/2.f+(200.f*screenRapport2)+x1,(y2-y1)/2.f+(200.f*screenRapport)+y1));
-////    }
-//   m_gameEngine->m_app.SetView(m_camera);
-//}
 /**
     Déconstruction des éléments du jeu
 **/

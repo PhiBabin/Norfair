@@ -16,14 +16,14 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.*/
 
 #include "Player.hpp"
-Player::Player(sf::Image &img, vector<sf::Image*> *imgManag,MapTile **map,bool machineGun=false,bool fireBall=false):
+Player::Player(sf::Image &img, vector<sf::Image*> *imgManag,MapTile **map,bool machineGun=false):
  ImgAnim::ImgAnim(img,3,4),m_colBot(false),m_velx(0),m_vely(0),m_hp(100),m_vie(3)
- ,m_imgManag(imgManag),m_machineGun(machineGun),m_fireBall(fireBall)
+ ,m_imgManag(imgManag),m_machineGun(machineGun)
  ,m_hpBarre(*imgManag->at(HPID),HPNBRCOLUMN,HPNBRLIGNE)
  ,m_vieBarre(*imgManag->at(VIEID),VIENBRCOLUMN,VIENBRLIGNE)
  ,m_map(map){
     setDelay(0.2);
-     if(fireBall)m_arm=new ImgAnim(*imgManag->at(ARMMID),ARMMNBRCOLUMN,ARMMNBRLIGNE);
+     if(!machineGun)m_arm=new ImgAnim(*imgManag->at(ARMMID),ARMMNBRCOLUMN,ARMMNBRLIGNE);
      else m_arm=new ImgAnim(*imgManag->at(ARMMID),ARMMNBRCOLUMN,ARMMNBRLIGNE);
     m_arm->setDelay(0.2);
 }
@@ -232,7 +232,7 @@ void Player::UnlockJump(){
     m_vely=0;
 }
 void Player::Shoot(){
-    if(m_lastShot.GetElapsedTime()/1000.f>0.5 && m_fireBall){
+    if(m_lastShot.GetElapsedTime()/1000.f>0.4 && !m_machineGun){
         float velx=0,vely=0;
         int rotation=0;
         if(m_lookUp==HAUT ){
