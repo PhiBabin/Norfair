@@ -311,3 +311,9 @@ void Player::Shoot(){
         if(!m_machineGun)app->Draw(*m_arm);
 
     }
+    void Player::Pause(){
+        m_lastShot.Pause();
+    }
+    void Player::Resume(){
+        m_lastShot.Play();
+    }

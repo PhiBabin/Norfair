@@ -17,11 +17,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "Map.hpp"
 MapTile::MapTile():m_app(NULL),m_playerOne(NULL),m_playerTwo(NULL){}
-MapTile::MapTile(sf::RenderWindow *App,const char* tileset,const char* image_schema,const char* image_corr,const char* tileprop,vector<sf::Image*> *imgManag ,Player *playerOne, Player *playerTwo):
+MapTile::MapTile(sf::RenderWindow *App,const char* tileset,const char* background,const char* image_schema,const char* image_corr,const char* tileprop,vector<sf::Image*> *imgManag ,Player *playerOne, Player *playerTwo):
 m_app(App),m_playerOne(playerOne),m_playerTwo(playerTwo) ,m_imgManag(imgManag),m_height(0){
 
 
-    loadMap(tileset,image_schema,image_corr,tileprop);
+    loadMap(tileset,background,image_schema,image_corr,tileprop);
 }
  bool MapTile::collisionTile(float x, float y){
     return m_tileSet.at(x).at(y).solid;
@@ -138,8 +138,9 @@ Type MapTile::Tile(float x, float y){
     return CollisionHorizontal;
  }
 void MapTile::draw(){
-    cout<<"FPS="<<1.f/(m_app->GetFrameTime()/1000)<<"Joueur 1 x="<<m_playerOne->GetPosition().x<<" y="<<m_playerOne->GetPosition().y<<" vely="<<m_playerOne->GetVely()<<" velx="<<m_playerOne->GetVelx()<<endl;
+    cout<<"FPS="<<1.f/(m_app->GetFrameTime())*1000<<"Joueur 1 x="<<m_playerOne->GetPosition().x<<" y="<<m_playerOne->GetPosition().y<<" vely="<<m_playerOne->GetVely()<<" velx="<<m_playerOne->GetVelx()<<endl;
     //! On affiche les tiles
+    m_app->Draw(sf::Sprite(m_background.GetImage()));
     m_app->Draw(sf::Sprite(m_map.GetImage()));
     //! On affiche le personnage et ces éléments
     m_app->Draw(*m_playerOne);
@@ -174,11 +175,12 @@ vector<Type> & MapTile::operator [] (int X){
         exit(0);
         return 0;
  }
-//Tileset: image du niveau image_schema: Liste des tiles (petit) image_corr: liste des tiles correspondant tileprop: fichier des propriété
-void MapTile::loadMap(const char* tileset,const char* image_schema,const char* image_corr,const char* tileprop){
+//!Tileset: image du niveau image_schema: Liste des tiles (petit) image_corr: liste des tiles correspondant tileprop: fichier des propriété
+void MapTile::loadMap(const char* tileset, const char* background,const char* image_schema,const char* image_corr,const char* tileprop){
     //! Initiation des images temporaire
-  sf::Image tilesetImg,image_schemaImg;
+    sf::Image tilesetImg,backImg ,image_schemaImg;
     tilesetImg.LoadFromFile(tileset);
+    backImg.LoadFromFile(background);
     //! On supprime les vectors
 	m_typeList.erase(m_typeList.begin(),m_typeList.end());
 	m_tileSet.erase(m_tileSet.begin(),m_tileSet.end());
@@ -203,6 +205,7 @@ void MapTile::loadMap(const char* tileset,const char* image_schema,const char* i
 	if(tilePropFile==NULL){ cerr<<"[FATAL ERROR] Map not found."<<endl; exit(1);}
 
 	int nbrItems,itemX,itemY,Visible,Solid,Spawn,Killer,typeSpawn1,typeSpawn2;
+
 	//! On charge crée les items
 	fscanf(tilePropFile, "%d",&nbrItems);
 	for(int it=0;it<nbrItems;it++){
@@ -211,8 +214,8 @@ void MapTile::loadMap(const char* tileset,const char* image_schema,const char* i
                           (*(m_imgManag->at(EXP3ID)),4,1));
 	    m_mapItems.back()->SetPosition(itemX*TILEHEIGHT,itemY*TILEWIDTH);
 	}
+	    //! On charge les propriétés
 	for(unsigned int it=0;it<m_typeList.size();it++){
-	    //! On liste les propriétés
         fscanf(tilePropFile, "%d  %d %d %d",&Visible,&Solid,&Spawn,&Killer);
         if(Spawn==1)typeSpawn1=it;
         if(Spawn==2)typeSpawn2=it;
@@ -226,6 +229,8 @@ void MapTile::loadMap(const char* tileset,const char* image_schema,const char* i
         if(Solid==1)m_typeList[it].solid=true;
         else m_typeList[it].solid=false;
 	}
+	//! Charge le niveau
+    m_map.Create(m_width*TILEWIDTH,m_height*TILEHEIGHT);
 	int theTile;
     for(int it=0;it<m_width;it++){
         vector<Type> tileList2;
@@ -246,16 +251,23 @@ void MapTile::loadMap(const char* tileset,const char* image_schema,const char* i
             theNewTile.tile.SetPosition(it*TILEWIDTH,it2*TILEHEIGHT);
             theNewTile.tile.SetImage(m_ImgTypeTile);
             theNewTile.tile.SetSubRect(m_typeList[theTile].zoneRect);
-             m_tileSet[it].insert( m_tileSet[it].end(),theNewTile);
-        }
-    }
-    m_drawSprite.SetImage(m_ImgTypeTile);
-    m_map.Create(m_width*TILEWIDTH,m_height*TILEHEIGHT);
-    m_drawSprite.SetImage(m_ImgTypeTile);
-    for(int y=0;y<m_height;y++){
-        for(int x=0;x<m_width;x++){
-            if(m_tileSet[x][y].visible)m_map.Draw(m_tileSet[x][y].tile);
+            m_tileSet[it].insert( m_tileSet[it].end(),theNewTile);
+
+            if(theNewTile.visible)m_map.Draw(theNewTile.tile);
         }
     }
     m_map.Display();
+    //! Chargement du background
+    m_background.Create(m_width*TILEWIDTH,m_height*TILEHEIGHT);
+    for(int it=0;it<m_width;it++){
+        for(int it2=0;it2< m_height;it2++){
+            theTile=findType(backImg.GetPixel(it, it2));
+            Type theNewTile= m_typeList[theTile];
+            theNewTile.tile.SetPosition(it*TILEWIDTH,it2*TILEHEIGHT);
+            theNewTile.tile.SetImage(m_ImgTypeTile);
+            theNewTile.tile.SetSubRect(m_typeList[theTile].zoneRect);
+            if(theNewTile.visible)m_background.Draw(theNewTile.tile);
+        }
+    }
+    m_background.Display();
 }

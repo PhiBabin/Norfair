@@ -48,6 +48,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 //! Carte
 #define MAPPATH "img/levelDonjon.png" //Chemin vers la carte
+#define BACKPATH "img/levelDonjonb.png" //Chemin vers le background
 #define TILEPATH "img/tilesimage.png" //Chemin vers les tiles
 #define PROPPATH "tilesprop.txt" //Chemin vers les propriétés des tiles
 #define CORRPATH "img/tile.png" //Chemin vers les correspondances
@@ -143,6 +144,7 @@ using namespace std;
 
 #include "GameState.cpp"
 #include "PlayState.cpp"
+#include "MenuState.cpp"
 #include "GameEngine.cpp"
 
 #endif // INCLUDES_HPP_INCLUDED

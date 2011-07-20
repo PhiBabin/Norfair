@@ -17,6 +17,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "PlayState.hpp"
 #include "GameEngine.hpp"
+
 /**
     Construction des éléments du jeu
 **/
@@ -36,16 +37,11 @@ PlayState::PlayState(GameEngine* theGameEngine): m_playerOne(0),m_playerTwo(0),m
     m_playerOne= new Player(*m_imgManag.at(MAGOID), &m_imgManag, &m_map);
     m_playerTwo= new Player(*m_imgManag.at(SQUELID), &m_imgManag, &m_map, true);
     m_gameEngine=theGameEngine;
-    m_map =new MapTile(&(*m_gameEngine).m_app,MAPPATH,CORRPATH,TILEPATH,PROPPATH,&m_imgManag,m_playerOne,m_playerTwo);
+    m_map =new MapTile(&(*m_gameEngine).m_app,MAPPATH,BACKPATH,CORRPATH,TILEPATH,PROPPATH,&m_imgManag,m_playerOne,m_playerTwo);
 
     m_mapObject=m_map->getMapObject();
     m_playerOne->SetMapObject(m_mapObject);
     m_playerTwo->SetMapObject(m_mapObject);
-
-
-
-
-    //m_map.setPlayer();
 }
 /**
     Initialisation des éléments du jeu
@@ -66,6 +62,10 @@ void PlayState::loop(){
     m_playerOne->TurnUp(Input.IsKeyDown(sf::Key::Up));
     m_playerOne->Turn(Input.IsKeyDown(sf::Key::Left),Input.IsKeyDown(sf::Key::Right));
     if(Input.IsKeyDown(sf::Key::N))m_playerOne->Shoot();
+
+//    if(Input.IsKeyDown(sf::Key::Q))pause();
+//    if(Input.IsKeyDown(sf::Key::E))resume();
+
 
     //! Control du joueur 2
     if (Input.IsKeyDown(sf::Key::G))m_playerTwo->Jump();
@@ -108,11 +108,21 @@ void PlayState::loop(){
     Appelé lors d'un changement de state
 **/
 void PlayState::pause(){
+    m_playerOne->Pause();
+    m_playerTwo->Pause();
+    for(int i=0;i<m_mapObject->size();i++){
+        m_mapObject->at(i)->pause();
+    }
 }
 /**
     Démarrage après une pause
 **/
 void PlayState::resume(){
+    m_playerOne->Resume();
+    m_playerTwo->Resume();
+    for(int i=0;i<m_mapObject->size();i++){
+        m_mapObject->at(i)->play();
+    }
 }
 /**
     Remet à zéro

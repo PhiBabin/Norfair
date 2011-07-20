@@ -18,17 +18,27 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef MAP_HPP_INCLUDED
 #define MAP_HPP_INCLUDED
 struct Type{
-	bool		visible;	//is the tile visible
-	bool		solid;	//is the tile solid
-	bool		kill;	//is the tile killer
+    //! S'il est visible
+	bool		visible;
+	//! S'il est solide
+	bool		solid;
+	//! S'il est mortel
+	bool		kill;
+	//! La couleur de pixel
 	sf::Color   colorPix;
+	//! Le rectangle de visible
 	sf::IntRect zoneRect;
 	sf::Sprite tile;};
 class MapTile{
 	public:
+        //! Public variable
+		int m_width, m_height;
+		sf::Vector2f m_spawnLocationOne;
+		sf::Vector2f m_spawnLocationTwo;
+
         MapTile();
-        MapTile(sf::RenderWindow *App,const char* tileset,const char* image_schema,const char* image_corr,const char* tileprop,vector<sf::Image*> *imgManag,Player *playerOne, Player *playerTwo);
-		void loadMap(const char* tileset,const char* image_schema,const char* image_corr,const char* tileprop);		//loads the map from a file
+        MapTile(sf::RenderWindow *App,const char* tileset,const char* background,const char* image_schema,const char* image_corr,const char* tileprop,vector<sf::Image*> *imgManag,Player *playerOne, Player *playerTwo);
+		void loadMap(const char* tileset, const char* background,const char* image_schema,const char* image_corr,const char* tileprop);		//loads the map from a file
 		void draw();
         vector<Type> & operator [] (int X);
         unsigned char findType(sf::Color Pix);
@@ -39,9 +49,6 @@ class MapTile{
         bool collisionGeneral(const sf::FloatRect playerRect,bool &kill);
         bool collisionHorizontal(const sf::FloatRect playerRect, bool &gauche, bool &droite,int &solidLimit);
         bool collisionVertical(const sf::FloatRect playerRect, bool &haut, bool &bas,int &solidLimit);
-		int m_width, m_height;
-		sf::Vector2f m_spawnLocationOne;
-		sf::Vector2f m_spawnLocationTwo;
 	private:
         sf::RenderWindow *m_app;
 		sf::Image m_ImgTypeTile;
@@ -54,6 +61,7 @@ class MapTile{
 		Player *m_playerOne;
 		Player *m_playerTwo;
 		sf::RenderImage m_map;
+		sf::RenderImage m_background;
 
 };
 
