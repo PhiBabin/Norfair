@@ -25,7 +25,10 @@ GameEngine::GameEngine(sf::RenderWindow &app):m_app(app),m_updateRate(FRAME),m_r
 **/
 void GameEngine::init(){
    cout<<"  /GameStates::Init"<<endl;
+    m_gameState.push_back(NULL);
     m_gameState.push_back(new PlayState(this));
+    m_gameState.push_back(new MenuState(this));
+    m_gameState[0]=m_gameState[1];
 }
 /**
     Boucle du Moteur
@@ -62,6 +65,16 @@ void GameEngine::loop(){
     }
     m_app.Close();
    cout<<"  /GameEngine::loop end"<<endl;
+}
+/**
+    Boucle du Moteur
+**/
+void GameEngine::changeState(int frontState){
+    if(frontState<m_gameState.size()){
+        m_gameState[0]=m_gameState[frontState];
+        m_gameState[0]->init();
+    }
+
 }
 GameEngine::~GameEngine(){
    cout<<"  /GameEngine::delete"<<endl;

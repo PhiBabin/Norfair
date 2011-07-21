@@ -14,21 +14,27 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.*/
-#ifndef GAMEENGINE_HPP
-#define GAMEENGINE_HPP
-class GameEngine{
-    public:
-    GameEngine(sf::RenderWindow &app);
-    void init();
-    void loop();
-    void changeState(int frontState);
-   ~GameEngine();
+#ifndef MENUSTATE_HPP_INCLUDED
+#define MENUSTATE_HPP_INCLUDED
 
-    sf::RenderWindow &m_app;
-   vector<GameState*> m_gameState;
-   private:
-   bool m_running;
-   float m_updateRate;
+class MenuState: public GameState {
+    public:
+        MenuState(GameEngine* theGameEngine);
+        virtual void init();
+        virtual void loop();
+        virtual void stop();
+        virtual void pause();
+        virtual void resume();
+        virtual void GetEvents(sf::Event eventNew);
+        virtual void draw();
+        virtual ~MenuState();
+    private:
+        GameEngine *m_gameEngine;
+        sf::Image m_imgPause;
+        sf::Sprite m_pause;
+        bool m_scaleUp;
 };
 
-#endif
+
+
+#endif // MENUSTATE_HPP_INCLUDED

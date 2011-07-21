@@ -84,5 +84,7 @@ class Player:public ImgAnim{
         bool m_fireBall;
 
         PausableClock m_lastShot;
+        PausableClock m_burning;
+        PausableClock m_hurt;
 };
 #endif // PLAYER_HPP_INCLUDED

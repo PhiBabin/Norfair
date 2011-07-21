@@ -17,7 +17,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "Anim.hpp"
 
-Anim::Anim(void) : m_time()
+Anim::Anim() : m_time()
 {
 	m_frameCount=0;
 	m_delay=0.f;
@@ -25,10 +25,14 @@ Anim::Anim(void) : m_time()
 	m_play=true;
 }
 
-Anim::~Anim(void)
+Anim::~Anim()
 {
 }
 
+bool Anim::isStop() const{
+    if(m_time.m_elapsedTime==0 && m_time.m_pause)return true;
+    else return false;
+}
 void Anim::nextFrame()
 {
 	if(currentFrame()==getSize()-1)

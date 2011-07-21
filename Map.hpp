@@ -19,11 +19,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #define MAP_HPP_INCLUDED
 struct Type{
     //! S'il est visible
-	bool		visible;
+	bool visible;
 	//! S'il est solide
-	bool		solid;
+	bool solid;
 	//! S'il est mortel
-	bool		kill;
+	bool kill;
 	//! La couleur de pixel
 	sf::Color   colorPix;
 	//! Le rectangle de visible

@@ -49,7 +49,6 @@ public:
 	//!Retourne si l'animation est joué en boucle
 	bool isLoop() const;
 
-
 	//!Joue l'animation
 	void play();
 
@@ -58,6 +57,9 @@ public:
 
 	//!Met l'animation en pause et laisse le compteur où il en est.
 	void pause();
+
+	//!Retourne true si l'animation est posé
+	bool isStop() const;
 
 	//!Retourne true si l'animation joue
 	bool isPlaying() const;

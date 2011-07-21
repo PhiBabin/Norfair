@@ -107,6 +107,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #define EXP3NBRCOLUMN  //Nombre de colone de l'explosion
 #define EXP3NBRLIGNE  //Nombre de ligne de l'explosion
 
+//! Pause
+#define PAUSEPATH "img/pause.png" //Chemin vers le sprite du image du menu
 
 #include <iostream>
 #include <sstream>

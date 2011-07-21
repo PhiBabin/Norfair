@@ -19,17 +19,12 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 
 int main(){
-   cout<<"********************"<<endl;
-   cout<<"*****App Start******"<<endl;
+   cout<<"  /App Start"<<endl;
     sf::RenderWindow App(sf::VideoMode(SCREENWIDTH, SCREENHEIGHT, 32), "Norfair", sf::Style::Close | sf::Style::Titlebar );
 
     App.EnableVerticalSync(true);
-    //App.SetFramerateLimit(70);
-    //sf::View maVue(App.GetDefaultView());
-   // maVue.Zoom(2.f);
-   // App.SetView(maVue);
-   cout<<"********************"<<endl;
-   cout<<"*GameEngine   Start*"<<endl;
+
+   cout<<"  /GameEngine   Start"<<endl;
     GameEngine *Game(0);
     Game=new GameEngine(App);
     delete Game;

@@ -36,8 +36,9 @@ public:
 	//!Retourne le temps écouler depuis la dernière fois qu'il à été mis en marche (avec Reset ou Play).
 	float GetElapsedTime();
 
-private:
 	float m_elapsedTime;
+
 	bool m_pause;
+
 };
 #endif

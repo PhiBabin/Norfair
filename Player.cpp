@@ -198,12 +198,15 @@ bool Player::IsDead(){
     if(m_hp<=0){
         m_hp=100;
         m_vie--;
+        m_onFire=false;
         return true;
     }
     else return false;
 }
 void Player::SetOnFire(){
     m_onFire=true;
+    m_burning.Reset();
+    m_hurt.Reset();
  }
 float Player::GetVelx(){
     return m_velx;
@@ -259,7 +262,7 @@ void Player::Shoot(){
 //        m_listObject->back()->SetPosition(GetPosition());
 //        m_listObject->back()->setDelay(0.1);
 
-        m_listObject->push_back(new GameBullet(*m_imgManag->at(FIREID),FIRENBRCOLUMN,FIRENBRLIGNE,20,true,this,velx,vely));
+        m_listObject->push_back(new GameBullet(*m_imgManag->at(FIREID),FIRENBRCOLUMN,FIRENBRLIGNE,10,true,this,velx,vely));
         m_listObject->back()->SetPosition(GetPosition());
         m_listObject->back()->setDelay(0.1);
         if(!(m_lookUp==HAUT && m_moving==IMMOBILE))m_listObject->back()->FlipX(m_direction);
@@ -310,10 +313,25 @@ void Player::Shoot(){
         m_arm->SetPosition(GetPosition());
         if(!m_machineGun)app->Draw(*m_arm);
 
+        if(m_burning.GetElapsedTime()>5000)m_onFire=false;
+
+        if(m_onFire){
+            if(m_hurt.GetElapsedTime()>1000){
+                m_hurt.Reset();
+                Degat(5);
+            }
+            m_listObject->push_back(new GameAnim(*m_imgManag->at(EXP3ID),4,1));
+            m_listObject->back()->SetPosition(GetPosition().x+3.f +rand() *-3.f /RAND_MAX + 3.f,GetPosition().y+3.f+rand() *-8.f /RAND_MAX + 8.f);
+            m_listObject->back()->setDelay(0.1);
+        }
     }
     void Player::Pause(){
         m_lastShot.Pause();
+        m_burning.Pause();
+        m_hurt.Pause();
     }
     void Player::Resume(){
         m_lastShot.Play();
+        m_burning.Play();
+        m_hurt.Play();
     }

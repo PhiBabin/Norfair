@@ -48,6 +48,7 @@ PlayState::PlayState(GameEngine* theGameEngine): m_playerOne(0),m_playerTwo(0),m
     Cette méthode est appelé lors démarrage ou du redémarrage du state
 **/
 void PlayState::init(){
+    resume();
 }
 /**
     Exécution des éléments
@@ -57,14 +58,15 @@ void PlayState::loop(){
         Gestion des entrées claviers
     */
     const sf::Input &Input =m_gameEngine->m_app.GetInput();
+
+    //! Pauser le jeu
+   if(Input.IsKeyDown(sf::Key::Return))pause();
+
     //! Control du joueur 1
     if (Input.IsKeyDown(sf::Key::M))m_playerOne->Jump();
     m_playerOne->TurnUp(Input.IsKeyDown(sf::Key::Up));
     m_playerOne->Turn(Input.IsKeyDown(sf::Key::Left),Input.IsKeyDown(sf::Key::Right));
     if(Input.IsKeyDown(sf::Key::N))m_playerOne->Shoot();
-
-//    if(Input.IsKeyDown(sf::Key::Q))pause();
-//    if(Input.IsKeyDown(sf::Key::E))resume();
 
 
     //! Control du joueur 2
@@ -84,15 +86,20 @@ void PlayState::loop(){
          //! sleep(1);
          exit(0);
     }
+
  //! Déplacement du personnage 1
     movePlayer(*m_playerOne);
+
  //! Déplacement du personnage 2
     movePlayer(*m_playerTwo);
+
  //! Déplacement des objets
     moveObject();
+
  //! On vérifie si les personnages sont vivant
     if(m_playerOne->IsDead())m_playerOne->SetPosition(m_map->m_spawnLocationOne);
     if(m_playerTwo->IsDead())m_playerTwo->SetPosition(m_map->m_spawnLocationTwo);
+
 //! On vérifie si ils ont encore des vies
     if(m_playerOne->GetVie()<=0){
         cout<<endl<<"Player 2 win!"<<endl<<endl;
@@ -113,6 +120,8 @@ void PlayState::pause(){
     for(int i=0;i<m_mapObject->size();i++){
         m_mapObject->at(i)->pause();
     }
+    //! On change le state principale
+    m_gameEngine->changeState(2);
 }
 /**
     Démarrage après une pause
@@ -121,7 +130,7 @@ void PlayState::resume(){
     m_playerOne->Resume();
     m_playerTwo->Resume();
     for(int i=0;i<m_mapObject->size();i++){
-        m_mapObject->at(i)->play();
+        if(!m_mapObject->at(i)->isStop())m_mapObject->at(i)->play();
     }
 }
 /**
