@@ -42,11 +42,8 @@ void MenuState::loop(){
     if(m_pause.GetScale().x>4)m_scaleUp=false;
     if(m_pause.GetScale().x<3)m_scaleUp=true;
 
-    if(m_scaleUp)m_pause.SetScale(m_pause.GetScale().x+0.002*m_gameEngine->m_app.GetFrameTime(),m_pause.GetScale().x+0.002*m_gameEngine->m_app.GetFrameTime());//0.2*m_gameEngine->m_app.GetFrameTime()
-    else m_pause.SetScale(m_pause.GetScale().x-0.002*m_gameEngine->m_app.GetFrameTime(),m_pause.GetScale().x-0.002*m_gameEngine->m_app.GetFrameTime());//0.2*m_gameEngine->m_app.GetFrameTime()
-
-    const sf::Input &Input =m_gameEngine->m_app.GetInput();
-
+    if(m_scaleUp)m_pause.SetScale(m_pause.GetScale().x+0.002*m_gameEngine->m_app.GetFrameTime(),m_pause.GetScale().x+0.002*m_gameEngine->m_app.GetFrameTime());
+    else m_pause.SetScale(m_pause.GetScale().x-0.002*m_gameEngine->m_app.GetFrameTime(),m_pause.GetScale().x-0.002*m_gameEngine->m_app.GetFrameTime());
 }
 /**
     Pause le jeu

@@ -39,12 +39,12 @@ sf::FloatRect Player::GetViewRect(){
 }
 
 void Player::Gravity(sf::RenderWindow &app){
-        m_vely+=GRAVITY*app.GetFrameTime()/1000;
+        m_vely+=GRAVITY/1000.f*app.GetFrameTime();
 }
 void Player::Jump(){
     if(!m_jumpLock){
         m_jumpLock=true;
-        m_vely+=-400;
+        m_vely+=-300;
         BottomCollision(false);
         cout<<"jump"<<endl;
     }
@@ -67,7 +67,7 @@ void Player::Turn(bool left, bool right){
         m_arm->setAnimRow(1);
         m_arm->play();
         play();
-        m_velx=-150.f;
+        m_velx=-150;
     }
     else if(!left&&right){
         m_moving=true;
@@ -77,7 +77,7 @@ void Player::Turn(bool left, bool right){
         play();
         m_arm->setAnimRow(0);
         m_arm->play();
-        m_velx=150.f;
+        m_velx=150;
     }
     else{
         m_moving=false;
@@ -86,8 +86,8 @@ void Player::Turn(bool left, bool right){
         else if(animRow()<2) setAnimRow(animRow()+2);
         else setAnimRow(animRow());
         stop();
-m_arm->stop();
-        m_velx=0;
+        m_arm->stop();
+        m_velx*=0.8;
     }
 }
  bool Player::collisionGeneral(const sf::FloatRect playerRect,bool &kill){
@@ -169,12 +169,10 @@ m_arm->stop();
                     if(playerRect.Intersects(theTile)||theTile.Intersects(playerRect)){
                         CollisionHorizontal= true;
                         if(x*TILEWIDTH>=playerRect.Left&&x*TILEWIDTH<=playerRect.Left+playerRect.Width){
-                            cout<<" ====Droit==";
                             droite=true;
                             solidLimit=x;
                         }
                         if((x+1)*TILEWIDTH<=playerRect.Left+playerRect.Width&&(x+1)*TILEWIDTH>=playerRect.Left){
-                            cout<<" ====Gauche==";
                             gauche=true;
                             solidLimit=x;
                         }
@@ -227,6 +225,9 @@ bool Player::GetBottomCollision() const{
     return m_colBot;
 }
 
+void Player::ResetVelx(){
+    m_velx=0;
+}
 void Player::ResetVely(){
     m_vely=0;
 }
@@ -321,7 +322,7 @@ void Player::Shoot(){
                 Degat(5);
             }
             m_listObject->push_back(new GameAnim(*m_imgManag->at(EXP3ID),4,1));
-            m_listObject->back()->SetPosition(GetPosition().x+3.f +rand() *-3.f /RAND_MAX + 3.f,GetPosition().y+3.f+rand() *-8.f /RAND_MAX + 8.f);
+            m_listObject->back()->SetPosition(GetPosition().x+1.f +rand() *-4.f /RAND_MAX + 3.f,GetPosition().y+3.f+rand() *-8.f /RAND_MAX + 8.f);
             m_listObject->back()->setDelay(0.1);
         }
     }

@@ -34,7 +34,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #define FRAME 0.1 //Frame time
 
 //! Constantes
-#define GRAVITY 350.f //Gravity force
+#define GRAVITY 350 //Gravity force
 #define GAUCHE true
 #define DROITE false
 #define HAUT true

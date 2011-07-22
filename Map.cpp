@@ -138,7 +138,7 @@ Type MapTile::Tile(float x, float y){
     return CollisionHorizontal;
  }
 void MapTile::draw(){
-    cout<<"FPS="<<1.f/(m_app->GetFrameTime())*1000<<"Joueur 1 x="<<m_playerOne->GetPosition().x<<" y="<<m_playerOne->GetPosition().y<<" vely="<<m_playerOne->GetVely()<<" velx="<<m_playerOne->GetVelx()<<endl;
+    cout<<"FPS="<</*1.f/(m_app->GetFrameTime())*1000<<*/"Joueur 1 x="<<m_playerOne->GetPosition().x<<" y="<<m_playerOne->GetPosition().y<<" vely="<<m_playerOne->GetVely()<<" velx="<<m_playerOne->GetVelx()<<endl;
     //! On affiche les tiles
     m_app->Draw(sf::Sprite(m_background.GetImage()));
     m_app->Draw(sf::Sprite(m_map.GetImage()));

@@ -35,10 +35,10 @@ GameObject::GameObject(sf::Image &img,int nbrFrame,int nbrLigne,float height=0, 
  ImgAnim::ImgAnim(img,nbrFrame,nbrLigne),m_colHeight(height),m_colWidth(width),m_offsetColX(offsetColX),m_offsetColY(offsetColY),m_col(col),m_velx(0),m_vely(0){
 }
 
-int GameObject::GetVelx()const{
+float GameObject::GetVelx()const{
     return m_velx;
 }
-int GameObject::GetVely()const{
+float GameObject::GetVely()const{
     return m_vely;
 }
 sf::FloatRect GameObject::GetRect()const {

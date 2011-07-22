@@ -16,7 +16,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.*/
 
 #ifndef PLAYER_HPP_INCLUDED
-#define PLAYER_HPP_INCLUDED;
+#define PLAYER_HPP_INCLUDED
 class MapTile;
 class Player:public ImgAnim{
     public:
@@ -57,6 +57,7 @@ class Player:public ImgAnim{
         float GetVely();
         void SetVelx(float nx);
         void SetVely(float ny);
+        void ResetVelx();
         void ResetVely();
     //! Pause et arrêt
         void Pause();
@@ -72,8 +73,8 @@ class Player:public ImgAnim{
 
         int m_hp;
         int m_vie;
-        int m_velx;
-        int m_vely;
+        float m_velx;
+        float m_vely;
         bool m_jumpLock;
         bool m_colBot;
         bool m_direction;

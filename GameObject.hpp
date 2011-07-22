@@ -23,16 +23,16 @@ class GameObject:public ImgAnim{
         GameObject(sf::Image &img,int nbrFrame,int nbrLigne,float height, float width,float offsetColX,float offsetColY,bool col);
         sf::FloatRect GetRect()const;
         sf::FloatRect GetMovedRect(const float moveX,const float moveY)const;
-        int GetVelx()const;
-        int GetVely()const;
+        float GetVelx()const;
+        float GetVely()const;
         virtual bool isDraw();
         virtual bool isDelete()const;
         virtual bool isCollision()const;
         virtual bool collisionEffect(Player &player)=0;
         virtual ~GameObject();
     protected:
-        int m_velx;
-        int m_vely;
+        float m_velx;
+        float m_vely;
         bool m_col;
         float m_offsetColX;
         float m_offsetColY;

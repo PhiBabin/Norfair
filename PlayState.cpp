@@ -57,6 +57,23 @@ void PlayState::loop(){
     /**
         Gestion des entrées claviers
     */
+
+//    //! Pauser le jeu
+//   if(sf::Keyboard::IsKeyPressed(sf::Keyboard::Return))pause();
+//
+//    //! Control du joueur 1
+//    if (sf::Keyboard::IsKeyPressed(sf::Keyboard::M))m_playerOne->Jump();
+//    m_playerOne->TurnUp(sf::Keyboard::IsKeyPressed(sf::Keyboard::Up));
+//    m_playerOne->Turn(sf::Keyboard::IsKeyPressed(sf::Keyboard::Left),sf::Keyboard::IsKeyPressed(sf::Keyboard::Right));
+//    if(sf::Keyboard::IsKeyPressed(sf::Keyboard::N))m_playerOne->Shoot();
+//
+//
+//    //! Control du joueur 2
+//    if (sf::Keyboard::IsKeyPressed(sf::Keyboard::G))m_playerTwo->Jump();
+//    m_playerTwo->TurnUp(sf::Keyboard::IsKeyPressed(sf::Keyboard::W));
+//    m_playerTwo->Turn(sf::Keyboard::IsKeyPressed(sf::Keyboard::A),sf::Keyboard::IsKeyPressed(sf::Keyboard::D));
+//    if(sf::Keyboard::IsKeyPressed(sf::Keyboard::F))m_playerTwo->Shoot();
+
     const sf::Input &Input =m_gameEngine->m_app.GetInput();
 
     //! Pauser le jeu
@@ -75,17 +92,9 @@ void PlayState::loop(){
     m_playerTwo->Turn(Input.IsKeyDown(sf::Key::A),Input.IsKeyDown(sf::Key::D));
     if(Input.IsKeyDown(sf::Key::F))m_playerTwo->Shoot();
 
-    if(Input.IsKeyDown(sf::Key::V))m_playerOne->Degat(4);
-    if(Input.IsKeyDown(sf::Key::B))m_playerOne->Degat(-6);
-    if(Input.IsKeyDown(sf::Key::Z)){m_map->getMapObject()->push_back(new GameAnim(*m_imgManag[EXP3ID],4,1));
-    m_mapObject->back()->SetPosition(m_playerOne->GetPosition().x+3.f +rand() *-3.f /RAND_MAX + 3.f,m_playerOne->GetPosition().y+3.f+rand() *-8.f /RAND_MAX + 8.f);
-    m_mapObject->back()->setDelay(0.1);cout<< m_mapObject->size()<<endl;}
-    bool inutile;
-    if(m_map->collisionGeneral(m_playerOne->GetPlayerRect(),inutile)){
-         cout<<"this is shit"<<endl;
-         //! sleep(1);
-         exit(0);
-    }
+    /**
+        Gestion des personnages et objets
+    */
 
  //! Déplacement du personnage 1
     movePlayer(*m_playerOne);
@@ -148,8 +157,6 @@ void PlayState::GetEvents(sf::Event){
 **/
 void PlayState::draw(){
     m_map->draw();
-    float x= m_playerOne->GetPosition().x;
-    float y= m_playerOne->GetPosition().y;
 }
 
 /**
@@ -158,7 +165,6 @@ void PlayState::draw(){
 void PlayState::addImg(const char* path,int id){
 	m_imgManag.at(id)=new sf::Image;
 	m_imgManag.at(id)->LoadFromFile(path);
-	m_imgManag.at(id)->SetSmooth(false);
 }
 
 /**
@@ -167,40 +173,47 @@ void PlayState::addImg(const char* path,int id){
 void PlayState::movePlayer(Player &player){
     float movHor=0;
     float movVer=0;
-    float movHorTest=player.GetVelx()*m_gameEngine->m_app.GetFrameTime()/1000;
-    float movVerTest=player.GetVely()*m_gameEngine->m_app.GetFrameTime()/1000;
+    int limitVer=0;
+    int limitHor=0;
+    float movHorTest=player.GetVelx()*m_gameEngine->m_app.GetFrameTime()/1000.f;
+    float movVerTest=player.GetVely()*m_gameEngine->m_app.GetFrameTime()/1000.f;
     bool bas=false;
     bool haut=false;
     bool gauche=false;
     bool droite=false;
     bool kill=false;
-    int limitVer=0;
-    int limitHor=0;
-    if(!player.collisionHorizontal(player.GetMovedPlayerRect(movHorTest,0),gauche,droite,limitHor)){
+    //! On vérifie les collisions horizontals
+    if(!player.collisionHorizontal(player.GetMovedPlayerRect(movHorTest,0),gauche,droite,limitHor)){//! Pas de collision
        movHor=movHorTest;
     }
-    else{
-        if(gauche)movHor=(((limitHor+1)*TILEWIDTH))-player.GetPosition().x;
-        if(droite)movHor=(((limitHor)*TILEWIDTH))-PLAYERCOLLISIONWIDTH-player.GetPosition().x;
+    else{//! Sinon on reposition le joueur
+        player.ResetVelx();
+        if(gauche)movHor=((((limitHor+1)*TILEWIDTH))-player.GetPosition().x)/1000.f;
+        if(droite)movHor=((((limitHor)*TILEWIDTH))-PLAYERCOLLISIONWIDTH-player.GetPosition().x)/1000.f;
     }
 
-    if(!player.collisionVertical(player.GetMovedPlayerRect(0,movVerTest),haut,bas,limitVer)){
+    //! On vérifie les collisions vertical
+    if(!player.collisionVertical(player.GetMovedPlayerRect(0,movVerTest),haut,bas,limitVer)){//! Pas de collision
         player.Gravity(m_gameEngine->m_app);
         movVer=movVerTest;
     }
-    else{
-        if(haut){
+    else{//! Sinon on reposition le joueur
+        if(haut){//! Si l'on touche le haut
             player.ResetVely();
         }
-        if(bas){
-            if(!player.GetBottomCollision())movVer=player.GetPosition().y-(limitVer*TILEHEIGHT)+PLAYERCOLLISIONHEIGHT;
+        if(bas){//! Si l'on touche le sol
+            if(!player.GetBottomCollision())movVer=(player.GetPosition().y-(limitVer*TILEHEIGHT)+PLAYERCOLLISIONHEIGHT)/1000.f;
             player.UnlockJump();
             player.BottomCollision(true);
         }
     }
+    cout <<movVerTest<<endl;
 
+    //! On vérifie si le mouvement envisagé cause une collision
     if(!player.collisionGeneral(player.GetMovedPlayerRect(movHor,movVer),kill)&&movHor<TILEHEIGHT&&movVer<TILEWIDTH) player.Move(movHor,movVer);
     else player.ResetVely();
+
+    //! Ouch!
     if(kill)player.Degat(200);
 }
 
@@ -212,15 +225,15 @@ void PlayState::moveObject(){
     for(int i=0;i<m_mapObject->size();i++){
         if(m_mapObject->at(i)->isCollision()){
             //! On affiche détermine le rectangle de l'object
-            sf::FloatRect Rect=m_mapObject->at(i)->GetMovedRect(m_mapObject->at(i)->GetVelx()/1000.f*m_gameEngine->m_app.GetFrameTime(),m_mapObject->at(i)->GetVely()/1000.f*m_gameEngine->m_app.GetFrameTime());
+            sf::FloatRect Rect=m_mapObject->at(i)->GetMovedRect(m_mapObject->at(i)->GetVelx()*m_gameEngine->m_app.GetFrameTime()/1000.f,m_mapObject->at(i)->GetVely()*m_gameEngine->m_app.GetFrameTime()/1000.f);
             //! On vérifie si l'object touche le joueur si oui on supprimer l'objet et crée un animation d'un explosion
             if((m_playerOne->GetPlayerRect().Intersects(Rect) && m_mapObject->at(i)->collisionEffect(*m_playerOne))     //! Joueur1
-               ||m_playerTwo->GetPlayerRect().Intersects(Rect) && m_mapObject->at(i)->collisionEffect(*m_playerTwo)){   //! Joueur 2
+               ||(m_playerTwo->GetPlayerRect().Intersects(Rect) && m_mapObject->at(i)->collisionEffect(*m_playerTwo))){   //! Joueur 2
                 //! On crée l'animation
                 m_map->getMapObject()->push_back(new GameAnim(*m_imgManag[EXPID],EXPNBRCOLUMN,EXPNBRLIGNE));
                 m_mapObject->back()->SetPosition((m_playerTwo->GetPosition()));
                 if(m_playerOne->GetPlayerRect().Intersects(Rect) && m_mapObject->at(i)->collisionEffect(*m_playerOne))
-                m_mapObject->back()->SetPosition((m_playerOne->GetPosition()));
+                m_mapObject->back()->SetPosition(m_playerOne->GetPosition().x+rand() *-3.f /RAND_MAX + 3.f,m_playerOne->GetPosition().y+rand() *-5.f /RAND_MAX + 2.f);
                 m_mapObject->back()->Move(0,5);
                 m_mapObject->back()->setDelay(0.1);
                 //! On crée libère la mémoire de le l'instance de l'objet
@@ -229,8 +242,10 @@ void PlayState::moveObject(){
                 m_mapObject->erase( m_mapObject->begin() + i );
             }
             else if(!m_map->collisionGeneral(Rect,inutile))
+                //! On déplace l'objet
                 m_mapObject->at(i)->Move(Rect.Left-m_mapObject->at(i)->GetPosition().x,Rect.Top-m_mapObject->at(i)->GetPosition().y);
             else {
+                //! On crée une explosion
                 m_map->getMapObject()->push_back(new GameAnim(*m_imgManag[EXP2ID],EXP2NBRCOLUMN,EXP2NBRLIGNE));
                 m_mapObject->back()->SetPosition(m_mapObject->at(i)->GetPosition().x,m_mapObject->at(i)->GetPosition().y);
                 m_mapObject->back()->setDelay(0.1);
