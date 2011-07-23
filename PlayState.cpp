@@ -27,10 +27,13 @@ PlayState::PlayState(GameEngine* theGameEngine): m_playerOne(0),m_playerTwo(0),m
     addImg(SQUELPATH,SQUELID);
 	addImg(FIREPATH,FIREID);
 	addImg(SHOTPATH,SHOTID);
-	addImg(ARMMPATH,ARMMID);
+	addImg(MARMMPATH,MARMMID);
+	addImg(SARMMPATH,SARMMID);
 	addImg(VIEPATH,VIEID);
 	addImg(HPPATH,HPID);
+	addImg(ITEMPATH,ITEMID);
 	addImg(FLASHPATH,FLASHID);
+	addImg(SHIEPATH,SHIEID);
 	addImg(EXPPATH,EXPID);
 	addImg(EXP2PATH,EXP2ID);
 	addImg(EXP3PATH,EXP3ID);
@@ -40,6 +43,7 @@ PlayState::PlayState(GameEngine* theGameEngine): m_playerOne(0),m_playerTwo(0),m
     m_map =new MapTile(&(*m_gameEngine).m_app,MAPPATH,BACKPATH,CORRPATH,TILEPATH,PROPPATH,&m_imgManag,m_playerOne,m_playerTwo);
 
     m_mapObject=m_map->getMapObject();
+    m_mapItems=m_map->getMapItem();
     m_playerOne->SetMapObject(m_mapObject);
     m_playerTwo->SetMapObject(m_mapObject);
 }
@@ -101,6 +105,9 @@ void PlayState::loop(){
 
  //! Déplacement du personnage 2
     movePlayer(*m_playerTwo);
+
+ //! Vérifie les items
+    checkItems();
 
  //! Déplacement des objets
     moveObject();
@@ -168,6 +175,20 @@ void PlayState::addImg(const char* path,int id){
 }
 
 /**
+    On vérifie les items
+**/
+void PlayState::checkItems(){
+    for(int i=0;i<m_mapItems->size();i++){
+        if(m_mapItems->at(i)->isCollision()){
+            if(m_playerOne->GetPlayerRect().Intersects(m_mapItems->at(i)->GetRect())){
+                m_mapItems->at(i)->collisionEffect(*m_playerOne);
+            }
+        }
+    }
+
+}
+
+/**
     Déplacement d'un Player dans la map
 **/
 void PlayState::movePlayer(Player &player){
@@ -184,7 +205,7 @@ void PlayState::movePlayer(Player &player){
     bool kill=false;
     //! On vérifie les collisions horizontals
     if(!player.collisionHorizontal(player.GetMovedPlayerRect(movHorTest,0),gauche,droite,limitHor)){//! Pas de collision
-       movHor=movHorTest;
+        movHor=movHorTest;
     }
     else{//! Sinon on reposition le joueur
         player.ResetVelx();
@@ -207,7 +228,6 @@ void PlayState::movePlayer(Player &player){
             player.BottomCollision(true);
         }
     }
-    cout <<movVerTest<<endl;
 
     //! On vérifie si le mouvement envisagé cause une collision
     if(!player.collisionGeneral(player.GetMovedPlayerRect(movHor,movVer),kill)&&movHor<TILEHEIGHT&&movVer<TILEWIDTH) player.Move(movHor,movVer);
@@ -221,7 +241,6 @@ void PlayState::movePlayer(Player &player){
     Déplacement des objets
 **/
 void PlayState::moveObject(){
-    bool inutile;
     for(int i=0;i<m_mapObject->size();i++){
         if(m_mapObject->at(i)->isCollision()){
             //! On affiche détermine le rectangle de l'object
@@ -241,7 +260,7 @@ void PlayState::moveObject(){
                 //! On supprime le pointeur du tableau dynamique
                 m_mapObject->erase( m_mapObject->begin() + i );
             }
-            else if(!m_map->collisionGeneral(Rect,inutile))
+            else if(!m_map->collisionGeneral(Rect))
                 //! On déplace l'objet
                 m_mapObject->at(i)->Move(Rect.Left-m_mapObject->at(i)->GetPosition().x,Rect.Top-m_mapObject->at(i)->GetPosition().y);
             else {

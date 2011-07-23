@@ -23,17 +23,24 @@ m_app(App),m_playerOne(playerOne),m_playerTwo(playerTwo) ,m_imgManag(imgManag),m
 
     loadMap(tileset,background,image_schema,image_corr,tileprop);
 }
+
  bool MapTile::collisionTile(float x, float y){
     return m_tileSet.at(x).at(y).solid;
  }
+
 Type MapTile::Tile(float x, float y){
     return m_tileSet.at(x).at(y);
  }
+
  vector<GameObject*> * MapTile::getMapObject(){
-    return &m_mapObject ;
+    return &m_mapObject;
  }
 
- bool MapTile::collisionGeneral(const sf::FloatRect playerRect,bool &kill){
+ vector<GameItems*> * MapTile::getMapItem(){
+    return &m_mapItems;
+ }
+
+ bool MapTile::collisionGeneral(const sf::FloatRect playerRect){
     int maxHeight, minHeight, maxWidth, minWidth;
     bool Collision=false;
    // cout<<"col gen="<<playerRect.Bottom-playerRect.Top<<endl;
@@ -49,7 +56,6 @@ Type MapTile::Tile(float x, float y){
     for(int y=minHeight;y<=maxHeight;y++){
         for(int x=minWidth;x<=maxWidth;x++){
             if(!(x>=m_width or y>=m_height)){
-                if(m_tileSet[x][y].kill)kill=true;
                 if(m_tileSet[x][y].solid){
                     sf::FloatRect  theTile(x*TILEWIDTH,y*TILEHEIGHT,TILEWIDTH,TILEHEIGHT);
                     if(playerRect.Intersects(theTile)||theTile.Intersects(playerRect)) return true;
@@ -58,84 +64,6 @@ Type MapTile::Tile(float x, float y){
         }
     }
     return false;
- }
- bool MapTile::collisionVertical(const sf::FloatRect playerRect, bool &haut, bool &bas,int &solidLimit){
-    int maxHeight, minHeight, maxWidth, minWidth;
-    bool CollisionVertical=false;
-    minHeight=playerRect.Top/TILEHEIGHT;
-    minWidth=playerRect.Left/TILEWIDTH;
-    maxHeight=(playerRect.Top+playerRect.Height-1)/TILEHEIGHT;
-    maxWidth=(playerRect.Left+playerRect.Width-1)/TILEWIDTH;
-
-    if(minHeight<0)minHeight=0;
-    if(maxHeight>m_height)maxHeight=m_height;
-    if(minWidth<0)minWidth=0;
-    if(maxWidth>m_width)maxWidth=m_width;
-    for(int y=minHeight;y<=maxHeight;y++){
-        for(int x=minWidth;x<=maxWidth;x++){
-            if(!(x>=m_width or y>=m_height)){
-                if(m_tileSet[x][y].solid){
-
-                    sf::FloatRect  theTile(x*TILEWIDTH,y*TILEHEIGHT,TILEWIDTH,TILEHEIGHT);
-                    if(playerRect.Intersects(theTile)||theTile.Intersects(playerRect)){
-                        CollisionVertical=true;
-                        if(y*TILEHEIGHT<=playerRect.Top+playerRect.Height&&y*TILEHEIGHT>=playerRect.Top){
-                            //cout<<" ====sol==";
-                            /**
-                            m_playerOne->UnlockJump();
-                            m_playerOne->BottomCollision(true);
-                            */
-                            bas=true;
-                            solidLimit=y;
-                        }
-                        if((y+1)*TILEHEIGHT>=playerRect.Top&&(y+1)*TILEHEIGHT<=playerRect.Top+playerRect.Height){
-                           // cout<<" ====tete==";
-                            haut=true;
-                            /**m_playerOne->ResetVely();*/
-                        }
-                    }
-                  //  cout<<endl;
-                }
-            }
-        }
-    }
-    return CollisionVertical;
- }
- bool MapTile::collisionHorizontal(const sf::FloatRect playerRect, bool &gauche, bool &droite,int &solidLimit){
-    int maxHeight, minHeight, maxWidth, minWidth;
-    bool CollisionHorizontal=false;
-    minHeight=playerRect.Top/TILEHEIGHT;
-    minWidth=playerRect.Left/TILEWIDTH;
-    maxHeight=(playerRect.Top+playerRect.Height-1)/TILEHEIGHT;
-    maxWidth=(playerRect.Left+playerRect.Width-1)/TILEWIDTH;
-
-    if(minHeight<0)minHeight=0;
-    if(maxHeight>m_height)maxHeight=m_height;
-    if(minWidth<0)minWidth=0;
-    if(maxWidth>m_width)maxWidth=m_width;
-    for(int y=minHeight;y<=maxHeight;y++){
-        for(int x=minWidth;x<=maxWidth;x++){
-            if(!(x>=m_width or y>=m_height)){
-                if(m_tileSet[x][y].solid){
-                    sf::FloatRect  theTile(x*TILEWIDTH,y*TILEHEIGHT,TILEWIDTH,TILEHEIGHT);
-                    if(playerRect.Intersects(theTile)||theTile.Intersects(playerRect)){
-                        CollisionHorizontal= true;
-                        if(x*TILEWIDTH>=playerRect.Left&&x*TILEWIDTH<=playerRect.Left+playerRect.Width){
-                            cout<<" ====Droit==";
-                            droite=true;
-                            solidLimit=x;
-                        }
-                        if((x+1)*TILEWIDTH<=playerRect.Left+playerRect.Width&&(x+1)*TILEWIDTH>=playerRect.Left){
-                            cout<<" ====Gauche==";
-                            gauche=true;
-                            solidLimit=x;
-                        }
-                    }
-                }
-            }
-        }
-    }
-    return CollisionHorizontal;
  }
 void MapTile::draw(){
     cout<<"FPS="<</*1.f/(m_app->GetFrameTime())*1000<<*/"Joueur 1 x="<<m_playerOne->GetPosition().x<<" y="<<m_playerOne->GetPosition().y<<" vely="<<m_playerOne->GetVely()<<" velx="<<m_playerOne->GetVelx()<<endl;
@@ -157,11 +85,9 @@ void MapTile::draw(){
     }
     //! On affiche les items
     for(int i=0;i<m_mapItems.size();i++){
-        if((m_mapItems.at(i))->isDelete()){
-            delete m_mapItems.at(i);
-            m_mapItems.erase( m_mapItems.begin() + i );
+        if((m_mapItems.at(i))->isDraw()){
+            m_app->Draw(*(m_mapItems.at(i)));
         }
-        else m_app->Draw(*(m_mapItems.at(i)));
     }
 }
 vector<Type> & MapTile::operator [] (int X){
@@ -211,8 +137,9 @@ void MapTile::loadMap(const char* tileset, const char* background,const char* im
 	for(int it=0;it<nbrItems;it++){
         fscanf(tilePropFile, "%d %d",&itemX,&itemY);
 	    m_mapItems.push_back(new GameItems
-                          (*(m_imgManag->at(EXP3ID)),4,1));
+                          (*(m_imgManag->at(ITEMID)),ITEMNBRCOLUMN,ITEMNBRLIGNE));
 	    m_mapItems.back()->SetPosition(itemX*TILEHEIGHT,itemY*TILEWIDTH);
+	    m_mapItems.back()->setDelay(0.2);
 	}
 	    //! On charge les propriétés
 	for(unsigned int it=0;it<m_typeList.size();it++){

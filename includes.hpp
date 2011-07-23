@@ -63,10 +63,15 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #define SQUELNBRCOLUMN 3 //Nombre de collone du sprite du personnage
 #define SQUELNBRLIGNE 4 //Nombre de ligne du sprite du personnage
 //! Bras
-#define ARMMID 6 // ID de ce sprite
-#define ARMMPATH "img/arm_mago2.png" //Chemin vers  le sprite
-#define ARMMNBRCOLUMN  3 //Nombre de colone du sprite
-#define ARMMNBRLIGNE  2 //Nombre de ligne du sprite
+#define MARMMID 6 // ID de ce sprite
+#define MARMMPATH "img/arm_mago2.png" //Chemin vers  le sprite
+#define MARMMNBRCOLUMN  3 //Nombre de colone du sprite
+#define MARMMNBRLIGNE  2 //Nombre de ligne du sprite
+
+#define SARMMID 16 // ID de ce sprite
+#define SARMMPATH "img/arm_squel.png" //Chemin vers  le sprite
+#define SARMMNBRCOLUMN  3 //Nombre de colone du sprite
+#define SARMMNBRLIGNE  1 //Nombre de ligne du sprite
 //! Barre de vie
 #define HPID 3 // ID de ce sprite
 #define HPPATH "img/barre_vie.png" //Chemin vers  le sprite
@@ -88,6 +93,19 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #define SHOTPATH "img/shot2.png" //Chemin vers  le sprite
 #define SHOTNBRCOLUMN 16 //Nombre de colone du sprite
 #define SHOTNBRLIGNE 1 //Nombre de ligne du sprite
+
+//! Sheild
+#define SHIEID 19 // ID de ce sprite
+#define SHIEPATH "img/sheild.png" //Chemin vers le sheild
+#define SHIENBRCOLUMN 1 //Nombre de colone du sheild
+#define SHIENBRLIGNE 1 //Nombre de ligne du sheild
+
+//! Items
+#define ITEMID 17 // ID de ce sprite
+#define ITEMPATH "img/chest.png" //Chemin vers  le coffre
+#define ITEMNBRCOLUMN 6 //Nombre de colone du coffre
+#define ITEMNBRLIGNE 1 //Nombre de ligne du coffre
+
 //! Explosion & cie
 #define FLASHID 12 // ID de ce sprite
 #define FLASHPATH "img/flash.png" //Chemin vers  l'explosion
@@ -125,7 +143,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 sf::Clock Clock;
 using namespace std;
-#include "LayerAnim.cpp"
+#include "Anim.cpp"
 #include "ImgAnim.cpp"
 
 #include "GameObject.hpp"

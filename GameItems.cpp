@@ -20,20 +20,35 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 GameItems::GameItems(sf::Image &img,int nbrFrame,int nbrLigne,float height=0, float width=0,float offsetColX=0,float offsetColY=0,bool col=false):
  GameObject(img,nbrFrame,nbrLigne,height, width,offsetColX,offsetColY,col),m_draw(true){
      m_lastSpawn.Reset();
+     if(height==0){
+         m_colHeight=img.GetHeight()/nbrLigne;
+         m_colWidth=img.GetWidth()/nbrFrame;
+     }
 }
 bool GameItems::isDraw(){
-   if(m_lastSpawn.GetElapsedTime()>15.f)m_draw=true;
+   if(m_lastSpawn.GetElapsedTime()/1000>3.f)m_draw=true;
+   else m_draw=false;
     return m_draw;
 }
 bool GameItems::isDelete()const{
     return false;
 }
 bool GameItems::isCollision()const{
-    return true;
+    return m_draw;
 }
 bool GameItems::collisionEffect(Player &player){
     m_draw=false;
     m_lastSpawn.Reset();
+    switch(rand() % 3 + 1){
+        case 1:
+            player.AddLife();
+        break;
+        case 2:
+            player.AddLife();
+        break;
+        default:
+            player.RaiseShield();
+    }
     return true;
 }
 GameItems::~GameItems(){

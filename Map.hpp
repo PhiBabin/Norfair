@@ -45,10 +45,9 @@ class MapTile{
         bool collisionTile(float x,float y);
         Type Tile(float x, float y);
         vector<GameObject*> * getMapObject();
+        vector<GameItems*> * getMapItem();
 
-        bool collisionGeneral(const sf::FloatRect playerRect,bool &kill);
-        bool collisionHorizontal(const sf::FloatRect playerRect, bool &gauche, bool &droite,int &solidLimit);
-        bool collisionVertical(const sf::FloatRect playerRect, bool &haut, bool &bas,int &solidLimit);
+        bool collisionGeneral(const sf::FloatRect playerRect);
 	private:
         sf::RenderWindow *m_app;
 		sf::Image m_ImgTypeTile;

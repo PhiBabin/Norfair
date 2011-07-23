@@ -48,6 +48,8 @@ class Player:public ImgAnim{
     //! Vie et mort
         int GetVie();
         void Degat(int degats);
+        void AddLife();
+        void RaiseShield();
         bool IsDead();
     //! I just want to kill stuff with FIRE!
         void SetOnFire();
@@ -66,6 +68,7 @@ class Player:public ImgAnim{
         ImgAnim *m_arm;
         ImgAnim m_vieBarre;
         ImgAnim m_hpBarre;
+        ImgAnim m_blueShield;
         vector<sf::Image*> *m_imgManag;
 
         MapTile **m_map;
@@ -83,7 +86,9 @@ class Player:public ImgAnim{
         bool m_onFire;
         bool m_machineGun;
         bool m_fireBall;
+        bool m_shield;
 
+        PausableClock m_shieldCoolDown;
         PausableClock m_lastShot;
         PausableClock m_burning;
         PausableClock m_hurt;

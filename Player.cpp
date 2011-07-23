@@ -17,14 +17,15 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "Player.hpp"
 Player::Player(sf::Image &img, vector<sf::Image*> *imgManag,MapTile **map,bool machineGun=false):
- ImgAnim::ImgAnim(img,3,4),m_colBot(false),m_velx(0),m_vely(0),m_hp(100),m_vie(3)
+ ImgAnim::ImgAnim(img,3,4),m_colBot(false),m_velx(0),m_vely(0),m_hp(100),m_vie(3),m_shield(false),m_onFire(false)
  ,m_imgManag(imgManag),m_machineGun(machineGun)
  ,m_hpBarre(*imgManag->at(HPID),HPNBRCOLUMN,HPNBRLIGNE)
  ,m_vieBarre(*imgManag->at(VIEID),VIENBRCOLUMN,VIENBRLIGNE)
+ ,m_blueShield(*imgManag->at(SHIEID),SHIENBRCOLUMN,SHIENBRLIGNE)
  ,m_map(map){
     setDelay(0.2);
-     if(!machineGun)m_arm=new ImgAnim(*imgManag->at(ARMMID),ARMMNBRCOLUMN,ARMMNBRLIGNE);
-     else m_arm=new ImgAnim(*imgManag->at(ARMMID),ARMMNBRCOLUMN,ARMMNBRLIGNE);
+     if(!machineGun)m_arm=new ImgAnim(*imgManag->at(MARMMID),MARMMNBRCOLUMN,MARMMNBRLIGNE);
+     else m_arm=new ImgAnim(*imgManag->at(SARMMID),SARMMNBRCOLUMN,SARMMNBRLIGNE);
     m_arm->setDelay(0.2);
 }
 
@@ -64,8 +65,10 @@ void Player::Turn(bool left, bool right){
         else {
             setAnimRow(3);
         }
-        m_arm->setAnimRow(1);
-        m_arm->play();
+        if(!m_machineGun){
+            m_arm->setAnimRow(1);
+            m_arm->play();
+        }
         play();
         m_velx=-150;
     }
@@ -75,8 +78,10 @@ void Player::Turn(bool left, bool right){
         if(m_colBot)setAnimRow(0);
         else setAnimRow(2);
         play();
-        m_arm->setAnimRow(0);
-        m_arm->play();
+        if(!m_machineGun){
+            m_arm->setAnimRow(0);
+            m_arm->play();
+        }
         m_velx=150;
     }
     else{
@@ -86,7 +91,7 @@ void Player::Turn(bool left, bool right){
         else if(animRow()<2) setAnimRow(animRow()+2);
         else setAnimRow(animRow());
         stop();
-        m_arm->stop();
+        if(!m_machineGun)m_arm->stop();
         m_velx*=0.8;
     }
 }
@@ -186,9 +191,16 @@ void Player::Turn(bool left, bool right){
 void Player::SetMapObject(vector<GameObject*> *listObject){
     m_listObject=listObject;
 }
+void Player::AddLife(){
+    if(m_vie<6)m_vie++;
+}
+void Player::RaiseShield(){
+    m_shield=true;
+    m_shieldCoolDown.Reset();
+}
 void Player::Degat(int degats){
-    m_hp-=degats;
- }
+    if(!m_shield)m_hp-=degats;
+}
 int Player::GetVie(){
     return m_vie;
 }
@@ -202,9 +214,11 @@ bool Player::IsDead(){
     else return false;
 }
 void Player::SetOnFire(){
-    m_onFire=true;
-    m_burning.Reset();
-    m_hurt.Reset();
+    if(!m_shield){
+        m_onFire=true;
+        m_burning.Reset();
+        m_hurt.Reset();
+    }
  }
 float Player::GetVelx(){
     return m_velx;
@@ -259,9 +273,6 @@ void Player::Shoot(){
             if(m_direction==DROITE)velx=200;
         }
         m_arm->play();
-//        m_listObject->push_back(new GameBullet(*m_imgManag->at(FLASHID),FLASHNBRCOLUMN,FLASHNBRLIGNE,0,false,this,velx,vely));
-//        m_listObject->back()->SetPosition(GetPosition());
-//        m_listObject->back()->setDelay(0.1);
 
         m_listObject->push_back(new GameBullet(*m_imgManag->at(FIREID),FIRENBRCOLUMN,FIRENBRLIGNE,10,true,this,velx,vely));
         m_listObject->back()->SetPosition(GetPosition());
@@ -289,9 +300,10 @@ void Player::Shoot(){
             velx=-300;
             if(m_direction==DROITE)velx=300;
         }
-
+        m_arm->play();
         m_listObject->push_back(new GameBullet(*m_imgManag->at(SHOTID),SHOTNBRCOLUMN,SHOTNBRLIGNE,5,false,this,velx,vely));
         m_listObject->back()->SetPosition(GetPosition());
+        m_listObject->back()->Move(0,4);
         m_listObject->back()->setDelay(0.04);
         m_listObject->back()->loop(true);
         m_lastShot.Reset();
@@ -304,17 +316,36 @@ void Player::Shoot(){
             m_hpBarre.setAnimRow(10-floor(m_hp/10));
             app->Draw(m_hpBarre);
         }
-        m_vieBarre.SetPosition(GetPosition().x-3+(-4*(STARTVIE-3)),GetPosition().y-7);
+        if(m_vie<=STARTVIE)m_vieBarre.SetPosition(GetPosition().x-3+(-4*(STARTVIE-3)),GetPosition().y-7);
+        else m_vieBarre.SetPosition(GetPosition().x-3+(-4*(m_vie-3)),GetPosition().y-7);
         m_vieBarre.setAnimRow(6-m_vie);
         app->Draw(m_vieBarre);
-//        if(m_lastShot.GetElapsedTime()<0.2 && m_arm->animRow()<2){
-//            if(m_direction==GAUCHE)m_arm->setAnimRow(3);
-//            else m_arm->setAnimRow(2);
-//        }
+
         m_arm->SetPosition(GetPosition());
-        if(!m_machineGun)app->Draw(*m_arm);
+        if(m_machineGun){
+            if(m_lastShot.GetElapsedTime()/1000<0.2){
+                m_arm->play();
+            }
+            else{
+                m_arm->stop();
+            }
+
+            if(m_direction==GAUCHE){
+                m_arm->FlipX(true);
+                m_arm->Move(-5,0);
+            }
+            else m_arm->FlipX(false);
+        }
+        app->Draw(*m_arm);
 
         if(m_burning.GetElapsedTime()>5000)m_onFire=false;
+
+        if(m_shieldCoolDown.GetElapsedTime()/1000>15)m_shield=false;
+        if(m_shield){
+            m_blueShield.SetPosition(GetPosition());
+            m_blueShield.Move(-7,-7);
+            app->Draw(m_blueShield);
+        }
 
         if(m_onFire){
             if(m_hurt.GetElapsedTime()>1000){
