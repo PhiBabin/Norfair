@@ -65,6 +65,11 @@ Type MapTile::Tile(float x, float y){
     }
     return false;
  }
+
+ Player* MapTile::oppositePlayer(Player *player){
+        if(player==m_playerOne)return m_playerTwo;
+        else return m_playerOne;
+}
 void MapTile::draw(){
     cout<<"FPS="<</*1.f/(m_app->GetFrameTime())*1000<<*/"Joueur 1 x="<<m_playerOne->GetPosition().x<<" y="<<m_playerOne->GetPosition().y<<" vely="<<m_playerOne->GetVely()<<" velx="<<m_playerOne->GetVelx()<<endl;
     //! On affiche les tiles

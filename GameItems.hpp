@@ -16,8 +16,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.*/
 #ifndef GAMEITEMS_H
 #define GAMEITEMS_H
-
-
 class GameItems: public GameObject{
     public:
         GameItems(sf::Image &img,int nbrFrame,int nbrLigne,float height, float width,float offsetColX,float offsetColY,bool col);
@@ -25,10 +23,12 @@ class GameItems: public GameObject{
         virtual bool isDelete()const;
         virtual bool isCollision()const;
         virtual bool collisionEffect(Player &player);
+        void setGameMessage(GameMessage *gameMessage);
         virtual ~GameItems();
     private:
         PausableClock m_lastSpawn;
         bool m_draw;
+        GameMessage *m_gameMessage;
 };
 
 #endif // GAMEITEMS_H

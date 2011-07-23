@@ -49,8 +49,10 @@ class Player:public ImgAnim{
         int GetVie();
         void Degat(int degats);
         void AddLife();
-        void RaiseShield();
         bool IsDead();
+    //! Items
+        void RaiseShield();
+        void GodInvocation();
     //! I just want to kill stuff with FIRE!
         void SetOnFire();
     //! Velocité

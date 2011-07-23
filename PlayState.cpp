@@ -31,6 +31,7 @@ PlayState::PlayState(GameEngine* theGameEngine): m_playerOne(0),m_playerTwo(0),m
 	addImg(SARMMPATH,SARMMID);
 	addImg(VIEPATH,VIEID);
 	addImg(HPPATH,HPID);
+	addImg(GODPATH,GODID);
 	addImg(ITEMPATH,ITEMID);
 	addImg(FLASHPATH,FLASHID);
 	addImg(SHIEPATH,SHIEID);
@@ -113,8 +114,14 @@ void PlayState::loop(){
     moveObject();
 
  //! On vérifie si les personnages sont vivant
-    if(m_playerOne->IsDead())m_playerOne->SetPosition(m_map->m_spawnLocationOne);
-    if(m_playerTwo->IsDead())m_playerTwo->SetPosition(m_map->m_spawnLocationTwo);
+    if(m_playerOne->IsDead()){
+        m_playerOne->SetPosition(m_map->m_spawnLocationOne);
+        m_gameMessage.AddMessage("Player 1 has been kill!");
+    }
+    if(m_playerTwo->IsDead()){
+        m_playerTwo->SetPosition(m_map->m_spawnLocationTwo);
+        m_gameMessage.AddMessage("Player 2 has been kill!");
+    }
 
 //! On vérifie si ils ont encore des vies
     if(m_playerOne->GetVie()<=0){
@@ -164,6 +171,7 @@ void PlayState::GetEvents(sf::Event){
 **/
 void PlayState::draw(){
     m_map->draw();
+    m_gameMessage.drawing(&(m_gameEngine->m_app));
 }
 
 /**
@@ -179,9 +187,13 @@ void PlayState::addImg(const char* path,int id){
 **/
 void PlayState::checkItems(){
     for(int i=0;i<m_mapItems->size();i++){
+        m_mapItems->at(i)->setGameMessage(&m_gameMessage);
         if(m_mapItems->at(i)->isCollision()){
             if(m_playerOne->GetPlayerRect().Intersects(m_mapItems->at(i)->GetRect())){
                 m_mapItems->at(i)->collisionEffect(*m_playerOne);
+            }
+            if(m_playerTwo->GetPlayerRect().Intersects(m_mapItems->at(i)->GetRect())){
+                m_mapItems->at(i)->collisionEffect(*m_playerTwo);
             }
         }
     }
@@ -230,7 +242,7 @@ void PlayState::movePlayer(Player &player){
     }
 
     //! On vérifie si le mouvement envisagé cause une collision
-    if(!player.collisionGeneral(player.GetMovedPlayerRect(movHor,movVer),kill)&&movHor<TILEHEIGHT&&movVer<TILEWIDTH) player.Move(movHor,movVer);
+    if(!player.collisionGeneral(player.GetMovedPlayerRect(movHor,movVer),kill)&&movHor<TILEHEIGHT&&movVer<TILEWIDTH)player.Move(movHor,movVer);
     else player.ResetVely();
 
     //! Ouch!

@@ -168,19 +168,17 @@ void Player::Turn(bool left, bool right){
     if(maxWidth>(*m_map)->m_width)maxWidth=(*m_map)->m_width;
     for(int y=minHeight;y<=maxHeight;y++){
         for(int x=minWidth;x<=maxWidth;x++){
-            if(!(x>=(*m_map)->m_width or y>=(*m_map)->m_height)){
-                if((*m_map)->Tile(x,y).solid){
-                    sf::FloatRect  theTile(x*TILEWIDTH,y*TILEHEIGHT,TILEWIDTH,TILEHEIGHT);
-                    if(playerRect.Intersects(theTile)||theTile.Intersects(playerRect)){
-                        CollisionHorizontal= true;
-                        if(x*TILEWIDTH>=playerRect.Left&&x*TILEWIDTH<=playerRect.Left+playerRect.Width){
-                            droite=true;
-                            solidLimit=x;
-                        }
-                        if((x+1)*TILEWIDTH<=playerRect.Left+playerRect.Width&&(x+1)*TILEWIDTH>=playerRect.Left){
-                            gauche=true;
-                            solidLimit=x;
-                        }
+            if(!(x>=(*m_map)->m_width or y>=(*m_map)->m_height)&&(*m_map)->Tile(x,y).solid){
+                sf::FloatRect  theTile(x*TILEWIDTH,y*TILEHEIGHT,TILEWIDTH,TILEHEIGHT);
+                if(playerRect.Intersects(theTile)||theTile.Intersects(playerRect)){
+                    CollisionHorizontal= true;
+                    if(x*TILEWIDTH>=playerRect.Left&&x*TILEWIDTH<=playerRect.Left+playerRect.Width){
+                        droite=true;
+                        solidLimit=x;
+                    }
+                    if((x+1)*TILEWIDTH<=playerRect.Left+playerRect.Width&&(x+1)*TILEWIDTH>=playerRect.Left){
+                        gauche=true;
+                        solidLimit=x;
                     }
                 }
             }
@@ -197,6 +195,26 @@ void Player::AddLife(){
 void Player::RaiseShield(){
     m_shield=true;
     m_shieldCoolDown.Reset();
+}
+void Player::GodInvocation(){
+
+    m_listObject->push_back(new GameAnim(*m_imgManag->at(GODID),GODNBRCOLUMN,GODNBRLIGNE));
+    m_listObject->back()->setDelay(0.3);
+    m_listObject->back()->SetPosition((*m_map)->oppositePlayer(this)->GetPosition().x-7,0);
+
+    m_listObject->push_back(new GameAnim(*m_imgManag->at(EXP2ID),EXP2NBRCOLUMN,EXP2NBRLIGNE));
+    m_listObject->back()->SetPosition((*m_map)->oppositePlayer(this)->GetPosition());
+    m_listObject->back()->setDelay(0.3);
+    m_listObject->push_back(new GameAnim(*m_imgManag->at(EXP2ID),EXP2NBRCOLUMN,EXP2NBRLIGNE));
+    m_listObject->back()->SetPosition((*m_map)->oppositePlayer(this)->GetPosition());
+    m_listObject->back()->Move(-3,-5);
+    m_listObject->back()->setDelay(0.4);
+    m_listObject->push_back(new GameAnim(*m_imgManag->at(EXP2ID),EXP2NBRCOLUMN,EXP2NBRLIGNE));
+    m_listObject->back()->SetPosition((*m_map)->oppositePlayer(this)->GetPosition());
+    m_listObject->back()->Move(5,-4);
+    m_listObject->back()->setDelay(0.5);
+
+    (*m_map)->oppositePlayer(this)->Degat(200);
 }
 void Player::Degat(int degats){
     if(!m_shield)m_hp-=degats;
@@ -285,85 +303,89 @@ void Player::Shoot(){
     if(m_lastShot.GetElapsedTime()/1000.f>0.2 && m_machineGun){
         float velx=0,vely=0;
         if(m_lookUp==HAUT ){
-            if(m_moving==BOUGE){
-                velx=167;
-                vely=-167;
-                if(m_direction==GAUCHE){
-                    velx=-167;
+                if(m_moving==BOUGE){
+                    velx=167;
+                    vely=-167;
+                    if(m_direction==GAUCHE){
+                        velx=-167;
+                    }
+                }
+                else{
+                    vely=-300;
                 }
             }
             else{
-                vely=-300;
+                velx=-300;
+                if(m_direction==DROITE)velx=300;
             }
-        }
-        else{
-            velx=-300;
-            if(m_direction==DROITE)velx=300;
-        }
-        m_arm->play();
-        m_listObject->push_back(new GameBullet(*m_imgManag->at(SHOTID),SHOTNBRCOLUMN,SHOTNBRLIGNE,5,false,this,velx,vely));
-        m_listObject->back()->SetPosition(GetPosition());
-        m_listObject->back()->Move(0,4);
-        m_listObject->back()->setDelay(0.04);
-        m_listObject->back()->loop(true);
-        m_lastShot.Reset();
+            m_arm->play();
+            m_listObject->push_back(new GameBullet(*m_imgManag->at(SHOTID),SHOTNBRCOLUMN,SHOTNBRLIGNE,5,false,this,velx,vely));
+            m_listObject->back()->SetPosition(GetPosition());
+            m_listObject->back()->Move(0,4);
+            m_listObject->back()->setDelay(0.04);
+            m_listObject->back()->loop(true);
+            m_lastShot.Reset();
     }
 }
 
-    void Player::drawing(sf::RenderWindow* app){
-        if(m_hp>0){
-            m_hpBarre.SetPosition(GetPosition().x-3,GetPosition().y-13);
-            m_hpBarre.setAnimRow(10-floor(m_hp/10));
-            app->Draw(m_hpBarre);
+void Player::drawing(sf::RenderWindow* app){
+    m_arm->SetPosition(GetPosition());
+    if(m_machineGun){
+        if(m_lastShot.GetElapsedTime()/1000<0.2){
+            m_arm->play();
         }
-        if(m_vie<=STARTVIE)m_vieBarre.SetPosition(GetPosition().x-3+(-4*(STARTVIE-3)),GetPosition().y-7);
-        else m_vieBarre.SetPosition(GetPosition().x-3+(-4*(m_vie-3)),GetPosition().y-7);
-        m_vieBarre.setAnimRow(6-m_vie);
-        app->Draw(m_vieBarre);
-
-        m_arm->SetPosition(GetPosition());
-        if(m_machineGun){
-            if(m_lastShot.GetElapsedTime()/1000<0.2){
-                m_arm->play();
-            }
-            else{
-                m_arm->stop();
-            }
-
-            if(m_direction==GAUCHE){
-                m_arm->FlipX(true);
-                m_arm->Move(-5,0);
-            }
-            else m_arm->FlipX(false);
-        }
-        app->Draw(*m_arm);
-
-        if(m_burning.GetElapsedTime()>5000)m_onFire=false;
-
-        if(m_shieldCoolDown.GetElapsedTime()/1000>15)m_shield=false;
-        if(m_shield){
-            m_blueShield.SetPosition(GetPosition());
-            m_blueShield.Move(-7,-7);
-            app->Draw(m_blueShield);
+        else{
+            m_arm->stop();
         }
 
-        if(m_onFire){
-            if(m_hurt.GetElapsedTime()>1000){
-                m_hurt.Reset();
-                Degat(5);
-            }
-            m_listObject->push_back(new GameAnim(*m_imgManag->at(EXP3ID),4,1));
-            m_listObject->back()->SetPosition(GetPosition().x+1.f +rand() *-4.f /RAND_MAX + 3.f,GetPosition().y+3.f+rand() *-8.f /RAND_MAX + 8.f);
-            m_listObject->back()->setDelay(0.1);
+        if(m_direction==GAUCHE){
+            m_arm->FlipX(true);
+            m_arm->Move(-5,0);
         }
+        else m_arm->FlipX(false);
     }
-    void Player::Pause(){
-        m_lastShot.Pause();
-        m_burning.Pause();
-        m_hurt.Pause();
+    app->Draw(*m_arm);
+
+    if(m_burning.GetElapsedTime()>5000)m_onFire=false;
+
+    if(m_shieldCoolDown.GetElapsedTime()/1000>15)m_shield=false;
+    if(m_shield){
+        m_blueShield.SetPosition(GetPosition());
+        if(m_machineGun)m_blueShield.Move(-9,-7);
+        else m_blueShield.Move(-7,-7);
+        app->Draw(m_blueShield);
     }
-    void Player::Resume(){
-        m_lastShot.Play();
-        m_burning.Play();
-        m_hurt.Play();
+
+    if(m_onFire){
+        if(m_hurt.GetElapsedTime()>1000){
+            m_hurt.Reset();
+            Degat(5);
+        }
+        m_listObject->push_back(new GameAnim(*m_imgManag->at(EXP3ID),4,1));
+        m_listObject->back()->SetPosition(GetPosition().x+1.f +rand() *-4.f /RAND_MAX + 3.f,GetPosition().y+3.f+rand() *-8.f /RAND_MAX + 8.f);
+        m_listObject->back()->setDelay(0.1);
     }
+
+
+    if(m_hp>0){
+        m_hpBarre.SetPosition(GetPosition().x-3,GetPosition().y-13);
+        m_hpBarre.setAnimRow(10-floor(m_hp/10));
+        app->Draw(m_hpBarre);
+    }
+    if(m_vie<=STARTVIE)m_vieBarre.SetPosition(GetPosition().x-3+(-4*(STARTVIE-3)),GetPosition().y-7);
+    else m_vieBarre.SetPosition(GetPosition().x-3+(-4*(m_vie-3)),GetPosition().y-7);
+    m_vieBarre.setAnimRow(6-m_vie);
+    app->Draw(m_vieBarre);
+}
+void Player::Pause(){
+    m_lastShot.Pause();
+    m_shieldCoolDown.Pause();
+    m_burning.Pause();
+    m_hurt.Pause();
+}
+void Player::Resume(){
+    m_lastShot.Play();
+    m_shieldCoolDown.Play();
+    m_burning.Play();
+    m_hurt.Play();
+}

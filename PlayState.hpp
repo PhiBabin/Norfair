@@ -45,6 +45,7 @@ class PlayState: public GameState {
         vector<sf::Image*> m_imgManag;
         vector<GameObject*> *m_mapObject;
         vector<GameItems*> *m_mapItems;
+        GameMessage m_gameMessage;
         GameEngine *m_gameEngine;
 };
 

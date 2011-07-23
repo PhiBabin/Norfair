@@ -106,6 +106,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #define ITEMNBRCOLUMN 6 //Nombre de colone du coffre
 #define ITEMNBRLIGNE 1 //Nombre de ligne du coffre
 
+#define GODID 18 // ID de ce sprite
+#define GODPATH "img/god.png" //Chemin vers  le coffre
+#define GODNBRCOLUMN 2 //Nombre de colone du coffre
+#define GODNBRLIGNE 1 //Nombre de ligne du coffre
+
 //! Explosion & cie
 #define FLASHID 12 // ID de ce sprite
 #define FLASHPATH "img/flash.png" //Chemin vers  l'explosion
@@ -146,6 +151,7 @@ using namespace std;
 #include "Anim.cpp"
 #include "ImgAnim.cpp"
 
+#include "GameMessage.hpp"
 #include "GameObject.hpp"
 #include "GameAnim.hpp"
 #include "GameBullet.hpp"
@@ -154,6 +160,7 @@ using namespace std;
 #include "Player.hpp"
 #include "Map.hpp"
 
+#include "GameMessage.cpp"
 #include "GameObject.cpp"
 #include "GameAnim.cpp"
 #include "GameBullet.cpp"

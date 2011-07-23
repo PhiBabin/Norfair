@@ -42,14 +42,20 @@ bool GameItems::collisionEffect(Player &player){
     switch(rand() % 3 + 1){
         case 1:
             player.AddLife();
+            m_gameMessage->AddMessage("New Life");
         break;
         case 2:
-            player.AddLife();
+            player.GodInvocation();
+            m_gameMessage->AddMessage("God hates you!");
         break;
         default:
             player.RaiseShield();
+            m_gameMessage->AddMessage("Raise shield");
     }
     return true;
+}
+void GameItems::setGameMessage(GameMessage *gameMessage){
+    m_gameMessage=gameMessage;
 }
 GameItems::~GameItems(){
 }
