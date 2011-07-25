@@ -17,7 +17,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "Map.hpp"
 MapTile::MapTile():m_app(NULL),m_playerOne(NULL),m_playerTwo(NULL){}
-MapTile::MapTile(sf::RenderWindow *App,const char* tileset,const char* background,const char* image_schema,const char* image_corr,const char* tileprop,vector<sf::Image*> *imgManag ,Player *playerOne, Player *playerTwo):
+MapTile::MapTile(sf::RenderWindow *App,const char* tileset,const char* background,const char* image_schema,const char* image_corr,const char* tileprop, map<string,imgAnim> *imgManag ,Player *playerOne, Player *playerTwo):
 m_app(App),m_playerOne(playerOne),m_playerTwo(playerTwo) ,m_imgManag(imgManag),m_height(0){
 
 
@@ -142,7 +142,7 @@ void MapTile::loadMap(const char* tileset, const char* background,const char* im
 	for(int it=0;it<nbrItems;it++){
         fscanf(tilePropFile, "%d %d",&itemX,&itemY);
 	    m_mapItems.push_back(new GameItems
-                          (*(m_imgManag->at(ITEMID)),ITEMNBRCOLUMN,ITEMNBRLIGNE));
+                          ((*m_imgManag)["item"].img,ITEMNBRCOLUMN,ITEMNBRLIGNE));
 	    m_mapItems.back()->SetPosition(itemX*TILEHEIGHT,itemY*TILEWIDTH);
 	    m_mapItems.back()->setDelay(0.2);
 	}

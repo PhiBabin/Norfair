@@ -18,17 +18,18 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #define GAMEENGINE_HPP
 class GameEngine{
     public:
-    GameEngine(sf::RenderWindow &app);
-    void init();
-    void loop();
-    void changeState(int frontState);
-   ~GameEngine();
+        GameEngine(sf::RenderWindow &app);
+        void init();
+        void loop();
+        void changeState(int frontState);
+        void loadConfig();
+       ~GameEngine();
 
-    sf::RenderWindow &m_app;
-   vector<GameState*> m_gameState;
+        sf::RenderWindow &m_app;
+       vector<GameState*> m_gameState;
+        map<string,imgAnim> m_imgManag;
    private:
-   bool m_running;
-   float m_updateRate;
+    bool m_running;
 };
 
 #endif

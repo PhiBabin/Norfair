@@ -16,9 +16,32 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.*/
 
 #include "GameEngine.hpp"
-GameEngine::GameEngine(sf::RenderWindow &app):m_app(app),m_updateRate(FRAME),m_running(true){
+GameEngine::GameEngine(sf::RenderWindow &app):m_app(app),m_running(true){
+    loadConfig();
     init();
     loop();
+}
+/**
+    Chargement de la configuration
+**/
+void GameEngine::loadConfig(){
+    TiXmlDocument doc("config/config.xml");
+    doc.LoadFile();
+
+    TiXmlHandle hDoc(&doc);
+    TiXmlHandle hRoot(0);
+    TiXmlElement* pElem;
+
+    pElem=hDoc.FirstChild("img").FirstChild().Element();
+    for(pElem; pElem; pElem=pElem->NextSiblingElement()){
+        imgAnim newAnim;
+        sf::Image newImg;
+        newImg.LoadFromFile(pElem->Attribute("path"));
+        newAnim.img=newImg;
+        newAnim.nbrCollum=atoi(pElem->Attribute("nbrCollums"));
+        newAnim.nbrLine=atoi(pElem->Attribute("nbrLines"));
+        m_imgManag[pElem->Attribute("name")]=newAnim;
+    }
 }
 /**
     Initialisation du moteur

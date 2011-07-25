@@ -8,6 +8,7 @@ class GameMessage{
         ~GameMessage();
     private:
         bool m_empty;
+        sf::Font m_font;
         sf::Text m_principal;
         sf::Text m_transition;
         vector<sf::String> m_message;

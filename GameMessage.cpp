@@ -1,6 +1,9 @@
 #include "GameMessage.hpp"
 
 GameMessage::GameMessage():m_empty(true){
+    m_font.LoadFromFile("font/pixel.ttf");
+    m_principal.SetFont(m_font);
+    m_transition.SetFont(m_font);
     m_nextMessage.Reset();
 }
 void GameMessage::AddMessage(sf::String newMessage){

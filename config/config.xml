@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+<img>
+	<anim name="hp" path="img/barre_vie.png" nbrCollums="1" nbrLines="11" />
+	<anim name="vie" path="img/live.png" nbrCollums="1" nbrLines="7" />
+	<anim name="shield" path="img/sheild.png" nbrCollums="1" nbrLines="1" />
+	<anim name="marm" path="img/arm_mago2.png" nbrCollums="3" nbrLines="2" />
+	<anim name="sarm" path="img/arm_squel.png" nbrCollums="3" nbrLines="1" />
+	<anim name="god" path="img/god.png" nbrCollums="2" nbrLines="1" />
+	<anim name="fire" path="img/fireball2.png" nbrCollums="6" nbrLines="1" />
+	<anim name="shot" path="img/shot2.png" nbrCollums="16" nbrLines="1" />
+	<anim name="mago" path="img/sprite_mago4.png" nbrCollums="3" nbrLines="4" />
+	<anim name="squel" path="img/sprite_squel.png" nbrCollums="3" nbrLines="4" />
+	<anim name="item" path="img/chest.png" nbrCollums="6" nbrLines="1" />
+	<anim name="explosion" path="img/explosion.png" nbrCollums="6" nbrLines="3" />
+	<anim name="explosion2" path="img/explosion2.png" nbrCollums="3" nbrLines="1" />
+	<anim name="explosion3" path="img/fire2.png" nbrCollums="4" nbrLines="1" />
+</img>
+<sound>
+	<wav name="jump" path="sounds/jump.wav" />
+	<wav name="explosion2" path="sounds/jump.wav" />
+</sound>
+<config>
+	<option name="gravity" value="350" />
+	<option name="explosion2" value="" />
+</config>

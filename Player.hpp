@@ -21,7 +21,7 @@ class MapTile;
 class Player:public ImgAnim{
     public:
     //! Construteur
-        Player(sf::Image &img, vector<sf::Image*> *imgManag, MapTile **map,bool machineGun);
+        Player(sf::Image &img, map<string,imgAnim> *imgManag, vector<sf::SoundBuffer*> *soundManag, MapTile **map,bool machineGun);
     //! Affiche
         void drawing(sf::RenderWindow* app);
     //! Retourne le rectangle de Camera
@@ -71,7 +71,10 @@ class Player:public ImgAnim{
         ImgAnim m_vieBarre;
         ImgAnim m_hpBarre;
         ImgAnim m_blueShield;
-        vector<sf::Image*> *m_imgManag;
+        sf::Sound m_jumpSound;
+        sf::Sound m_hurtSound;
+        map<string,imgAnim> *m_imgManag;
+        vector<sf::SoundBuffer*> *m_soundManag;
 
         MapTile **m_map;
         vector<GameObject*> *m_listObject;

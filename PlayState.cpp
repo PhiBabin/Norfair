@@ -21,26 +21,18 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 /**
     Construction des éléments du jeu
 **/
-PlayState::PlayState(GameEngine* theGameEngine): m_playerOne(0),m_playerTwo(0),m_map(0),m_maxMove(0,0,200,200){
-    m_imgManag.resize(20);
-    addImg(MAGOPATH,MAGOID);
-    addImg(SQUELPATH,SQUELID);
-	addImg(FIREPATH,FIREID);
-	addImg(SHOTPATH,SHOTID);
-	addImg(MARMMPATH,MARMMID);
-	addImg(SARMMPATH,SARMMID);
-	addImg(VIEPATH,VIEID);
-	addImg(HPPATH,HPID);
-	addImg(GODPATH,GODID);
-	addImg(ITEMPATH,ITEMID);
-	addImg(FLASHPATH,FLASHID);
-	addImg(SHIEPATH,SHIEID);
-	addImg(EXPPATH,EXPID);
-	addImg(EXP2PATH,EXP2ID);
-	addImg(EXP3PATH,EXP3ID);
-    m_playerOne= new Player(*m_imgManag.at(MAGOID), &m_imgManag, &m_map);
-    m_playerTwo= new Player(*m_imgManag.at(SQUELID), &m_imgManag, &m_map, true);
-    m_gameEngine=theGameEngine;
+PlayState::PlayState(GameEngine* theGameEngine): m_playerOne(0),m_playerTwo(0),m_map(0),m_maxMove(0,0,200,200), m_gameEngine(theGameEngine){
+    m_imgManag=m_gameEngine->m_imgManag;
+    m_soundManag.resize(10);
+	addSound(JUMPPATH,JUMPID);
+	addSound(HURPATH,HURID);
+	addSound(ITEPATH,ITEID);
+
+    m_itemSound.SetBuffer(*m_soundManag[ITEID]);
+
+    m_playerOne= new Player((m_imgManag)["mago"].img, &m_imgManag, &m_soundManag, &m_map);
+    m_playerTwo= new Player((m_imgManag)["squel"].img, &m_imgManag, &m_soundManag, &m_map, true);
+
     m_map =new MapTile(&(*m_gameEngine).m_app,MAPPATH,BACKPATH,CORRPATH,TILEPATH,PROPPATH,&m_imgManag,m_playerOne,m_playerTwo);
 
     m_mapObject=m_map->getMapObject();
@@ -175,11 +167,11 @@ void PlayState::draw(){
 }
 
 /**
-    Ajoute un sprite
+    Ajoute un son
 **/
-void PlayState::addImg(const char* path,int id){
-	m_imgManag.at(id)=new sf::Image;
-	m_imgManag.at(id)->LoadFromFile(path);
+void PlayState::addSound(const char* path,int id){
+	m_soundManag.at(id)=new sf::SoundBuffer;
+	m_soundManag.at(id)->LoadFromFile(path);
 }
 
 /**
@@ -190,9 +182,11 @@ void PlayState::checkItems(){
         m_mapItems->at(i)->setGameMessage(&m_gameMessage);
         if(m_mapItems->at(i)->isCollision()){
             if(m_playerOne->GetPlayerRect().Intersects(m_mapItems->at(i)->GetRect())){
+                 m_itemSound.Play();
                 m_mapItems->at(i)->collisionEffect(*m_playerOne);
             }
             if(m_playerTwo->GetPlayerRect().Intersects(m_mapItems->at(i)->GetRect())){
+                 m_itemSound.Play();
                 m_mapItems->at(i)->collisionEffect(*m_playerTwo);
             }
         }
@@ -261,7 +255,7 @@ void PlayState::moveObject(){
             if((m_playerOne->GetPlayerRect().Intersects(Rect) && m_mapObject->at(i)->collisionEffect(*m_playerOne))     //! Joueur1
                ||(m_playerTwo->GetPlayerRect().Intersects(Rect) && m_mapObject->at(i)->collisionEffect(*m_playerTwo))){   //! Joueur 2
                 //! On crée l'animation
-                m_map->getMapObject()->push_back(new GameAnim(*m_imgManag[EXPID],EXPNBRCOLUMN,EXPNBRLIGNE));
+                m_map->getMapObject()->push_back(new GameAnim(m_imgManag["explosion"].img,EXPNBRCOLUMN,EXPNBRLIGNE));
                 m_mapObject->back()->SetPosition((m_playerTwo->GetPosition()));
                 if(m_playerOne->GetPlayerRect().Intersects(Rect) && m_mapObject->at(i)->collisionEffect(*m_playerOne))
                 m_mapObject->back()->SetPosition(m_playerOne->GetPosition().x+rand() *-3.f /RAND_MAX + 3.f,m_playerOne->GetPosition().y+rand() *-5.f /RAND_MAX + 2.f);
@@ -277,7 +271,7 @@ void PlayState::moveObject(){
                 m_mapObject->at(i)->Move(Rect.Left-m_mapObject->at(i)->GetPosition().x,Rect.Top-m_mapObject->at(i)->GetPosition().y);
             else {
                 //! On crée une explosion
-                m_map->getMapObject()->push_back(new GameAnim(*m_imgManag[EXP2ID],EXP2NBRCOLUMN,EXP2NBRLIGNE));
+                m_map->getMapObject()->push_back(new GameAnim(m_imgManag["explosion2"].img,EXP2NBRCOLUMN,EXP2NBRLIGNE));
                 m_mapObject->back()->SetPosition(m_mapObject->at(i)->GetPosition().x,m_mapObject->at(i)->GetPosition().y);
                 m_mapObject->back()->setDelay(0.1);
                 delete m_mapObject->at(i);

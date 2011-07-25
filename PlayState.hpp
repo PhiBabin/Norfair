@@ -27,7 +27,7 @@ class PlayState: public GameState {
         virtual void resume();
         virtual void GetEvents(sf::Event eventNew);
         virtual void draw();
-        void addImg(const char* path,int id);
+        void addSound(const char* path,int id);
         void checkItems();
         void moveObject();
         void movePlayer(Player &player);
@@ -36,13 +36,16 @@ class PlayState: public GameState {
         Player *m_playerOne;
         Player *m_playerTwo;
         MapTile *m_map;
+        sf::Sound m_itemSound;
         sf::Image *m_imgPlayer;
         sf::View m_camera;
         sf::FloatRect m_maxMove;
         sf::Shape m_vecPlayerOne;
         sf::Shape m_vecPlayerTwo;
         sf::IntRect m_minMove;
-        vector<sf::Image*> m_imgManag;
+        //vector<sf::Image*> m_imgManag;
+        map<string,imgAnim> m_imgManag;
+        vector<sf::SoundBuffer*> m_soundManag;
         vector<GameObject*> *m_mapObject;
         vector<GameItems*> *m_mapItems;
         GameMessage m_gameMessage;

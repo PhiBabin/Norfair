@@ -16,17 +16,20 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.*/
 
 #include "Player.hpp"
-Player::Player(sf::Image &img, vector<sf::Image*> *imgManag,MapTile **map,bool machineGun=false):
+Player::Player(sf::Image &img, map<string,imgAnim> *imgManag, vector<sf::SoundBuffer*> *soundManag, MapTile **map,bool machineGun=false):
  ImgAnim::ImgAnim(img,3,4),m_colBot(false),m_velx(0),m_vely(0),m_hp(100),m_vie(3),m_shield(false),m_onFire(false)
- ,m_imgManag(imgManag),m_machineGun(machineGun)
- ,m_hpBarre(*imgManag->at(HPID),HPNBRCOLUMN,HPNBRLIGNE)
- ,m_vieBarre(*imgManag->at(VIEID),VIENBRCOLUMN,VIENBRLIGNE)
- ,m_blueShield(*imgManag->at(SHIEID),SHIENBRCOLUMN,SHIENBRLIGNE)
- ,m_map(map){
+ ,m_imgManag(imgManag) ,m_soundManag(soundManag),m_machineGun(machineGun)
+ ,m_hpBarre((*imgManag)["hp"].img,HPNBRCOLUMN,HPNBRLIGNE)
+ ,m_vieBarre((*imgManag)["vie"].img,VIENBRCOLUMN,VIENBRLIGNE)
+ ,m_blueShield((*imgManag)["shield"].img,SHIENBRCOLUMN,SHIENBRLIGNE)
+,m_map(map){
     setDelay(0.2);
-     if(!machineGun)m_arm=new ImgAnim(*imgManag->at(MARMMID),MARMMNBRCOLUMN,MARMMNBRLIGNE);
-     else m_arm=new ImgAnim(*imgManag->at(SARMMID),SARMMNBRCOLUMN,SARMMNBRLIGNE);
+     if(!machineGun)m_arm=new ImgAnim((*m_imgManag)["marm"].img,MARMMNBRCOLUMN,MARMMNBRLIGNE);
+     else m_arm=new ImgAnim((*m_imgManag)["sarm"].img,SARMMNBRCOLUMN,SARMMNBRLIGNE);
     m_arm->setDelay(0.2);
+
+    m_jumpSound.SetBuffer(*m_soundManag->at(JUMPID));
+    m_hurtSound.SetBuffer(*m_soundManag->at(HURID));
 }
 
 sf::FloatRect Player::GetPlayerRect(){
@@ -44,6 +47,7 @@ void Player::Gravity(sf::RenderWindow &app){
 }
 void Player::Jump(){
     if(!m_jumpLock){
+        m_jumpSound.Play();
         m_jumpLock=true;
         m_vely+=-300;
         BottomCollision(false);
@@ -198,18 +202,18 @@ void Player::RaiseShield(){
 }
 void Player::GodInvocation(){
 
-    m_listObject->push_back(new GameAnim(*m_imgManag->at(GODID),GODNBRCOLUMN,GODNBRLIGNE));
+    m_listObject->push_back(new GameAnim((*m_imgManag)["god"].img,GODNBRCOLUMN,GODNBRLIGNE));
     m_listObject->back()->setDelay(0.3);
     m_listObject->back()->SetPosition((*m_map)->oppositePlayer(this)->GetPosition().x-7,0);
 
-    m_listObject->push_back(new GameAnim(*m_imgManag->at(EXP2ID),EXP2NBRCOLUMN,EXP2NBRLIGNE));
+    m_listObject->push_back(new GameAnim((*m_imgManag)["explosion2"].img,EXP2NBRCOLUMN,EXP2NBRLIGNE));
     m_listObject->back()->SetPosition((*m_map)->oppositePlayer(this)->GetPosition());
     m_listObject->back()->setDelay(0.3);
-    m_listObject->push_back(new GameAnim(*m_imgManag->at(EXP2ID),EXP2NBRCOLUMN,EXP2NBRLIGNE));
+    m_listObject->push_back(new GameAnim((*m_imgManag)["explosion2"].img,EXP2NBRCOLUMN,EXP2NBRLIGNE));
     m_listObject->back()->SetPosition((*m_map)->oppositePlayer(this)->GetPosition());
     m_listObject->back()->Move(-3,-5);
     m_listObject->back()->setDelay(0.4);
-    m_listObject->push_back(new GameAnim(*m_imgManag->at(EXP2ID),EXP2NBRCOLUMN,EXP2NBRLIGNE));
+    m_listObject->push_back(new GameAnim((*m_imgManag)["explosion2"].img,EXP2NBRCOLUMN,EXP2NBRLIGNE));
     m_listObject->back()->SetPosition((*m_map)->oppositePlayer(this)->GetPosition());
     m_listObject->back()->Move(5,-4);
     m_listObject->back()->setDelay(0.5);
@@ -217,7 +221,10 @@ void Player::GodInvocation(){
     (*m_map)->oppositePlayer(this)->Degat(200);
 }
 void Player::Degat(int degats){
-    if(!m_shield)m_hp-=degats;
+    if(!m_shield){
+        m_hp-=degats;
+        m_hurtSound.Play();
+    }
 }
 int Player::GetVie(){
     return m_vie;
@@ -292,7 +299,7 @@ void Player::Shoot(){
         }
         m_arm->play();
 
-        m_listObject->push_back(new GameBullet(*m_imgManag->at(FIREID),FIRENBRCOLUMN,FIRENBRLIGNE,10,true,this,velx,vely));
+        m_listObject->push_back(new GameBullet((*m_imgManag)["fire"].img,FIRENBRCOLUMN,FIRENBRLIGNE,10,true,this,velx,vely));
         m_listObject->back()->SetPosition(GetPosition());
         m_listObject->back()->setDelay(0.1);
         if(!(m_lookUp==HAUT && m_moving==IMMOBILE))m_listObject->back()->FlipX(m_direction);
@@ -319,7 +326,7 @@ void Player::Shoot(){
                 if(m_direction==DROITE)velx=300;
             }
             m_arm->play();
-            m_listObject->push_back(new GameBullet(*m_imgManag->at(SHOTID),SHOTNBRCOLUMN,SHOTNBRLIGNE,5,false,this,velx,vely));
+            m_listObject->push_back(new GameBullet((*m_imgManag)["shot"].img,SHOTNBRCOLUMN,SHOTNBRLIGNE,5,false,this,velx,vely));
             m_listObject->back()->SetPosition(GetPosition());
             m_listObject->back()->Move(0,4);
             m_listObject->back()->setDelay(0.04);
@@ -361,7 +368,7 @@ void Player::drawing(sf::RenderWindow* app){
             m_hurt.Reset();
             Degat(5);
         }
-        m_listObject->push_back(new GameAnim(*m_imgManag->at(EXP3ID),4,1));
+        m_listObject->push_back(new GameAnim((*m_imgManag)["explosion3"].img,4,1));
         m_listObject->back()->SetPosition(GetPosition().x+1.f +rand() *-4.f /RAND_MAX + 3.f,GetPosition().y+3.f+rand() *-8.f /RAND_MAX + 8.f);
         m_listObject->back()->setDelay(0.1);
     }

@@ -31,7 +31,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #define TILEHEIGHT 15  //Px height a tile
 #define TILESETWIDTH 10 //Number of tile in a tile set image
 #define TILESETHEIGHT 9 //Number of tile in a tile set image
-#define FRAME 0.1 //Frame time
 
 //! Constantes
 #define GRAVITY 350 //Gravity force
@@ -130,6 +129,16 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #define EXP3NBRCOLUMN  //Nombre de colone de l'explosion
 #define EXP3NBRLIGNE  //Nombre de ligne de l'explosion
 
+//! Sons
+#define JUMPID 1 // ID du son
+#define JUMPPATH "sounds/jump.wav" //Chemin vers le son
+
+#define HURID 2 // ID du son
+#define HURPATH "sounds/hurt.wav" //Chemin vers le son
+
+#define ITEID 3 // ID du son
+#define ITEPATH "sounds/item.wav" //Chemin vers le son
+
 //! Pause
 #define PAUSEPATH "img/pause.png" //Chemin vers le sprite du image du menu
 
@@ -143,11 +152,23 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
+#include "tinyxml/tinyxmlerror.cpp"
+#include "tinyxml/tinystr.cpp"
+#include "tinyxml/tinyxmlparser.cpp"
+#include "tinyxml/tinyxml.cpp"
 
 
 
 sf::Clock Clock;
 using namespace std;
+
+struct imgAnim{
+    sf::Image img;
+    int nbrCollum;
+    int nbrLine;
+};
+
 #include "Anim.cpp"
 #include "ImgAnim.cpp"
 
