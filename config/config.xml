@@ -14,12 +14,28 @@
 	<anim name="explosion" path="img/explosion.png" nbrCollums="6" nbrLines="3" />
 	<anim name="explosion2" path="img/explosion2.png" nbrCollums="3" nbrLines="1" />
 	<anim name="explosion3" path="img/fire2.png" nbrCollums="4" nbrLines="1" />
+	<anim name="pause" path="img/pause.png" nbrCollums="0" nbrLines="0" />
 </img>
 <sound>
 	<wav name="jump" path="sounds/jump.wav" />
-	<wav name="explosion2" path="sounds/jump.wav" />
+	<wav name="hurt" path="sounds/hurt.wav" />
+	<wav name="item" path="sounds/item.wav" />
 </sound>
 <config>
+	<option name="tilewidth" value="16" />
+	<option name="tileheight" value="15" />
+	<option name="tilesetwidth" value="10" />
+	<option name="tilesetheight" value="9" />
+	<option name="playercollwidth" value="16" />
+	<option name="playercollheight" value="18" />
 	<option name="gravity" value="350" />
-	<option name="explosion2" value="" />
+	<option name="startvie" value="3" />
+	<option name="starthp" value="100" />
 </config>
+<map>
+	<option name="mappath" value="img/levelDonjon.png" />
+	<option name="backpath" value="img/levelDonjonb.png" />
+	<option name="tilepath" value="img/tilesimage.png" />
+	<option name="proppath" value="tilesprop.txt" />
+	<option name="corrpath" value="img/tile.png" />
+</map>

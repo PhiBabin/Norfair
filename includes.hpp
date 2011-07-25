@@ -26,14 +26,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #define SCREENWIDTH 800.f //Px width of the screen
 #define SCREENHEIGHT 600.f //Px height of the screen
 
-//! Configuration d'une map
-#define TILEWIDTH 16 //Px width a tile
-#define TILEHEIGHT 15  //Px height a tile
-#define TILESETWIDTH 10 //Number of tile in a tile set image
-#define TILESETHEIGHT 9 //Number of tile in a tile set image
-
 //! Constantes
-#define GRAVITY 350 //Gravity force
 #define GAUCHE true
 #define DROITE false
 #define HAUT true
@@ -41,106 +34,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #define BOUGE true
 #define IMMOBILE false
 
-//! Collision d'un personnage
-#define PLAYERCOLLISIONWIDTH 16 //16
-#define PLAYERCOLLISIONHEIGHT 18 //18
-
 //! Carte
 #define MAPPATH "img/levelDonjon.png" //Chemin vers la carte
 #define BACKPATH "img/levelDonjonb.png" //Chemin vers le background
 #define TILEPATH "img/tilesimage.png" //Chemin vers les tiles
 #define PROPPATH "tilesprop.txt" //Chemin vers les propriétés des tiles
 #define CORRPATH "img/tile.png" //Chemin vers les correspondances
-//! Personnage
-#define MAGOID 1 // ID de ce sprite
-#define MAGOPATH "img/sprite_mago4.png" //Chemin vers le sprite du personnage
-#define MAGONBRCOLUMN 3 //Nombre de collone du sprite du personnage
-#define MAGONBRLIGNE 4 //Nombre de ligne du sprite du personnage
 
-#define SQUELID 2 // ID de ce sprite
-#define SQUELPATH "img/sprite_squel.png" //Chemin vers le sprite du personnage
-#define SQUELNBRCOLUMN 3 //Nombre de collone du sprite du personnage
-#define SQUELNBRLIGNE 4 //Nombre de ligne du sprite du personnage
-//! Bras
-#define MARMMID 6 // ID de ce sprite
-#define MARMMPATH "img/arm_mago2.png" //Chemin vers  le sprite
-#define MARMMNBRCOLUMN  3 //Nombre de colone du sprite
-#define MARMMNBRLIGNE  2 //Nombre de ligne du sprite
-
-#define SARMMID 16 // ID de ce sprite
-#define SARMMPATH "img/arm_squel.png" //Chemin vers  le sprite
-#define SARMMNBRCOLUMN  3 //Nombre de colone du sprite
-#define SARMMNBRLIGNE  1 //Nombre de ligne du sprite
-//! Barre de vie
-#define HPID 3 // ID de ce sprite
-#define HPPATH "img/barre_vie.png" //Chemin vers  le sprite
-#define HPNBRCOLUMN  1 //Nombre de colone du sprite
-#define HPNBRLIGNE  11 //Nombre de ligne du sprite
-#define VIEID 4 // ID de ce sprite
-#define VIEPATH "img/live.png" //Chemin vers  le sprite
-#define VIENBRCOLUMN  1 //Nombre de colone du sprite
-#define VIENBRLIGNE  7 //Nombre de ligne du sprite
-
-#define STARTVIE  3 //Nombre de vie qu'a le joueur au début
-//! Arme
-#define FIREID 5 // ID de ce sprite
-#define FIREPATH "img/fireball2.png" //Chemin vers  le sprite
-#define FIRENBRCOLUMN 6 //Nombre de colone du sprite
-#define FIRENBRLIGNE 1 //Nombre de ligne du sprite
-
-#define SHOTID 10 // ID de ce sprite
-#define SHOTPATH "img/shot2.png" //Chemin vers  le sprite
-#define SHOTNBRCOLUMN 16 //Nombre de colone du sprite
-#define SHOTNBRLIGNE 1 //Nombre de ligne du sprite
-
-//! Sheild
-#define SHIEID 19 // ID de ce sprite
-#define SHIEPATH "img/sheild.png" //Chemin vers le sheild
-#define SHIENBRCOLUMN 1 //Nombre de colone du sheild
-#define SHIENBRLIGNE 1 //Nombre de ligne du sheild
-
-//! Items
-#define ITEMID 17 // ID de ce sprite
-#define ITEMPATH "img/chest.png" //Chemin vers  le coffre
-#define ITEMNBRCOLUMN 6 //Nombre de colone du coffre
-#define ITEMNBRLIGNE 1 //Nombre de ligne du coffre
-
-#define GODID 18 // ID de ce sprite
-#define GODPATH "img/god.png" //Chemin vers  le coffre
-#define GODNBRCOLUMN 2 //Nombre de colone du coffre
-#define GODNBRLIGNE 1 //Nombre de ligne du coffre
-
-//! Explosion & cie
-#define FLASHID 12 // ID de ce sprite
-#define FLASHPATH "img/flash.png" //Chemin vers  l'explosion
-#define FLASHNBRCOLUMN 5 //Nombre de colone de l'explosion
-#define FLASHNBRLIGNE 1 //Nombre de ligne de l'explosion
-
-#define EXPID 7 // ID de ce sprite
-#define EXPPATH "img/explosion.png" //Chemin vers  l'explosion
-#define EXPNBRCOLUMN 6 //Nombre de colone de l'explosion
-#define EXPNBRLIGNE 3 //Nombre de ligne de l'explosion
-#define EXP2ID 8 // ID de ce sprite
-#define EXP2PATH "img/explosion2.png" //Chemin vers l'explosion
-#define EXP2NBRCOLUMN 3 //Nombre de colone de l'explosion
-#define EXP2NBRLIGNE 1 //Nombre de ligne de l'explosion
-#define EXP3ID 9 // ID de ce sprite
-#define EXP3PATH "img/fire2.png" //Chemin vers l'explosion
-#define EXP3NBRCOLUMN  //Nombre de colone de l'explosion
-#define EXP3NBRLIGNE  //Nombre de ligne de l'explosion
-
-//! Sons
-#define JUMPID 1 // ID du son
-#define JUMPPATH "sounds/jump.wav" //Chemin vers le son
-
-#define HURID 2 // ID du son
-#define HURPATH "sounds/hurt.wav" //Chemin vers le son
-
-#define ITEID 3 // ID du son
-#define ITEPATH "sounds/item.wav" //Chemin vers le son
-
-//! Pause
-#define PAUSEPATH "img/pause.png" //Chemin vers le sprite du image du menu
 
 #include <iostream>
 #include <sstream>
@@ -168,6 +68,9 @@ struct imgAnim{
     int nbrCollum;
     int nbrLine;
 };
+map<string,int> g_config;
+map<string,imgAnim> g_imgManag;
+map<string,sf::SoundBuffer> g_soundManag;
 
 #include "Anim.cpp"
 #include "ImgAnim.cpp"

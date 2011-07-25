@@ -22,18 +22,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
     Construction des éléments du jeu
 **/
 PlayState::PlayState(GameEngine* theGameEngine): m_playerOne(0),m_playerTwo(0),m_map(0),m_maxMove(0,0,200,200), m_gameEngine(theGameEngine){
-    m_imgManag=m_gameEngine->m_imgManag;
-    m_soundManag.resize(10);
-	addSound(JUMPPATH,JUMPID);
-	addSound(HURPATH,HURID);
-	addSound(ITEPATH,ITEID);
 
-    m_itemSound.SetBuffer(*m_soundManag[ITEID]);
+    m_itemSound.SetBuffer(g_soundManag["item"]);
 
-    m_playerOne= new Player((m_imgManag)["mago"].img, &m_imgManag, &m_soundManag, &m_map);
-    m_playerTwo= new Player((m_imgManag)["squel"].img, &m_imgManag, &m_soundManag, &m_map, true);
+    m_playerOne= new Player((g_imgManag)["mago"].img, &m_map);
+    m_playerTwo= new Player((g_imgManag)["squel"].img, &m_map, true);
 
-    m_map =new MapTile(&(*m_gameEngine).m_app,MAPPATH,BACKPATH,CORRPATH,TILEPATH,PROPPATH,&m_imgManag,m_playerOne,m_playerTwo);
+    m_map =new MapTile(&(*m_gameEngine).m_app,MAPPATH,BACKPATH,CORRPATH,TILEPATH,PROPPATH,m_playerOne,m_playerTwo);
 
     m_mapObject=m_map->getMapObject();
     m_mapItems=m_map->getMapItem();
@@ -166,13 +161,6 @@ void PlayState::draw(){
     m_gameMessage.drawing(&(m_gameEngine->m_app));
 }
 
-/**
-    Ajoute un son
-**/
-void PlayState::addSound(const char* path,int id){
-	m_soundManag.at(id)=new sf::SoundBuffer;
-	m_soundManag.at(id)->LoadFromFile(path);
-}
 
 /**
     On vérifie les items
@@ -215,8 +203,8 @@ void PlayState::movePlayer(Player &player){
     }
     else{//! Sinon on reposition le joueur
         player.ResetVelx();
-        if(gauche)movHor=((((limitHor+1)*TILEWIDTH))-player.GetPosition().x)/1000.f;
-        if(droite)movHor=((((limitHor)*TILEWIDTH))-PLAYERCOLLISIONWIDTH-player.GetPosition().x)/1000.f;
+        if(gauche)movHor=((((limitHor+1)*g_config["tilewidth"]))-player.GetPosition().x)/1000.f;
+        if(droite)movHor=((((limitHor)*g_config["tilewidth"]))-g_config["playercollwidth"]-player.GetPosition().x)/1000.f;
     }
 
     //! On vérifie les collisions vertical
@@ -229,14 +217,14 @@ void PlayState::movePlayer(Player &player){
             player.ResetVely();
         }
         if(bas){//! Si l'on touche le sol
-            if(!player.GetBottomCollision())movVer=(player.GetPosition().y-(limitVer*TILEHEIGHT)+PLAYERCOLLISIONHEIGHT)/1000.f;
+            if(!player.GetBottomCollision())movVer=(player.GetPosition().y-(limitVer*g_config["tileheight"])+g_config["playercollheight"])/1000.f;
             player.UnlockJump();
             player.BottomCollision(true);
         }
     }
 
     //! On vérifie si le mouvement envisagé cause une collision
-    if(!player.collisionGeneral(player.GetMovedPlayerRect(movHor,movVer),kill)&&movHor<TILEHEIGHT&&movVer<TILEWIDTH)player.Move(movHor,movVer);
+    if(!player.collisionGeneral(player.GetMovedPlayerRect(movHor,movVer),kill)&&movHor<g_config["tileheight"]&&movVer<g_config["tilewidth"])player.Move(movHor,movVer);
     else player.ResetVely();
 
     //! Ouch!
@@ -255,7 +243,7 @@ void PlayState::moveObject(){
             if((m_playerOne->GetPlayerRect().Intersects(Rect) && m_mapObject->at(i)->collisionEffect(*m_playerOne))     //! Joueur1
                ||(m_playerTwo->GetPlayerRect().Intersects(Rect) && m_mapObject->at(i)->collisionEffect(*m_playerTwo))){   //! Joueur 2
                 //! On crée l'animation
-                m_map->getMapObject()->push_back(new GameAnim(m_imgManag["explosion"].img,EXPNBRCOLUMN,EXPNBRLIGNE));
+                m_map->getMapObject()->push_back(new GameAnim(g_imgManag["explosion"].img,(g_imgManag)["explosion"].nbrCollum,(g_imgManag)["explosion"].nbrLine));
                 m_mapObject->back()->SetPosition((m_playerTwo->GetPosition()));
                 if(m_playerOne->GetPlayerRect().Intersects(Rect) && m_mapObject->at(i)->collisionEffect(*m_playerOne))
                 m_mapObject->back()->SetPosition(m_playerOne->GetPosition().x+rand() *-3.f /RAND_MAX + 3.f,m_playerOne->GetPosition().y+rand() *-5.f /RAND_MAX + 2.f);
@@ -271,7 +259,7 @@ void PlayState::moveObject(){
                 m_mapObject->at(i)->Move(Rect.Left-m_mapObject->at(i)->GetPosition().x,Rect.Top-m_mapObject->at(i)->GetPosition().y);
             else {
                 //! On crée une explosion
-                m_map->getMapObject()->push_back(new GameAnim(m_imgManag["explosion2"].img,EXP2NBRCOLUMN,EXP2NBRLIGNE));
+                m_map->getMapObject()->push_back(new GameAnim(g_imgManag["explosion2"].img,(g_imgManag)["explosion2"].nbrCollum,(g_imgManag)["explosion2"].nbrLine));
                 m_mapObject->back()->SetPosition(m_mapObject->at(i)->GetPosition().x,m_mapObject->at(i)->GetPosition().y);
                 m_mapObject->back()->setDelay(0.1);
                 delete m_mapObject->at(i);

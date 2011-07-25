@@ -17,8 +17,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "Map.hpp"
 MapTile::MapTile():m_app(NULL),m_playerOne(NULL),m_playerTwo(NULL){}
-MapTile::MapTile(sf::RenderWindow *App,const char* tileset,const char* background,const char* image_schema,const char* image_corr,const char* tileprop, map<string,imgAnim> *imgManag ,Player *playerOne, Player *playerTwo):
-m_app(App),m_playerOne(playerOne),m_playerTwo(playerTwo) ,m_imgManag(imgManag),m_height(0){
+MapTile::MapTile(sf::RenderWindow *App,const char* tileset,const char* background,const char* image_schema,const char* image_corr,const char* tileprop,Player *playerOne, Player *playerTwo):
+m_app(App),m_playerOne(playerOne),m_playerTwo(playerTwo) /*,m_imgManag(imgManag)*/,m_height(0){
 
 
     loadMap(tileset,background,image_schema,image_corr,tileprop);
@@ -43,11 +43,10 @@ Type MapTile::Tile(float x, float y){
  bool MapTile::collisionGeneral(const sf::FloatRect playerRect){
     int maxHeight, minHeight, maxWidth, minWidth;
     bool Collision=false;
-   // cout<<"col gen="<<playerRect.Bottom-playerRect.Top<<endl;
-    minHeight=playerRect.Top/TILEHEIGHT;
-    minWidth=playerRect.Left/TILEWIDTH;
-    maxHeight=(playerRect.Top+playerRect.Height-1)/TILEHEIGHT;
-    maxWidth=(playerRect.Left+playerRect.Width-1)/TILEWIDTH;
+    minHeight=playerRect.Top/g_config["tileheight"];
+    minWidth=playerRect.Left/g_config["tilewidth"];
+    maxHeight=(playerRect.Top+playerRect.Height-1)/g_config["tileheight"];
+    maxWidth=(playerRect.Left+playerRect.Width-1)/g_config["tilewidth"];
 
     if(minHeight<0)minHeight=0;
     if(maxHeight>m_height)maxHeight=m_height;
@@ -57,7 +56,7 @@ Type MapTile::Tile(float x, float y){
         for(int x=minWidth;x<=maxWidth;x++){
             if(!(x>=m_width or y>=m_height)){
                 if(m_tileSet[x][y].solid){
-                    sf::FloatRect  theTile(x*TILEWIDTH,y*TILEHEIGHT,TILEWIDTH,TILEHEIGHT);
+                    sf::FloatRect  theTile(x*g_config["tilewidth"],y*g_config["tileheight"],g_config["tilewidth"],g_config["tileheight"]);
                     if(playerRect.Intersects(theTile)||theTile.Intersects(playerRect)) return true;
                 }
             }
@@ -126,7 +125,7 @@ void MapTile::loadMap(const char* tileset, const char* background,const char* im
         for(unsigned int it=0;it<image_schemaImg.GetWidth();it++){
             Type newTile;
             newTile.colorPix = image_schemaImg.GetPixel(it, it2);
-            newTile.zoneRect=sf::IntRect(it*TILEWIDTH, it2*TILEHEIGHT, TILEWIDTH, TILEHEIGHT);
+            newTile.zoneRect=sf::IntRect(it*g_config["tilewidth"], it2*g_config["tileheight"], g_config["tilewidth"], g_config["tileheight"]);
             if(image_schemaImg.GetPixel(it, it2)!=sf::Color(42,42,42))m_typeList.insert(m_typeList.end(),newTile);
         }
     }
@@ -141,9 +140,8 @@ void MapTile::loadMap(const char* tileset, const char* background,const char* im
 	fscanf(tilePropFile, "%d",&nbrItems);
 	for(int it=0;it<nbrItems;it++){
         fscanf(tilePropFile, "%d %d",&itemX,&itemY);
-	    m_mapItems.push_back(new GameItems
-                          ((*m_imgManag)["item"].img,ITEMNBRCOLUMN,ITEMNBRLIGNE));
-	    m_mapItems.back()->SetPosition(itemX*TILEHEIGHT,itemY*TILEWIDTH);
+	    m_mapItems.push_back(new GameItems((g_imgManag)["item"].img,(g_imgManag)["item"].nbrCollum,(g_imgManag)["item"].nbrLine));
+	    m_mapItems.back()->SetPosition(itemX*g_config["tileheight"],itemY*g_config["tilewidth"]);
 	    m_mapItems.back()->setDelay(0.2);
 	}
 	    //! On charge les propriétés
@@ -162,7 +160,7 @@ void MapTile::loadMap(const char* tileset, const char* background,const char* im
         else m_typeList[it].solid=false;
 	}
 	//! Charge le niveau
-    m_map.Create(m_width*TILEWIDTH,m_height*TILEHEIGHT);
+    m_map.Create(m_width*g_config["tilewidth"],m_height*g_config["tileheight"]);
 	int theTile;
     for(int it=0;it<m_width;it++){
         vector<Type> tileList2;
@@ -170,17 +168,17 @@ void MapTile::loadMap(const char* tileset, const char* background,const char* im
         for(int it2=0;it2< m_height;it2++){
             theTile=findType(tilesetImg.GetPixel(it, it2));
             if(theTile==typeSpawn1){
-                sf::Vector2f spawnLocationOne(it*TILEWIDTH ,(it2+1)*TILEHEIGHT-PLAYERCOLLISIONHEIGHT);
+                sf::Vector2f spawnLocationOne(it*g_config["tilewidth"] ,(it2+1)*g_config["tileheight"]-g_config["playercollheight"]);
                 m_spawnLocationOne=spawnLocationOne;
                 m_playerOne->SetPosition(m_spawnLocationOne);
             }
             else if(theTile==typeSpawn2){
-                sf::Vector2f spawnLocationTwo(it*TILEWIDTH,(it2+1)*TILEHEIGHT-PLAYERCOLLISIONHEIGHT);
+                sf::Vector2f spawnLocationTwo(it*g_config["tilewidth"] ,(it2+1)*g_config["tileheight"]-g_config["playercollheight"]);
                 m_spawnLocationTwo=spawnLocationTwo;
                 m_playerTwo->SetPosition(m_spawnLocationTwo);
             }
             Type theNewTile= m_typeList[theTile];
-            theNewTile.tile.SetPosition(it*TILEWIDTH,it2*TILEHEIGHT);
+            theNewTile.tile.SetPosition(it*g_config["tilewidth"],it2*g_config["tileheight"]);
             theNewTile.tile.SetImage(m_ImgTypeTile);
             theNewTile.tile.SetSubRect(m_typeList[theTile].zoneRect);
             m_tileSet[it].insert( m_tileSet[it].end(),theNewTile);
@@ -190,12 +188,12 @@ void MapTile::loadMap(const char* tileset, const char* background,const char* im
     }
     m_map.Display();
     //! Chargement du background
-    m_background.Create(m_width*TILEWIDTH,m_height*TILEHEIGHT);
+    m_background.Create(m_width*g_config["tilewidth"],m_height*g_config["tileheight"]);
     for(int it=0;it<m_width;it++){
         for(int it2=0;it2< m_height;it2++){
             theTile=findType(backImg.GetPixel(it, it2));
             Type theNewTile= m_typeList[theTile];
-            theNewTile.tile.SetPosition(it*TILEWIDTH,it2*TILEHEIGHT);
+            theNewTile.tile.SetPosition(it*g_config["tilewidth"],it2*g_config["tileheight"]);
             theNewTile.tile.SetImage(m_ImgTypeTile);
             theNewTile.tile.SetSubRect(m_typeList[theTile].zoneRect);
             if(theNewTile.visible)m_background.Draw(theNewTile.tile);

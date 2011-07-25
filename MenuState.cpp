@@ -23,11 +23,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 **/
 MenuState::MenuState(GameEngine* theGameEngine):m_scaleUp(true){
     m_gameEngine=theGameEngine;
-    m_imgPause.LoadFromFile(PAUSEPATH);
-    m_pause.SetImage(m_imgPause);
+    m_pause.SetImage(g_imgManag["pause"].img);
     m_pause.SetScale(3,3);
     m_pause.SetPosition(SCREENWIDTH/2,SCREENHEIGHT/2);
-    m_pause.SetOrigin(m_imgPause.GetWidth()/2,m_imgPause.GetHeight()/2);
+    m_pause.SetOrigin(g_imgManag["pause"].img.GetWidth()/2,g_imgManag["pause"].img.GetHeight()/2);
 }
 /**
     Initialisation des éléments du menu

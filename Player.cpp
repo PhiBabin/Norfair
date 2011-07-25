@@ -16,34 +16,34 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.*/
 
 #include "Player.hpp"
-Player::Player(sf::Image &img, map<string,imgAnim> *imgManag, vector<sf::SoundBuffer*> *soundManag, MapTile **map,bool machineGun=false):
- ImgAnim::ImgAnim(img,3,4),m_colBot(false),m_velx(0),m_vely(0),m_hp(100),m_vie(3),m_shield(false),m_onFire(false)
- ,m_imgManag(imgManag) ,m_soundManag(soundManag),m_machineGun(machineGun)
- ,m_hpBarre((*imgManag)["hp"].img,HPNBRCOLUMN,HPNBRLIGNE)
- ,m_vieBarre((*imgManag)["vie"].img,VIENBRCOLUMN,VIENBRLIGNE)
- ,m_blueShield((*imgManag)["shield"].img,SHIENBRCOLUMN,SHIENBRLIGNE)
+Player::Player(sf::Image &img, MapTile **map,bool machineGun=false):
+ ImgAnim::ImgAnim(img,3,4),m_colBot(false),m_velx(0),m_vely(0),m_hp(g_config["starthp"]),m_vie(3),m_shield(false),m_onFire(false)
+/* ,m_imgManag(imgManag) */,m_machineGun(machineGun)
+ ,m_hpBarre((g_imgManag)["hp"].img,(g_imgManag)["hp"].nbrCollum,(g_imgManag)["hp"].nbrLine)
+ ,m_vieBarre((g_imgManag)["vie"].img,(g_imgManag)["vie"].nbrCollum,(g_imgManag)["vie"].nbrLine)
+ ,m_blueShield((g_imgManag)["shield"].img,(g_imgManag)["shield"].nbrCollum,(g_imgManag)["shield"].nbrLine)
 ,m_map(map){
     setDelay(0.2);
-     if(!machineGun)m_arm=new ImgAnim((*m_imgManag)["marm"].img,MARMMNBRCOLUMN,MARMMNBRLIGNE);
-     else m_arm=new ImgAnim((*m_imgManag)["sarm"].img,SARMMNBRCOLUMN,SARMMNBRLIGNE);
+     if(!machineGun)m_arm=new ImgAnim((g_imgManag)["marm"].img,(g_imgManag)["marm"].nbrCollum,(g_imgManag)["marm"].nbrLine);
+     else m_arm=new ImgAnim((g_imgManag)["sarm"].img,(g_imgManag)["sarm"].nbrCollum,(g_imgManag)["sarm"].nbrLine);
     m_arm->setDelay(0.2);
 
-    m_jumpSound.SetBuffer(*m_soundManag->at(JUMPID));
-    m_hurtSound.SetBuffer(*m_soundManag->at(HURID));
+    m_jumpSound.SetBuffer(g_soundManag["jump"]);
+    m_hurtSound.SetBuffer(g_soundManag["hurt"]);
 }
 
 sf::FloatRect Player::GetPlayerRect(){
-    return sf::FloatRect(GetPosition().x,GetPosition().y,PLAYERCOLLISIONWIDTH,PLAYERCOLLISIONHEIGHT);
+    return sf::FloatRect(GetPosition().x,GetPosition().y,g_config["playercollwidth"],g_config["playercollheight"]);
 }
 sf::FloatRect Player::GetMovedPlayerRect(const float moveX,const float moveY){
-  return sf::FloatRect(GetPosition().x+moveX,GetPosition().y+moveY,PLAYERCOLLISIONWIDTH,PLAYERCOLLISIONHEIGHT);
+  return sf::FloatRect(GetPosition().x+moveX,GetPosition().y+moveY,g_config["playercollwidth"],g_config["playercollheight"]);
 }
 sf::FloatRect Player::GetViewRect(){
    return sf::FloatRect(GetPosition().x-SCREENWIDTH/8,GetPosition().y-SCREENHEIGHT/8,GetPosition().x+SCREENWIDTH/8,GetPosition().y+SCREENHEIGHT/8);
 }
 
 void Player::Gravity(sf::RenderWindow &app){
-        m_vely+=GRAVITY/1000.f*app.GetFrameTime();
+        m_vely+=g_config["gravity"]/1000.f*app.GetFrameTime();
 }
 void Player::Jump(){
     if(!m_jumpLock){
@@ -102,10 +102,10 @@ void Player::Turn(bool left, bool right){
  bool Player::collisionGeneral(const sf::FloatRect playerRect,bool &kill){
     int maxHeight, minHeight, maxWidth, minWidth;
     bool Collision=false;
-    minHeight=playerRect.Top/TILEHEIGHT;
-    minWidth=playerRect.Left/TILEWIDTH;
-    maxHeight=(playerRect.Top+playerRect.Height-1)/TILEHEIGHT;
-    maxWidth=(playerRect.Left+playerRect.Width-1)/TILEWIDTH;
+    minHeight=playerRect.Top/g_config["tileheight"];
+    minWidth=playerRect.Left/g_config["tilewidth"];
+    maxHeight=(playerRect.Top+playerRect.Height-1)/g_config["tileheight"];
+    maxWidth=(playerRect.Left+playerRect.Width-1)/g_config["tilewidth"];
 
     if(minHeight<0)minHeight=0;
     if(maxHeight>(*m_map)->m_height)maxHeight=(*m_map)->m_height;
@@ -116,7 +116,7 @@ void Player::Turn(bool left, bool right){
             if(!(x>=(*m_map)->m_width or y>=(*m_map)->m_height)){
                 if((*m_map)->Tile(x,y).kill)kill=true;
                 if((*m_map)->Tile(x,y).solid){
-                    sf::FloatRect  theTile(x*TILEWIDTH,y*TILEHEIGHT,TILEWIDTH,TILEHEIGHT);
+                    sf::FloatRect  theTile(x*g_config["tilewidth"],y*g_config["tileheight"],g_config["tilewidth"],g_config["tileheight"]);
                     if(playerRect.Intersects(theTile)||theTile.Intersects(playerRect)) return true;
                 }
             }
@@ -127,10 +127,10 @@ void Player::Turn(bool left, bool right){
  bool Player::collisionVertical(const sf::FloatRect playerRect, bool &haut, bool &bas,int &solidLimit){
     int maxHeight, minHeight, maxWidth, minWidth;
     bool CollisionVertical=false;
-    minHeight=playerRect.Top/TILEHEIGHT;
-    minWidth=playerRect.Left/TILEWIDTH;
-    maxHeight=(playerRect.Top+playerRect.Height-1)/TILEHEIGHT;
-    maxWidth=(playerRect.Left+playerRect.Width-1)/TILEWIDTH;
+    minHeight=playerRect.Top/g_config["tileheight"];
+    minWidth=playerRect.Left/g_config["tilewidth"];
+    maxHeight=(playerRect.Top+playerRect.Height-1)/g_config["tileheight"];
+    maxWidth=(playerRect.Left+playerRect.Width-1)/g_config["tilewidth"];
 
     if(minHeight<0)minHeight=0;
     if(maxHeight>(*m_map)->m_height)maxHeight=(*m_map)->m_height;
@@ -140,15 +140,14 @@ void Player::Turn(bool left, bool right){
         for(int x=minWidth;x<=maxWidth;x++){
             if(!(x>=(*m_map)->m_width or y>=(*m_map)->m_height)){
                 if((*m_map)->Tile(x,y).solid){
-
-                    sf::FloatRect  theTile(x*TILEWIDTH,y*TILEHEIGHT,TILEWIDTH,TILEHEIGHT);
+                    sf::FloatRect  theTile(x*g_config["tilewidth"],y*g_config["tileheight"],g_config["tilewidth"],g_config["tileheight"]);
                     if(playerRect.Intersects(theTile)||theTile.Intersects(playerRect)){
                         CollisionVertical=true;
-                        if(y*TILEHEIGHT<=playerRect.Top+playerRect.Height&&y*TILEHEIGHT>=playerRect.Top){
+                        if(y*g_config["tileheight"]<=playerRect.Top+playerRect.Height&&y*g_config["tileheight"]>=playerRect.Top){
                             bas=true;
                             solidLimit=y;
                         }
-                        if((y+1)*TILEHEIGHT>=playerRect.Top&&(y+1)*TILEHEIGHT<=playerRect.Top+playerRect.Height){
+                        if((y+1)*g_config["tileheight"]>=playerRect.Top&&(y+1)*g_config["tileheight"]<=playerRect.Top+playerRect.Height){
                             haut=true;
                         }
                     }
@@ -161,10 +160,10 @@ void Player::Turn(bool left, bool right){
  bool Player::collisionHorizontal(const sf::FloatRect playerRect, bool &gauche, bool &droite,int &solidLimit){
     int maxHeight, minHeight, maxWidth, minWidth;
     bool CollisionHorizontal=false;
-    minHeight=playerRect.Top/TILEHEIGHT;
-    minWidth=playerRect.Left/TILEWIDTH;
-    maxHeight=(playerRect.Top+playerRect.Height-1)/TILEHEIGHT;
-    maxWidth=(playerRect.Left+playerRect.Width-1)/TILEWIDTH;
+    minHeight=playerRect.Top/g_config["tileheight"];
+    minWidth=playerRect.Left/g_config["tilewidth"];
+    maxHeight=(playerRect.Top+playerRect.Height-1)/g_config["tileheight"];
+    maxWidth=(playerRect.Left+playerRect.Width-1)/g_config["tilewidth"];
 
     if(minHeight<0)minHeight=0;
     if(maxHeight>(*m_map)->m_height)maxHeight=(*m_map)->m_height;
@@ -173,14 +172,14 @@ void Player::Turn(bool left, bool right){
     for(int y=minHeight;y<=maxHeight;y++){
         for(int x=minWidth;x<=maxWidth;x++){
             if(!(x>=(*m_map)->m_width or y>=(*m_map)->m_height)&&(*m_map)->Tile(x,y).solid){
-                sf::FloatRect  theTile(x*TILEWIDTH,y*TILEHEIGHT,TILEWIDTH,TILEHEIGHT);
+                sf::FloatRect  theTile(x*g_config["tilewidth"],y*g_config["tileheight"],g_config["tilewidth"],g_config["tileheight"]);
                 if(playerRect.Intersects(theTile)||theTile.Intersects(playerRect)){
                     CollisionHorizontal= true;
-                    if(x*TILEWIDTH>=playerRect.Left&&x*TILEWIDTH<=playerRect.Left+playerRect.Width){
+                    if(x*g_config["tilewidth"]>=playerRect.Left&&x*g_config["tilewidth"]<=playerRect.Left+playerRect.Width){
                         droite=true;
                         solidLimit=x;
                     }
-                    if((x+1)*TILEWIDTH<=playerRect.Left+playerRect.Width&&(x+1)*TILEWIDTH>=playerRect.Left){
+                    if((x+1)*g_config["tilewidth"]<=playerRect.Left+playerRect.Width&&(x+1)*g_config["tilewidth"]>=playerRect.Left){
                         gauche=true;
                         solidLimit=x;
                     }
@@ -202,18 +201,18 @@ void Player::RaiseShield(){
 }
 void Player::GodInvocation(){
 
-    m_listObject->push_back(new GameAnim((*m_imgManag)["god"].img,GODNBRCOLUMN,GODNBRLIGNE));
+    m_listObject->push_back(new GameAnim((g_imgManag)["god"].img,(g_imgManag)["god"].nbrCollum,(g_imgManag)["god"].nbrLine));
     m_listObject->back()->setDelay(0.3);
     m_listObject->back()->SetPosition((*m_map)->oppositePlayer(this)->GetPosition().x-7,0);
 
-    m_listObject->push_back(new GameAnim((*m_imgManag)["explosion2"].img,EXP2NBRCOLUMN,EXP2NBRLIGNE));
+    m_listObject->push_back(new GameAnim((g_imgManag)["explosion2"].img,(g_imgManag)["explosion2"].nbrCollum,(g_imgManag)["explosion2"].nbrLine));
     m_listObject->back()->SetPosition((*m_map)->oppositePlayer(this)->GetPosition());
     m_listObject->back()->setDelay(0.3);
-    m_listObject->push_back(new GameAnim((*m_imgManag)["explosion2"].img,EXP2NBRCOLUMN,EXP2NBRLIGNE));
+    m_listObject->push_back(new GameAnim((g_imgManag)["explosion2"].img,(g_imgManag)["explosion2"].nbrCollum,(g_imgManag)["explosion2"].nbrLine));
     m_listObject->back()->SetPosition((*m_map)->oppositePlayer(this)->GetPosition());
     m_listObject->back()->Move(-3,-5);
     m_listObject->back()->setDelay(0.4);
-    m_listObject->push_back(new GameAnim((*m_imgManag)["explosion2"].img,EXP2NBRCOLUMN,EXP2NBRLIGNE));
+    m_listObject->push_back(new GameAnim((g_imgManag)["explosion2"].img,(g_imgManag)["explosion2"].nbrCollum,(g_imgManag)["explosion2"].nbrLine));
     m_listObject->back()->SetPosition((*m_map)->oppositePlayer(this)->GetPosition());
     m_listObject->back()->Move(5,-4);
     m_listObject->back()->setDelay(0.5);
@@ -299,7 +298,7 @@ void Player::Shoot(){
         }
         m_arm->play();
 
-        m_listObject->push_back(new GameBullet((*m_imgManag)["fire"].img,FIRENBRCOLUMN,FIRENBRLIGNE,10,true,this,velx,vely));
+        m_listObject->push_back(new GameBullet((g_imgManag)["fire"].img,(g_imgManag)["fire"].nbrCollum,(g_imgManag)["fire"].nbrLine,10,true,this,velx,vely));
         m_listObject->back()->SetPosition(GetPosition());
         m_listObject->back()->setDelay(0.1);
         if(!(m_lookUp==HAUT && m_moving==IMMOBILE))m_listObject->back()->FlipX(m_direction);
@@ -326,7 +325,7 @@ void Player::Shoot(){
                 if(m_direction==DROITE)velx=300;
             }
             m_arm->play();
-            m_listObject->push_back(new GameBullet((*m_imgManag)["shot"].img,SHOTNBRCOLUMN,SHOTNBRLIGNE,5,false,this,velx,vely));
+            m_listObject->push_back(new GameBullet((g_imgManag)["shot"].img,(g_imgManag)["shot"].nbrCollum,(g_imgManag)["shot"].nbrLine,5,false,this,velx,vely));
             m_listObject->back()->SetPosition(GetPosition());
             m_listObject->back()->Move(0,4);
             m_listObject->back()->setDelay(0.04);
@@ -368,7 +367,7 @@ void Player::drawing(sf::RenderWindow* app){
             m_hurt.Reset();
             Degat(5);
         }
-        m_listObject->push_back(new GameAnim((*m_imgManag)["explosion3"].img,4,1));
+        m_listObject->push_back(new GameAnim((g_imgManag)["explosion3"].img,(g_imgManag)["explosion3"].nbrCollum,(g_imgManag)["explosion3"].nbrLine));
         m_listObject->back()->SetPosition(GetPosition().x+1.f +rand() *-4.f /RAND_MAX + 3.f,GetPosition().y+3.f+rand() *-8.f /RAND_MAX + 8.f);
         m_listObject->back()->setDelay(0.1);
     }
@@ -379,7 +378,7 @@ void Player::drawing(sf::RenderWindow* app){
         m_hpBarre.setAnimRow(10-floor(m_hp/10));
         app->Draw(m_hpBarre);
     }
-    if(m_vie<=STARTVIE)m_vieBarre.SetPosition(GetPosition().x-3+(-4*(STARTVIE-3)),GetPosition().y-7);
+    if(m_vie<=g_config["startvie"])m_vieBarre.SetPosition(GetPosition().x-3+(-4*(g_config["startvie"]-3)),GetPosition().y-7);
     else m_vieBarre.SetPosition(GetPosition().x-3+(-4*(m_vie-3)),GetPosition().y-7);
     m_vieBarre.setAnimRow(6-m_vie);
     app->Draw(m_vieBarre);

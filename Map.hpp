@@ -36,7 +36,7 @@ class MapTile{
 		sf::Vector2f m_spawnLocationTwo;
 
         MapTile();
-        MapTile(sf::RenderWindow *App,const char* tileset,const char* background,const char* image_schema,const char* image_corr,const char* tileprop, map<string,imgAnim> *imgManag,Player *playerOne, Player *playerTwo);
+        MapTile(sf::RenderWindow *App,const char* tileset,const char* background,const char* image_schema,const char* image_corr,const char* tileprop,Player *playerOne, Player *playerTwo);
 		void loadMap(const char* tileset, const char* background,const char* image_schema,const char* image_corr,const char* tileprop);		//loads the map from a file
 		void draw();
         vector<Type> & operator [] (int X);
@@ -56,7 +56,6 @@ class MapTile{
 		vector <Type> m_typeList;
 		vector <GameObject*> m_mapObject;
 		vector <GameItems*> m_mapItems;
-        map<string,imgAnim> *m_imgManag;
 		Player *m_playerOne;
 		Player *m_playerTwo;
 		sf::RenderImage m_map;

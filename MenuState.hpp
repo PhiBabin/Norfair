@@ -30,7 +30,6 @@ class MenuState: public GameState {
         virtual ~MenuState();
     private:
         GameEngine *m_gameEngine;
-        sf::Image m_imgPause;
         sf::Sprite m_pause;
         bool m_scaleUp;
 };

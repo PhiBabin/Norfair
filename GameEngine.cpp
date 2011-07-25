@@ -40,7 +40,17 @@ void GameEngine::loadConfig(){
         newAnim.img=newImg;
         newAnim.nbrCollum=atoi(pElem->Attribute("nbrCollums"));
         newAnim.nbrLine=atoi(pElem->Attribute("nbrLines"));
-        m_imgManag[pElem->Attribute("name")]=newAnim;
+        g_imgManag[pElem->Attribute("name")]=newAnim;
+    }
+    pElem=hDoc.FirstChild("sound").FirstChild().Element();
+    for(pElem; pElem; pElem=pElem->NextSiblingElement()){
+        sf::SoundBuffer newSound;
+        newSound.LoadFromFile(pElem->Attribute("path"));
+        g_soundManag[pElem->Attribute("name")]=newSound;
+    }
+    pElem=hDoc.FirstChild("config").FirstChild().Element();
+    for(pElem; pElem; pElem=pElem->NextSiblingElement()){
+        g_config[pElem->Attribute("name")]=atoi(pElem->Attribute("value"));
     }
 }
 /**

@@ -27,7 +27,6 @@ class GameEngine{
 
         sf::RenderWindow &m_app;
        vector<GameState*> m_gameState;
-        map<string,imgAnim> m_imgManag;
    private:
     bool m_running;
 };
