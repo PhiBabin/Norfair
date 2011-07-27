@@ -28,7 +28,7 @@ PlayState::PlayState(GameEngine* theGameEngine): m_playerOne(0),m_playerTwo(0),m
     m_playerOne= new Player((g_imgManag)["mago"].img, &m_map);
     m_playerTwo= new Player((g_imgManag)["squel"].img, &m_map, true);
 
-    m_map =new MapTile(&(*m_gameEngine).m_app,MAPPATH,BACKPATH,CORRPATH,TILEPATH,PROPPATH,m_playerOne,m_playerTwo);
+    m_map =new MapTile(&(*m_gameEngine).m_app,m_playerOne,m_playerTwo);
 
     m_mapObject=m_map->getMapObject();
     m_mapItems=m_map->getMapItem();
@@ -127,7 +127,7 @@ void PlayState::loop(){
 void PlayState::pause(){
     m_playerOne->Pause();
     m_playerTwo->Pause();
-    for(int i=0;i<m_mapObject->size();i++){
+    for(unsigned int i=0;i<m_mapObject->size();i++){
         m_mapObject->at(i)->pause();
     }
     //! On change le state principale
@@ -139,7 +139,7 @@ void PlayState::pause(){
 void PlayState::resume(){
     m_playerOne->Resume();
     m_playerTwo->Resume();
-    for(int i=0;i<m_mapObject->size();i++){
+    for(unsigned int i=0;i<m_mapObject->size();i++){
         if(!m_mapObject->at(i)->isStop())m_mapObject->at(i)->play();
     }
 }
@@ -166,7 +166,7 @@ void PlayState::draw(){
     On vérifie les items
 **/
 void PlayState::checkItems(){
-    for(int i=0;i<m_mapItems->size();i++){
+    for(unsigned int i=0;i<m_mapItems->size();i++){
         m_mapItems->at(i)->setGameMessage(&m_gameMessage);
         if(m_mapItems->at(i)->isCollision()){
             if(m_playerOne->GetPlayerRect().Intersects(m_mapItems->at(i)->GetRect())){
@@ -235,7 +235,7 @@ void PlayState::movePlayer(Player &player){
     Déplacement des objets
 **/
 void PlayState::moveObject(){
-    for(int i=0;i<m_mapObject->size();i++){
+    for(unsigned int i=0;i<m_mapObject->size();i++){
         if(m_mapObject->at(i)->isCollision()){
             //! On affiche détermine le rectangle de l'object
             sf::FloatRect Rect=m_mapObject->at(i)->GetMovedRect(m_mapObject->at(i)->GetVelx()*m_gameEngine->m_app.GetFrameTime()/1000.f,m_mapObject->at(i)->GetVely()*m_gameEngine->m_app.GetFrameTime()/1000.f);
@@ -273,4 +273,7 @@ void PlayState::moveObject(){
     Déconstruction des éléments du jeu
 **/
 PlayState::~PlayState(){
+    delete m_playerOne;
+    delete m_playerTwo;
+    delete m_map;
 }

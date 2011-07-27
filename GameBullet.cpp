@@ -17,9 +17,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "GameBullet.hpp"
 #include "Player.hpp"
 GameBullet::GameBullet(sf::Image &img,int nbrFrame,int nbrLigne,int degat,bool setOnFire,Player *from,float velx,float vely,float height=0, float width=0,float offsetColX=0,float offsetColY=0,bool col=false):
- GameObject(img,nbrFrame,nbrLigne,height, width,offsetColX,offsetColY,col),m_from(from),
- m_degat(degat),
-m_setOnFire(setOnFire){
+ GameObject(img,nbrFrame,nbrLigne,height, width,offsetColX,offsetColY,col)
+ ,m_degat(degat)
+ ,m_setOnFire(setOnFire)
+ ,m_from(from){
      if(height==0){
          m_colHeight=img.GetHeight()/nbrLigne;
          m_colWidth=img.GetWidth()/nbrFrame;

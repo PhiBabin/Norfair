@@ -33,7 +33,7 @@ void GameEngine::loadConfig(){
     TiXmlElement* pElem;
 
     pElem=hDoc.FirstChild("img").FirstChild().Element();
-    for(pElem; pElem; pElem=pElem->NextSiblingElement()){
+    for(; pElem; pElem=pElem->NextSiblingElement()){
         imgAnim newAnim;
         sf::Image newImg;
         newImg.LoadFromFile(pElem->Attribute("path"));
@@ -43,13 +43,13 @@ void GameEngine::loadConfig(){
         g_imgManag[pElem->Attribute("name")]=newAnim;
     }
     pElem=hDoc.FirstChild("sound").FirstChild().Element();
-    for(pElem; pElem; pElem=pElem->NextSiblingElement()){
+    for(; pElem; pElem=pElem->NextSiblingElement()){
         sf::SoundBuffer newSound;
         newSound.LoadFromFile(pElem->Attribute("path"));
         g_soundManag[pElem->Attribute("name")]=newSound;
     }
     pElem=hDoc.FirstChild("config").FirstChild().Element();
-    for(pElem; pElem; pElem=pElem->NextSiblingElement()){
+    for(; pElem; pElem=pElem->NextSiblingElement()){
         g_config[pElem->Attribute("name")]=atoi(pElem->Attribute("value"));
     }
 }
@@ -92,7 +92,7 @@ void GameEngine::loop(){
         m_gameState[0]->loop();
         m_app.Clear(sf::Color(183, 210, 215, 255));
 
-        cout<<"  /PlayState::draw"<<endl;
+        cout<<"  /GameEngine::draw"<<endl;
         m_gameState[0]->draw();
         m_app.Display();
     }
@@ -102,7 +102,7 @@ void GameEngine::loop(){
 /**
     Boucle du Moteur
 **/
-void GameEngine::changeState(int frontState){
+void GameEngine::changeState(unsigned int frontState){
     if(frontState<m_gameState.size()){
         m_gameState[0]=m_gameState[frontState];
         m_gameState[0]->init();
@@ -110,6 +110,9 @@ void GameEngine::changeState(int frontState){
 
 }
 GameEngine::~GameEngine(){
+    for(unsigned int i=1;i<m_gameState.size();i++){
+        delete m_gameState.at(i);
+    }
    cout<<"  /GameEngine::delete"<<endl;
 }
 

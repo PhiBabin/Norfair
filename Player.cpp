@@ -17,12 +17,14 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "Player.hpp"
 Player::Player(sf::Image &img, MapTile **map,bool machineGun=false):
- ImgAnim::ImgAnim(img,3,4),m_colBot(false),m_velx(0),m_vely(0),m_hp(g_config["starthp"]),m_vie(3),m_shield(false),m_onFire(false)
-/* ,m_imgManag(imgManag) */,m_machineGun(machineGun)
- ,m_hpBarre((g_imgManag)["hp"].img,(g_imgManag)["hp"].nbrCollum,(g_imgManag)["hp"].nbrLine)
- ,m_vieBarre((g_imgManag)["vie"].img,(g_imgManag)["vie"].nbrCollum,(g_imgManag)["vie"].nbrLine)
- ,m_blueShield((g_imgManag)["shield"].img,(g_imgManag)["shield"].nbrCollum,(g_imgManag)["shield"].nbrLine)
-,m_map(map){
+ImgAnim::ImgAnim(img,3,4)
+,m_vieBarre((g_imgManag)["vie"].img,(g_imgManag)["vie"].nbrCollum,(g_imgManag)["vie"].nbrLine)
+,m_hpBarre((g_imgManag)["hp"].img,(g_imgManag)["hp"].nbrCollum,(g_imgManag)["hp"].nbrLine)
+,m_blueShield((g_imgManag)["shield"].img,(g_imgManag)["shield"].nbrCollum,(g_imgManag)["shield"].nbrLine)
+,m_map(map)
+,m_hp(g_config["starthp"]),m_vie(3),m_velx(0),m_vely(0),m_jumpLock(false),m_colBot(false),m_direction(true),m_lookUp(true),m_moving(true),m_onFire(false)
+,m_machineGun(machineGun),m_shield(false)
+{
     setDelay(0.2);
      if(!machineGun)m_arm=new ImgAnim((g_imgManag)["marm"].img,(g_imgManag)["marm"].nbrCollum,(g_imgManag)["marm"].nbrLine);
      else m_arm=new ImgAnim((g_imgManag)["sarm"].img,(g_imgManag)["sarm"].nbrCollum,(g_imgManag)["sarm"].nbrLine);
@@ -49,7 +51,7 @@ void Player::Jump(){
     if(!m_jumpLock){
         m_jumpSound.Play();
         m_jumpLock=true;
-        m_vely+=-300;
+        m_vely+=g_config["jump"];
         BottomCollision(false);
         cout<<"jump"<<endl;
     }
@@ -101,7 +103,6 @@ void Player::Turn(bool left, bool right){
 }
  bool Player::collisionGeneral(const sf::FloatRect playerRect,bool &kill){
     int maxHeight, minHeight, maxWidth, minWidth;
-    bool Collision=false;
     minHeight=playerRect.Top/g_config["tileheight"];
     minWidth=playerRect.Left/g_config["tilewidth"];
     maxHeight=(playerRect.Top+playerRect.Height-1)/g_config["tileheight"];
@@ -394,4 +395,7 @@ void Player::Resume(){
     m_shieldCoolDown.Play();
     m_burning.Play();
     m_hurt.Play();
+}
+Player::~Player(){
+    delete m_arm;
 }

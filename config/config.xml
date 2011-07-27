@@ -29,13 +29,8 @@
 	<option name="playercollwidth" value="16" />
 	<option name="playercollheight" value="18" />
 	<option name="gravity" value="350" />
+	<option name="jump" value="-300" />
 	<option name="startvie" value="3" />
 	<option name="starthp" value="100" />
+	<option name="level" value="1" />
 </config>
-<map>
-	<option name="mappath" value="img/levelDonjon.png" />
-	<option name="backpath" value="img/levelDonjonb.png" />
-	<option name="tilepath" value="img/tilesimage.png" />
-	<option name="proppath" value="tilesprop.txt" />
-	<option name="corrpath" value="img/tile.png" />
-</map>

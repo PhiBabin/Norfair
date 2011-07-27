@@ -21,7 +21,7 @@ class GameEngine{
         GameEngine(sf::RenderWindow &app);
         void init();
         void loop();
-        void changeState(int frontState);
+        void changeState(unsigned int frontState);
         void loadConfig();
        ~GameEngine();
 

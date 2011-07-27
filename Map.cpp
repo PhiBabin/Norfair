@@ -17,11 +17,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "Map.hpp"
 MapTile::MapTile():m_app(NULL),m_playerOne(NULL),m_playerTwo(NULL){}
-MapTile::MapTile(sf::RenderWindow *App,const char* tileset,const char* background,const char* image_schema,const char* image_corr,const char* tileprop,Player *playerOne, Player *playerTwo):
-m_app(App),m_playerOne(playerOne),m_playerTwo(playerTwo) /*,m_imgManag(imgManag)*/,m_height(0){
+MapTile::MapTile(sf::RenderWindow *App, Player *playerOne, Player *playerTwo):
+m_width(0),m_height(0),m_app(App),m_playerOne(playerOne),m_playerTwo(playerTwo){
 
 
-    loadMap(tileset,background,image_schema,image_corr,tileprop);
+    loadMap();
 }
 
  bool MapTile::collisionTile(float x, float y){
@@ -42,7 +42,6 @@ Type MapTile::Tile(float x, float y){
 
  bool MapTile::collisionGeneral(const sf::FloatRect playerRect){
     int maxHeight, minHeight, maxWidth, minWidth;
-    bool Collision=false;
     minHeight=playerRect.Top/g_config["tileheight"];
     minWidth=playerRect.Left/g_config["tilewidth"];
     maxHeight=(playerRect.Top+playerRect.Height-1)/g_config["tileheight"];
@@ -80,7 +79,7 @@ void MapTile::draw(){
     m_app->Draw(*m_playerTwo);
     m_playerTwo->drawing(m_app);
     //! On affiche les objets de la carte
-    for(int i=0;i<m_mapObject.size();i++){
+    for(unsigned int i=0;i<m_mapObject.size();i++){
         if((m_mapObject.at(i))->isDelete()){
             delete m_mapObject.at(i);
             m_mapObject.erase( m_mapObject.begin() + i );
@@ -88,7 +87,7 @@ void MapTile::draw(){
         else m_app->Draw(*(m_mapObject.at(i)));
     }
     //! On affiche les items
-    for(int i=0;i<m_mapItems.size();i++){
+    for(unsigned int i=0;i<m_mapItems.size();i++){
         if((m_mapItems.at(i))->isDraw()){
             m_app->Draw(*(m_mapItems.at(i)));
         }
@@ -105,18 +104,34 @@ vector<Type> & MapTile::operator [] (int X){
         exit(0);
         return 0;
  }
-//!Tileset: image du niveau image_schema: Liste des tiles (petit) image_corr: liste des tiles correspondant tileprop: fichier des propriété
-void MapTile::loadMap(const char* tileset, const char* background,const char* image_schema,const char* image_corr,const char* tileprop){
+void MapTile::loadMap(){
+    //! On charge le niveau
+     stringstream ss;
+     ss<<g_config["level"];
+    string pathConfig="map/level"+ ss.str()+".xml";
+    TiXmlDocument doc(pathConfig.c_str());
+    doc.LoadFile();
+
+    TiXmlHandle hDoc(&doc);
+    TiXmlHandle hRoot(0);
+    TiXmlElement* pElem;
+
+    map<string,string> levelConfig;
+
+    pElem=hDoc.FirstChild("map").FirstChild().Element();
+    for(; pElem; pElem=pElem->NextSiblingElement()){
+        levelConfig[pElem->Attribute("name")]=string(pElem->Attribute("value"));
+    }
     //! Initiation des images temporaire
     sf::Image tilesetImg,backImg ,image_schemaImg;
-    tilesetImg.LoadFromFile(tileset);
-    backImg.LoadFromFile(background);
+    tilesetImg.LoadFromFile(levelConfig["mappath"]);
+    backImg.LoadFromFile(levelConfig["backpath"]);
     //! On supprime les vectors
 	m_typeList.erase(m_typeList.begin(),m_typeList.end());
 	m_tileSet.erase(m_tileSet.begin(),m_tileSet.end());
-    image_schemaImg.LoadFromFile(image_schema);
+    image_schemaImg.LoadFromFile(levelConfig["corrpath"]);
     //! Initiation des images des tiles
-    m_ImgTypeTile.LoadFromFile(image_corr);
+    m_ImgTypeTile.LoadFromFile(levelConfig["tilepath"]);
     m_ImgTypeTile.SetSmooth(false);
     m_width=tilesetImg.GetWidth();
     m_height=tilesetImg.GetHeight();
@@ -131,7 +146,7 @@ void MapTile::loadMap(const char* tileset, const char* background,const char* im
     }
     //! On charge le fichier des propriétés de la map
     FILE* tilePropFile = NULL;
-	tilePropFile = fopen(tileprop, "r");
+	tilePropFile = fopen(levelConfig["proppath"].c_str(), "r");
 	if(tilePropFile==NULL){ cerr<<"[FATAL ERROR] Map not found."<<endl; exit(1);}
 
 	int nbrItems,itemX,itemY,Visible,Solid,Spawn,Killer,typeSpawn1,typeSpawn2;
@@ -200,4 +215,12 @@ void MapTile::loadMap(const char* tileset, const char* background,const char* im
         }
     }
     m_background.Display();
+}
+MapTile::~MapTile(){
+    for(unsigned int i=0;i<m_mapObject.size();i++){
+        delete m_mapObject.at(i);
+    }
+    for(unsigned int i=0;i<m_mapItems.size();i++){
+        delete m_mapItems.at(i);
+    }
 }

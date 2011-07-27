@@ -30,14 +30,9 @@ struct Type{
 	sf::Sprite tile;};
 class MapTile{
 	public:
-        //! Public variable
-		int m_width, m_height;
-		sf::Vector2f m_spawnLocationOne;
-		sf::Vector2f m_spawnLocationTwo;
-
         MapTile();
-        MapTile(sf::RenderWindow *App,const char* tileset,const char* background,const char* image_schema,const char* image_corr,const char* tileprop,Player *playerOne, Player *playerTwo);
-		void loadMap(const char* tileset, const char* background,const char* image_schema,const char* image_corr,const char* tileprop);		//loads the map from a file
+        MapTile(sf::RenderWindow *App,Player *playerOne, Player *playerTwo);
+		void loadMap();
 		void draw();
         vector<Type> & operator [] (int X);
         unsigned char findType(sf::Color Pix);
@@ -46,8 +41,13 @@ class MapTile{
         vector<GameObject*> * getMapObject();
         vector<GameItems*> * getMapItem();
         Player* oppositePlayer(Player *player);
-
         bool collisionGeneral(const sf::FloatRect playerRect);
+        ~MapTile();
+
+        //! Public variable
+		int m_width, m_height;
+		sf::Vector2f m_spawnLocationOne;
+		sf::Vector2f m_spawnLocationTwo;
 	private:
         sf::RenderWindow *m_app;
 		sf::Image m_ImgTypeTile;

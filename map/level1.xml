@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+<map name="Donjon" author="Norgas">
+	<info name="mappath" value="map/level1/levelDonjon.png" />
+	<info name="backpath" value="map/level1/levelDonjonb.png" />
+	<info name="tilepath" value="map/level1/tilesimage.png" />
+	<info name="proppath" value="map/level1/tilesprop.txt" />
+	<info name="corrpath" value="map/level1/tile.png" />
+</map>

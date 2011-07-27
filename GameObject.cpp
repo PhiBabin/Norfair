@@ -15,26 +15,10 @@ You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.*/
 #include "GameObject.hpp"
-// TODO (user#1#): Ajouter la classe animation
-// TODO (user#1#): Ajout et suppression d'object
-// TODO (user#1#): Permettre de tirer
-// TODO (user#1#): Manager d'image
-// TODO (user#1#): Affichage des bras et animation.
-// TODO (user#1#): Barre de vie
-// TODO (user#1#): Création du vecteur de collision
-// TODO (user#1#): Ajout des collisions aux objet
-// TODO (user#1#): Ajout du 2ème joueur
-// TODO (user#1#): Gestion de la vue
-// TODO (user#1#): Ajouter item et gestion de la présence des items
-// TODO (user#1#): Gestion du 4 ground et background
-// TODO (user#1#): Anouncer
-// TODO (user#1#): Gestion des fichiers de configuration XML
-// TODO (user#1#): EXPLOSION!!!
 
 GameObject::GameObject(sf::Image &img,int nbrFrame,int nbrLigne,float height=0, float width=0, float offsetColX=0,float offsetColY=0,bool col=false):
- ImgAnim::ImgAnim(img,nbrFrame,nbrLigne),m_colHeight(height),m_colWidth(width),m_offsetColX(offsetColX),m_offsetColY(offsetColY),m_col(col),m_velx(0),m_vely(0){
+ ImgAnim::ImgAnim(img,nbrFrame,nbrLigne),m_velx(0),m_vely(0),m_col(col),m_offsetColX(offsetColX),m_offsetColY(offsetColY),m_colWidth(width),m_colHeight(height){
 }
-
 float GameObject::GetVelx()const{
     return m_velx;
 }

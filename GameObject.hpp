@@ -36,8 +36,8 @@ class GameObject:public ImgAnim{
         bool m_col;
         float m_offsetColX;
         float m_offsetColY;
-        float m_colHeight;
         float m_colWidth;
+        float m_colHeight;
 };
 
 #endif // GAMEOBJECT_H

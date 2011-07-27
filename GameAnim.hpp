@@ -21,16 +21,14 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 class GameAnim: public GameObject{
     public:
-        /** Default constructor */
         GameAnim(sf::Image &img,int nbrFrame,int nbrLigne,float time,float height, float width,float offsetColX,float offsetColY,bool col);
         virtual bool isDraw();
         virtual bool isDelete()const;
         virtual bool isCollision()const;
         virtual bool collisionEffect(Player &player);
-        /** Default destructor */
         virtual ~GameAnim();
     private:
-    int m_nbrFrame;
+        unsigned int m_nbrFrame;
 };
 
 #endif // GAMEANIM_H

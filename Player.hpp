@@ -66,6 +66,8 @@ class Player:public ImgAnim{
     //! Pause et arrêt
         void Pause();
         void Resume();
+    //! Déconstruteur
+        ~Player();
     private:
         ImgAnim *m_arm;
         ImgAnim m_vieBarre;
@@ -73,7 +75,6 @@ class Player:public ImgAnim{
         ImgAnim m_blueShield;
         sf::Sound m_jumpSound;
         sf::Sound m_hurtSound;
-       // map<string,imgAnim> *m_imgManag;
 
         MapTile **m_map;
         vector<GameObject*> *m_listObject;
@@ -89,7 +90,6 @@ class Player:public ImgAnim{
         bool m_moving;
         bool m_onFire;
         bool m_machineGun;
-        bool m_fireBall;
         bool m_shield;
 
         PausableClock m_shieldCoolDown;
