@@ -25,7 +25,7 @@ MenuState::MenuState(GameEngine* theGameEngine):m_scaleUp(true){
     m_gameEngine=theGameEngine;
     m_pause.SetImage(g_imgManag["pause"].img);
     m_pause.SetScale(3,3);
-    m_pause.SetPosition(SCREENWIDTH/2,SCREENHEIGHT/2);
+    m_pause.SetPosition(g_config["screenwidth"]/2,g_config["screenheight"]/2);
     m_pause.SetOrigin(g_imgManag["pause"].img.GetWidth()/2,g_imgManag["pause"].img.GetHeight()/2);
 }
 /**
@@ -71,7 +71,7 @@ void MenuState::GetEvents(sf::Event Event){
 **/
 void MenuState::draw(){
      sf::Color c(255,255,255);
-    (*m_gameEngine).m_app.Draw(sf::Shape::Rectangle(0,0,SCREENWIDTH, SCREENHEIGHT, c));
+    (*m_gameEngine).m_app.Draw(sf::Shape::Rectangle(0,0,g_config["screenwidth"], g_config["screenheight"], c));
     (*m_gameEngine).m_app.Draw(m_pause);
 }
 

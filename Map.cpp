@@ -20,7 +20,6 @@ MapTile::MapTile():m_app(NULL),m_playerOne(NULL),m_playerTwo(NULL){}
 MapTile::MapTile(sf::RenderWindow *App, Player *playerOne, Player *playerTwo):
 m_width(0),m_height(0),m_app(App),m_playerOne(playerOne),m_playerTwo(playerTwo){
 
-
     loadMap();
 }
 
@@ -105,78 +104,84 @@ vector<Type> & MapTile::operator [] (int X){
         return 0;
  }
 void MapTile::loadMap(){
-    //! On charge le niveau
-     stringstream ss;
-     ss<<g_config["level"];
+    map<string,string> levelConfig;
+	int typeSpawn1,typeSpawn2;
+	int theTile;
+	sf::Vector2f backbackCoor;
+
+    //! On charge la configuration du niveau
+    stringstream ss;
+    ss<<g_config["level"];
     string pathConfig="map/level"+ ss.str()+".xml";
+
     TiXmlDocument doc(pathConfig.c_str());
     doc.LoadFile();
 
-    TiXmlHandle hDoc(&doc);
-    TiXmlHandle hRoot(0);
+    TiXmlHandle hRoot(&doc);
+    TiXmlHandle hDoc(0);
     TiXmlElement* pElem;
 
-    map<string,string> levelConfig;
+    hDoc=TiXmlHandle(hRoot.FirstChildElement().Element());
 
-    pElem=hDoc.FirstChild("map").FirstChild().Element();
+    pElem=hDoc.FirstChild("metadata").FirstChild().Element();
     for(; pElem; pElem=pElem->NextSiblingElement()){
         levelConfig[pElem->Attribute("name")]=string(pElem->Attribute("value"));
+//!       if(pElem->Attribute("name")==string("backbackpath"))backbackCoor=sf::Vector2f(atoi(pElem->Attribute("x")),atoi(pElem->Attribute("y")));
     }
+
     //! Initiation des images temporaire
-    sf::Image tilesetImg,backImg ,image_schemaImg;
+    sf::Image tilesetImg,backImg ,backbackImg ,image_schemaImg;
     tilesetImg.LoadFromFile(levelConfig["mappath"]);
     backImg.LoadFromFile(levelConfig["backpath"]);
+//!    backbackImg.LoadFromFile(levelConfig["backbackpath"]);
+//!    sf::Sprite backback(backbackImg);
+//!    backback.SetPosition(backbackCoor);
     //! On supprime les vectors
 	m_typeList.erase(m_typeList.begin(),m_typeList.end());
 	m_tileSet.erase(m_tileSet.begin(),m_tileSet.end());
     image_schemaImg.LoadFromFile(levelConfig["corrpath"]);
     //! Initiation des images des tiles
     m_ImgTypeTile.LoadFromFile(levelConfig["tilepath"]);
-    m_ImgTypeTile.SetSmooth(false);
     m_width=tilesetImg.GetWidth();
     m_height=tilesetImg.GetHeight();
-    //! On crée un vector de tile et on les fait corresponds à un pixel
-    for(unsigned int it2=0;it2<image_schemaImg.GetHeight();it2++){
-        for(unsigned int it=0;it<image_schemaImg.GetWidth();it++){
-            Type newTile;
-            newTile.colorPix = image_schemaImg.GetPixel(it, it2);
-            newTile.zoneRect=sf::IntRect(it*g_config["tilewidth"], it2*g_config["tileheight"], g_config["tilewidth"], g_config["tileheight"]);
-            if(image_schemaImg.GetPixel(it, it2)!=sf::Color(42,42,42))m_typeList.insert(m_typeList.end(),newTile);
-        }
-    }
-    //! On charge le fichier des propriétés de la map
-    FILE* tilePropFile = NULL;
-	tilePropFile = fopen(levelConfig["proppath"].c_str(), "r");
-	if(tilePropFile==NULL){ cerr<<"[FATAL ERROR] Map not found."<<endl; exit(1);}
 
-	int nbrItems,itemX,itemY,Visible,Solid,Spawn,Killer,typeSpawn1,typeSpawn2;
-
-	//! On charge crée les items
-	fscanf(tilePropFile, "%d",&nbrItems);
-	for(int it=0;it<nbrItems;it++){
-        fscanf(tilePropFile, "%d %d",&itemX,&itemY);
+    //! On charge les items
+    pElem=hDoc.FirstChild("items").FirstChild().Element();
+    for(; pElem; pElem=pElem->NextSiblingElement()){
+        int itemX =atoi(pElem->Attribute("x"));
+        int itemY =atoi(pElem->Attribute("y"));
 	    m_mapItems.push_back(new GameItems((g_imgManag)["item"].img,(g_imgManag)["item"].nbrCollum,(g_imgManag)["item"].nbrLine));
 	    m_mapItems.back()->SetPosition(itemX*g_config["tileheight"],itemY*g_config["tilewidth"]);
 	    m_mapItems.back()->setDelay(0.2);
-	}
-	    //! On charge les propriétés
-	for(unsigned int it=0;it<m_typeList.size();it++){
-        fscanf(tilePropFile, "%d  %d %d %d",&Visible,&Solid,&Spawn,&Killer);
-        if(Spawn==1)typeSpawn1=it;
-        if(Spawn==2)typeSpawn2=it;
+    }
 
-        if(Visible==1)m_typeList[it].visible=true;
-        else m_typeList[it].visible=false;
+    //! On charge les différentes tiles
+    pElem=hDoc.FirstChild("tileset").FirstChild().Element();
+    for(; pElem; pElem=pElem->NextSiblingElement()){
+        int x =atoi(pElem->Attribute("x"));
+        int y =atoi(pElem->Attribute("y"));
 
-        if(Killer==1)m_typeList[it].kill=true;
-        else m_typeList[it].kill=false;
+        Type newTile;
+        newTile.colorPix = image_schemaImg.GetPixel(x, y);
+        newTile.zoneRect=sf::IntRect(x*g_config["tilewidth"], y*g_config["tileheight"], g_config["tilewidth"], g_config["tileheight"]);
 
-        if(Solid==1)m_typeList[it].solid=true;
-        else m_typeList[it].solid=false;
-	}
+        if(atoi(pElem->Attribute("spawn"))==1)typeSpawn1=m_typeList.size();
+        if(atoi(pElem->Attribute("spawn"))==2)typeSpawn2=m_typeList.size();
+
+        if(atoi(pElem->Attribute("visible"))==1)newTile.visible=true;
+        else newTile.visible=false;
+
+        if(atoi(pElem->Attribute("kill"))==1)newTile.kill=true;
+        else newTile.kill=false;
+
+        if(atoi(pElem->Attribute("solid"))==1)newTile.solid=true;
+        else newTile.solid=false;
+
+        m_typeList.insert(m_typeList.end(),newTile);
+    }
+
 	//! Charge le niveau
     m_map.Create(m_width*g_config["tilewidth"],m_height*g_config["tileheight"]);
-	int theTile;
     for(int it=0;it<m_width;it++){
         vector<Type> tileList2;
         m_tileSet.insert(m_tileSet.end(),tileList2);
@@ -204,6 +209,7 @@ void MapTile::loadMap(){
     m_map.Display();
     //! Chargement du background
     m_background.Create(m_width*g_config["tilewidth"],m_height*g_config["tileheight"]);
+//!    m_background.Draw(backback);
     for(int it=0;it<m_width;it++){
         for(int it2=0;it2< m_height;it2++){
             theTile=findType(backImg.GetPixel(it, it2));

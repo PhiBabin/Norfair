@@ -22,6 +22,8 @@
 	<wav name="item" path="sounds/item.wav" />
 </sound>
 <config>
+	<option name="screenwidth" value="800" />
+	<option name="screenheight" value="600" />
 	<option name="tilewidth" value="16" />
 	<option name="tileheight" value="15" />
 	<option name="tilesetwidth" value="10" />

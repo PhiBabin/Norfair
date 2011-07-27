@@ -22,10 +22,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
     Configuration
 */
 
-//! Configuration de l'écran
-#define SCREENWIDTH 800.f //Px width of the screen
-#define SCREENHEIGHT 600.f //Px height of the screen
-
 //! Constantes
 #define GAUCHE true
 #define DROITE false
@@ -33,14 +29,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #define BAS false
 #define BOUGE true
 #define IMMOBILE false
-
-//! Carte
-#define MAPPATH "img/levelDonjon.png" //Chemin vers la carte
-#define BACKPATH "img/levelDonjonb.png" //Chemin vers le background
-#define TILEPATH "img/tilesimage.png" //Chemin vers les tiles
-#define PROPPATH "tilesprop.txt" //Chemin vers les propriétés des tiles
-#define CORRPATH "img/tile.png" //Chemin vers les correspondances
-
 
 #include <iostream>
 #include <sstream>

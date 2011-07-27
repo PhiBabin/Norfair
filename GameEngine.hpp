@@ -22,7 +22,6 @@ class GameEngine{
         void init();
         void loop();
         void changeState(unsigned int frontState);
-        void loadConfig();
        ~GameEngine();
 
         sf::RenderWindow &m_app;

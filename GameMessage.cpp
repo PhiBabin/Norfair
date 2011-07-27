@@ -23,13 +23,13 @@ void GameMessage::drawing(sf::RenderWindow* app){
 
     if(m_nextMessage.GetElapsedTime()>4000){
         m_principal.Move(app->GetFrameTime()*0.7,0);
-        if(m_transition.GetPosition().x+app->GetFrameTime()*0.7<SCREENWIDTH/2)m_transition.Move(app->GetFrameTime()*0.7,0);
-        else m_transition.SetPosition(SCREENWIDTH/2,SCREENHEIGHT-100);
+        if(m_transition.GetPosition().x+app->GetFrameTime()*0.7<g_config["screenwidth"]/2)m_transition.Move(app->GetFrameTime()*0.7,0);
+        else m_transition.SetPosition(g_config["screenwidth"]/2,g_config["screenheight"]-100);
 
     }
     else{
-        m_principal.SetPosition(SCREENWIDTH/2,SCREENHEIGHT-100);
-        m_transition.SetPosition(-300,SCREENHEIGHT-100);
+        m_principal.SetPosition(g_config["screenwidth"]/2,g_config["screenheight"]-100);
+        m_transition.SetPosition(-300,g_config["screenheight"]-100);
     }
 
     m_principal.SetOrigin(m_principal.GetRect().Width/2,0);

@@ -41,7 +41,7 @@ sf::FloatRect Player::GetMovedPlayerRect(const float moveX,const float moveY){
   return sf::FloatRect(GetPosition().x+moveX,GetPosition().y+moveY,g_config["playercollwidth"],g_config["playercollheight"]);
 }
 sf::FloatRect Player::GetViewRect(){
-   return sf::FloatRect(GetPosition().x-SCREENWIDTH/8,GetPosition().y-SCREENHEIGHT/8,GetPosition().x+SCREENWIDTH/8,GetPosition().y+SCREENHEIGHT/8);
+   return sf::FloatRect(GetPosition().x-g_config["screenwidth"]/8,GetPosition().y-g_config["screenheight"]/8,GetPosition().x+g_config["screenheight"]/8,GetPosition().y+g_config["screenheight"]/8);
 }
 
 void Player::Gravity(sf::RenderWindow &app){
