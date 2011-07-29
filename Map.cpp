@@ -69,14 +69,15 @@ Type MapTile::Tile(float x, float y){
 }
 void MapTile::draw(){
     cout<<"FPS="<</*1.f/(m_app->GetFrameTime())*1000<<*/"Joueur 1 x="<<m_playerOne->GetPosition().x<<" y="<<m_playerOne->GetPosition().y<<" vely="<<m_playerOne->GetVely()<<" velx="<<m_playerOne->GetVelx()<<endl;
-    //! On affiche les tiles
+    //! On affiche les tiles du background
     m_app->Draw(sf::Sprite(m_background.GetImage()));
-    m_app->Draw(sf::Sprite(m_map.GetImage()));
     //! On affiche le personnage et ces éléments
     m_app->Draw(*m_playerOne);
     m_playerOne->drawing(m_app);
     m_app->Draw(*m_playerTwo);
     m_playerTwo->drawing(m_app);
+    //! On affiche les tiles du foreground
+    m_app->Draw(sf::Sprite(m_map.GetImage()));
     //! On affiche les objets de la carte
     for(unsigned int i=0;i<m_mapObject.size();i++){
         if((m_mapObject.at(i))->isDelete()){

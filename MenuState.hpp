@@ -31,6 +31,9 @@ class MenuState: public GameState {
     private:
         GameEngine *m_gameEngine;
         sf::Sprite m_pause;
+        sf::Sprite m_norfair;
+        sf::Sprite m_press;
+        bool m_start;
         bool m_scaleUp;
 };
 

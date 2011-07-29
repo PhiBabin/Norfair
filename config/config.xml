@@ -15,6 +15,10 @@
 	<anim name="explosion2" path="img/explosion2.png" nbrCollums="3" nbrLines="1" />
 	<anim name="explosion3" path="img/fire2.png" nbrCollums="4" nbrLines="1" />
 	<anim name="pause" path="img/pause.png" nbrCollums="0" nbrLines="0" />
+	<anim name="norfair" path="img/norfair.png" nbrCollums="0" nbrLines="0" />
+	<anim name="press" path="img/press_any_key.png" nbrCollums="0" nbrLines="0" />
+	<anim name="winner" path="img/winner.png" nbrCollums="1" nbrLines="2" />
+	<anim name="retry" path="img/retry.png" nbrCollums="0" nbrLines="0" />
 </img>
 <sound>
 	<wav name="jump" path="sounds/jump.wav" />
@@ -32,6 +36,7 @@
 	<option name="playercollheight" value="18" />
 	<option name="gravity" value="350" />
 	<option name="jump" value="-300" />
+	<option name="itemCoolDown" value="10" />
 	<option name="startvie" value="3" />
 	<option name="starthp" value="100" />
 	<option name="level" value="1" />

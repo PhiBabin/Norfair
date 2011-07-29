@@ -22,7 +22,7 @@ ImgAnim::ImgAnim(img,3,4)
 ,m_hpBarre((g_imgManag)["hp"].img,(g_imgManag)["hp"].nbrCollum,(g_imgManag)["hp"].nbrLine)
 ,m_blueShield((g_imgManag)["shield"].img,(g_imgManag)["shield"].nbrCollum,(g_imgManag)["shield"].nbrLine)
 ,m_map(map)
-,m_hp(g_config["starthp"]),m_vie(3),m_velx(0),m_vely(0),m_jumpLock(false),m_colBot(false),m_direction(true),m_lookUp(true),m_moving(true),m_onFire(false)
+,m_hp(g_config["starthp"]),m_vie(g_config["startvie"]),m_velx(0),m_vely(0),m_jumpLock(false),m_colBot(false),m_direction(true),m_lookUp(true),m_moving(true),m_onFire(false)
 ,m_machineGun(machineGun),m_shield(false)
 {
     setDelay(0.2);

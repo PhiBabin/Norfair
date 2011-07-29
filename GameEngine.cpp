@@ -28,7 +28,8 @@ void GameEngine::init(){
     m_gameState.push_back(NULL);
     m_gameState.push_back(new PlayState(this));
     m_gameState.push_back(new MenuState(this));
-    m_gameState[0]=m_gameState[1];
+    m_gameState.push_back(new EndState(this));
+    m_gameState[0]=m_gameState[2];
 }
 /**
     Boucle du Moteur
@@ -72,7 +73,6 @@ void GameEngine::loop(){
 void GameEngine::changeState(unsigned int frontState){
     if(frontState<m_gameState.size()){
         m_gameState[0]=m_gameState[frontState];
-        m_gameState[0]->init();
     }
 
 }

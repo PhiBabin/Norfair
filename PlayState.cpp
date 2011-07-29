@@ -112,12 +112,12 @@ void PlayState::loop(){
 
 //! On vérifie si ils ont encore des vies
     if(m_playerOne->GetVie()<=0){
-        cout<<endl<<"Player 2 win!"<<endl<<endl;
-        m_gameEngine->m_app.Close();
+        m_gameEngine->m_gameState.at(3)->init();
+        m_gameEngine->changeState(3);
     }
     if(m_playerTwo->GetVie()<=0){
-        cout<<endl<<"Player 1 win!"<<endl<<endl;
-        m_gameEngine->m_app.Close();
+        m_gameEngine->m_gameState.at(3)->stop();
+        m_gameEngine->changeState(3);
     }
 }
 /**

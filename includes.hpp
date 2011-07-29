@@ -84,6 +84,7 @@ map<string,sf::SoundBuffer> g_soundManag;
 #include "GameState.cpp"
 #include "PlayState.cpp"
 #include "MenuState.cpp"
+#include "EndState.cpp"
 #include "GameEngine.cpp"
 
 #endif // INCLUDES_HPP_INCLUDED
