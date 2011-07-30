@@ -39,6 +39,7 @@ void GameEngine::loop(){
     srand((unsigned)time(0));
    cout<<"  /GameEngine::loop start"<<endl;
     while(m_app.IsOpened()&&m_running){
+        m_gameState[0]->loop();
         sf::Event event;
         while(m_app.PollEvent(event)){
                 switch(event.Type){
@@ -57,7 +58,6 @@ void GameEngine::loop(){
                     m_gameState[0]->GetEvents(event);
               }
         }
-        m_gameState[0]->loop();
         m_app.Clear(sf::Color(183, 210, 215, 255));
 
         cout<<"  /GameEngine::draw"<<endl;

@@ -78,7 +78,7 @@ void EndState::stop(){
     Utilisation des entrés
 **/
 void EndState::GetEvents(sf::Event Event){
-    if (Event.Type == sf::Event::KeyPressed && m_continue.GetElapsedTime()>5000){
+    if (Event.Type == sf::Event::KeyPressed && m_continue.GetElapsedTime()>3000){
         m_gameEngine->m_gameState[1]=new PlayState(m_gameEngine);
         m_gameEngine->changeState(1);
         m_start=false;

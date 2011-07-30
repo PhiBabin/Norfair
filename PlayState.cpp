@@ -102,10 +102,19 @@ void PlayState::loop(){
 
  //! On vérifie si les personnages sont vivant
     if(m_playerOne->IsDead()){
+        m_map->getMapObject()->push_back(new GameAnim(g_imgManag["dead"].img,(g_imgManag)["dead"].nbrCollum,(g_imgManag)["dead"].nbrLine));
+        m_map->getMapObject()->back()->SetPosition(m_playerOne->GetPosition());
+        m_map->getMapObject()->back()->Move(0,9);
+        m_map->getMapObject()->back()->setDelay(35);
         m_playerOne->SetPosition(m_map->m_spawnLocationOne);
         m_gameMessage.AddMessage("Player 1 has been kill!");
     }
     if(m_playerTwo->IsDead()){
+        m_map->getMapObject()->push_back(new GameAnim(g_imgManag["dead"].img,(g_imgManag)["dead"].nbrCollum,(g_imgManag)["dead"].nbrLine));
+        m_map->getMapObject()->back()->SetPosition(m_playerTwo->GetPosition());
+        m_map->getMapObject()->back()->Move(0,8);
+        m_map->getMapObject()->back()->setDelay(35);
+        m_map->getMapObject()->back()->setAnimRow(1);
         m_playerTwo->SetPosition(m_map->m_spawnLocationTwo);
         m_gameMessage.AddMessage("Player 2 has been kill!");
     }

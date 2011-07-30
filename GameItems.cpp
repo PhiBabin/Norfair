@@ -26,7 +26,7 @@ GameItems::GameItems(sf::Image &img,int nbrFrame,int nbrLigne,float height=0, fl
      }
 }
 bool GameItems::isDraw(){
-   if(m_lastSpawn.GetElapsedTime()/1000>3.f)m_draw=true;
+   if(m_lastSpawn.GetElapsedTime()/1000>g_config["itemcooldown"])m_draw=true;
    else m_draw=false;
     return m_draw;
 }
