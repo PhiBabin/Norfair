@@ -21,9 +21,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 /**
     Construction des éléments du jeu
 **/
-PlayState::PlayState(GameEngine* theGameEngine): m_playerOne(0),m_playerTwo(0),m_map(0),m_maxMove(0,0,200,200), m_gameEngine(theGameEngine){
+PlayState::PlayState(GameEngine* theGameEngine): m_playerOne(0),m_playerTwo(0),m_map(0), m_gameEngine(theGameEngine){
 
     m_itemSound.SetBuffer(g_soundManag["item"]);
+    m_select.SetBuffer(g_soundManag["select"]);
 
     m_playerOne= new Player((g_imgManag)["mago"].img, &m_map);
     m_playerTwo= new Player((g_imgManag)["squel"].img, &m_map, true);
@@ -141,6 +142,7 @@ void PlayState::pause(){
     }
     //! On change le state principale
     m_gameEngine->changeState(2);
+    m_select.Play();
 }
 /**
     Démarrage après une pause

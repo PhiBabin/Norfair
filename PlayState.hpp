@@ -36,12 +36,8 @@ class PlayState: public GameState {
         Player *m_playerTwo;
         MapTile *m_map;
         sf::Sound m_itemSound;
-        sf::Image *m_imgPlayer;
-        sf::View m_camera;
-        sf::FloatRect m_maxMove;
-        sf::Shape m_vecPlayerOne;
-        sf::Shape m_vecPlayerTwo;
-        sf::IntRect m_minMove;
+        sf::Sound m_select;
+
         vector<GameObject*> *m_mapObject;
         vector<GameItems*> *m_mapItems;
         GameMessage m_gameMessage;

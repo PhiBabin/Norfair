@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <img>
 	<anim name="hp" path="img/barre_vie.png" nbrCollums="1" nbrLines="11" />
-	<anim name="vie" path="img/live.png" nbrCollums="1" nbrLines="7" />
+	<anim name="vie" path="img/live.png" nbrCollums="1" nbrLines="6" />
 	<anim name="shield" path="img/sheild.png" nbrCollums="1" nbrLines="1" />
 	<anim name="marm" path="img/arm_mago2.png" nbrCollums="3" nbrLines="2" />
 	<anim name="sarm" path="img/arm_squel.png" nbrCollums="3" nbrLines="1" />
@@ -25,6 +25,9 @@
 	<wav name="jump" path="sounds/jump.wav" />
 	<wav name="hurt" path="sounds/hurt.wav" />
 	<wav name="item" path="sounds/item.wav" />
+	<wav name="fireball" path="sounds/fireballs.wav" />
+	<wav name="shot" path="sounds/shot.wav" />
+	<wav name="select" path="sounds/select.wav" />
 </sound>
 <config>
 	<option name="screenwidth" value="800" />
@@ -37,8 +40,8 @@
 	<option name="playercollheight" value="18" />
 	<option name="gravity" value="350" />
 	<option name="jump" value="-300" />
-	<option name="itemcooldown" value="10" />
-	<option name="startvie" value="3" />
+	<option name="itemcooldown" value="15" />
+	<option name="startvie" value="5" />
 	<option name="starthp" value="100" />
 	<option name="level" value="1" />
 </config>

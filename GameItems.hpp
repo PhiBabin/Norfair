@@ -18,7 +18,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #define GAMEITEMS_H
 class GameItems: public GameObject{
     public:
-        GameItems(sf::Image &img,int nbrFrame,int nbrLigne,float height, float width,float offsetColX,float offsetColY,bool col);
+        GameItems(sf::Image &img,int nbrFrame,int nbrLigne,float height, float width,float offsetColX,float offsetColY,bool col,int x, int y,int x2, int y2,int x3, int y3);
         virtual bool isDraw();
         virtual bool isDelete()const;
         virtual bool isCollision()const;
@@ -28,6 +28,7 @@ class GameItems: public GameObject{
     private:
         PausableClock m_lastSpawn;
         bool m_draw;
+        int m_x, m_y, m_x2, m_y2, m_x3, m_y3;
         GameMessage *m_gameMessage;
 };
 

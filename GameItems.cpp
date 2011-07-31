@@ -17,8 +17,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "GameItems.hpp"
 #include "Player.hpp"
 
-GameItems::GameItems(sf::Image &img,int nbrFrame,int nbrLigne,float height=0, float width=0,float offsetColX=0,float offsetColY=0,bool col=false):
- GameObject(img,nbrFrame,nbrLigne,height, width,offsetColX,offsetColY,col),m_draw(true){
+GameItems::GameItems(sf::Image &img,int nbrFrame,int nbrLigne,float height=0, float width=0,float offsetColX=0,float offsetColY=0,bool col=false,int x=0, int y=0,int x2=0, int y2=0,int x3=0, int y3=0):
+ GameObject(img,nbrFrame,nbrLigne,height, width,offsetColX,offsetColY,col),m_draw(true)
+ ,m_x(x),m_y(y),m_x2(x2),m_y2(y2),m_x3(x3),m_y3(y3){
      m_lastSpawn.Reset();
      if(height==0){
          m_colHeight=img.GetHeight()/nbrLigne;
@@ -38,8 +39,7 @@ bool GameItems::isCollision()const{
 }
 bool GameItems::collisionEffect(Player &player){
     m_draw=false;
-    m_lastSpawn.Reset();
-    switch(rand() % 3 + 1){
+    switch(rand() % 5 + 1){
         case 1:
             player.AddLife();
             m_gameMessage->AddMessage("New Life");
@@ -48,10 +48,31 @@ bool GameItems::collisionEffect(Player &player){
             player.GodInvocation();
             m_gameMessage->AddMessage("God hates you!");
         break;
+        case 3:
+            player.Degat(200);
+            m_gameMessage->AddMessage("Sudden death");
+        break;
+        case 4:
+            player.HellInvocation();
+            m_gameMessage->AddMessage("Hell Fire!");
+        break;
         default:
             player.RaiseShield();
             m_gameMessage->AddMessage("Raise shield");
     }
+    //! Set the seed
+    srand((unsigned)time(0)*m_lastSpawn.GetElapsedTime());
+    switch(rand() % 3 +1 ){
+        case 2:
+            SetPosition(m_x2*g_config["tileheight"],m_y2*g_config["tilewidth"]);
+        break;
+        case 3:
+            SetPosition(m_x3*g_config["tileheight"],m_y3*g_config["tilewidth"]);
+        break;
+        default:
+            SetPosition(m_x*g_config["tileheight"],m_y*g_config["tilewidth"]);
+    }
+    m_lastSpawn.Reset();
     return true;
 }
 void GameItems::setGameMessage(GameMessage *gameMessage){

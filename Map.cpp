@@ -71,13 +71,13 @@ void MapTile::draw(){
     cout<<"FPS="<</*1.f/(m_app->GetFrameTime())*1000<<*/"Joueur 1 x="<<m_playerOne->GetPosition().x<<" y="<<m_playerOne->GetPosition().y<<" vely="<<m_playerOne->GetVely()<<" velx="<<m_playerOne->GetVelx()<<endl;
     //! On affiche les tiles du background
     m_app->Draw(sf::Sprite(m_background.GetImage()));
+    //! On affiche les tiles du foreground
+    m_app->Draw(sf::Sprite(m_map.GetImage()));
     //! On affiche le personnage et ces éléments
     m_app->Draw(*m_playerOne);
     m_playerOne->drawing(m_app);
     m_app->Draw(*m_playerTwo);
     m_playerTwo->drawing(m_app);
-    //! On affiche les tiles du foreground
-    m_app->Draw(sf::Sprite(m_map.GetImage()));
     //! On affiche les objets de la carte
     for(unsigned int i=0;i<m_mapObject.size();i++){
         if((m_mapObject.at(i))->isDelete()){
@@ -149,9 +149,13 @@ void MapTile::loadMap(){
     //! On charge les items
     pElem=hDoc.FirstChild("items").FirstChild().Element();
     for(; pElem; pElem=pElem->NextSiblingElement()){
-        int itemX =atoi(pElem->Attribute("x"));
-        int itemY =atoi(pElem->Attribute("y"));
-	    m_mapItems.push_back(new GameItems((g_imgManag)["item"].img,(g_imgManag)["item"].nbrCollum,(g_imgManag)["item"].nbrLine));
+        int itemX =atoi(pElem->Attribute("x1"));
+        int itemY =atoi(pElem->Attribute("y1"));
+        int itemX2 =atoi(pElem->Attribute("x2"));
+        int itemY2 =atoi(pElem->Attribute("y2"));
+        int itemX3 =atoi(pElem->Attribute("x3"));
+        int itemY3 =atoi(pElem->Attribute("y3"));
+	    m_mapItems.push_back(new GameItems(g_imgManag["item"].img,g_imgManag["item"].nbrCollum,g_imgManag["item"].nbrLine,0,0,0,0,false,itemX,itemY,itemX2,itemY2,itemX3,itemY3));
 	    m_mapItems.back()->SetPosition(itemX*g_config["tileheight"],itemY*g_config["tilewidth"]);
 	    m_mapItems.back()->setDelay(0.2);
     }

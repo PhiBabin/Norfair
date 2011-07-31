@@ -32,6 +32,8 @@ ImgAnim::ImgAnim(img,3,4)
 
     m_jumpSound.SetBuffer(g_soundManag["jump"]);
     m_hurtSound.SetBuffer(g_soundManag["hurt"]);
+    if(m_machineGun)m_pafPafSound.SetBuffer(g_soundManag["shot"]);
+    else m_pafPafSound.SetBuffer(g_soundManag["fireball"]);
 }
 
 sf::FloatRect Player::GetPlayerRect(){
@@ -196,12 +198,12 @@ void Player::SetMapObject(vector<GameObject*> *listObject){
 void Player::AddLife(){
     if(m_vie<6)m_vie++;
 }
+
 void Player::RaiseShield(){
     m_shield=true;
     m_shieldCoolDown.Reset();
 }
 void Player::GodInvocation(){
-
     m_listObject->push_back(new GameAnim((g_imgManag)["god"].img,(g_imgManag)["god"].nbrCollum,(g_imgManag)["god"].nbrLine));
     m_listObject->back()->setDelay(0.3);
     m_listObject->back()->SetPosition((*m_map)->oppositePlayer(this)->GetPosition().x-7,0);
@@ -219,6 +221,16 @@ void Player::GodInvocation(){
     m_listObject->back()->setDelay(0.5);
 
     (*m_map)->oppositePlayer(this)->Degat(200);
+}
+void Player::HellInvocation(){
+    m_listObject->push_back(new GameAnim(g_imgManag["explosion"].img,(g_imgManag)["explosion"].nbrCollum,(g_imgManag)["explosion"].nbrLine));
+    m_listObject->back()->SetScale(3,3);
+    m_listObject->back()->setDelay(0.1);
+    m_listObject->back()->SetPosition((*m_map)->oppositePlayer(this)->GetPosition());
+    m_listObject->back()->Move(-12,-5);
+
+    (*m_map)->oppositePlayer(this)->SetOnFire();
+    (*m_map)->oppositePlayer(this)->Degat(50);
 }
 void Player::Degat(int degats){
     if(!m_shield){
@@ -276,6 +288,8 @@ void Player::UnlockJump(){
 }
 void Player::Shoot(){
     if(m_lastShot.GetElapsedTime()/1000.f>0.4 && !m_machineGun){
+        m_pafPafSound.SetVolume(50);
+        m_pafPafSound.Play();
         float velx=0,vely=0;
         int rotation=0;
         if(m_lookUp==HAUT ){
@@ -308,6 +322,7 @@ void Player::Shoot(){
         m_lastShot.Reset();
     }
     if(m_lastShot.GetElapsedTime()/1000.f>0.2 && m_machineGun){
+        m_pafPafSound.Play();
         float velx=0,vely=0;
         if(m_lookUp==HAUT ){
                 if(m_moving==BOUGE){
@@ -355,7 +370,7 @@ void Player::drawing(sf::RenderWindow* app){
 
     if(m_burning.GetElapsedTime()>5000)m_onFire=false;
 
-    if(m_shieldCoolDown.GetElapsedTime()/1000>15)m_shield=false;
+    if(m_shieldCoolDown.GetElapsedTime()>8000)m_shield=false;
     if(m_shield){
         m_blueShield.SetPosition(GetPosition());
         if(m_machineGun)m_blueShield.Move(-9,-7);
@@ -375,12 +390,12 @@ void Player::drawing(sf::RenderWindow* app){
 
 
     if(m_hp>0){
-        m_hpBarre.SetPosition(GetPosition().x-3,GetPosition().y-13);
+        m_hpBarre.SetPosition(GetPosition().x-3,GetPosition().y-15);
         m_hpBarre.setAnimRow(10-floor(m_hp/10));
         app->Draw(m_hpBarre);
     }
-    if(m_vie<=g_config["startvie"])m_vieBarre.SetPosition(GetPosition().x-3+(-4*(g_config["startvie"]-3)),GetPosition().y-7);
-    else m_vieBarre.SetPosition(GetPosition().x-3+(-4*(m_vie-3)),GetPosition().y-7);
+    if(m_vie<=g_config["startvie"])m_vieBarre.SetPosition(GetPosition().x-3+(-6*(g_config["startvie"]-3)),GetPosition().y-8);
+    else m_vieBarre.SetPosition(GetPosition().x-3+(-6*(m_vie-3)),GetPosition().y-8);
     m_vieBarre.setAnimRow(6-m_vie);
     app->Draw(m_vieBarre);
 }

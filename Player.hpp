@@ -53,6 +53,7 @@ class Player:public ImgAnim{
     //! Items
         void RaiseShield();
         void GodInvocation();
+        void HellInvocation();
     //! I just want to kill stuff with FIRE!
         void SetOnFire();
     //! Velocité
@@ -75,6 +76,7 @@ class Player:public ImgAnim{
         ImgAnim m_blueShield;
         sf::Sound m_jumpSound;
         sf::Sound m_hurtSound;
+        sf::Sound m_pafPafSound;
 
         MapTile **m_map;
         vector<GameObject*> *m_listObject;

@@ -8,7 +8,7 @@
 		<!--<info name="backbackpath" value="map/level1/shadow.png" x="0" y="100"/>-->
 	</metadata>
 	<items>
-		<position x="26" y="7" />
+		<position x1="26" y1="7"  x2="4" y2="26"  x3="49" y3="26"/>
 	</items>
 	<tileset>
 		<tile x="0" y="0" visible="0" solid="0" spawn="0" kill="0" />
