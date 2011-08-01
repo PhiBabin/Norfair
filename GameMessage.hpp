@@ -10,7 +10,6 @@ class GameMessage{
         bool m_empty;
         sf::Font m_font;
         sf::Text m_principal;
-        sf::Text m_transition;
         vector<sf::String> m_message;
         PausableClock m_nextMessage;
 };

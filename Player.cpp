@@ -232,6 +232,12 @@ void Player::HellInvocation(){
     (*m_map)->oppositePlayer(this)->SetOnFire();
     (*m_map)->oppositePlayer(this)->Degat(50);
 }
+void Player::Exchange(){
+    int e=(*m_map)->oppositePlayer(this)->GetVie();
+    (*m_map)->oppositePlayer(this)->SetVie(m_vie);
+    m_vie=e;
+
+}
 void Player::Degat(int degats){
     if(!m_shield){
         m_hp-=degats;
@@ -240,6 +246,9 @@ void Player::Degat(int degats){
 }
 int Player::GetVie(){
     return m_vie;
+}
+void Player::SetVie(int nv){
+    m_vie=nv;
 }
 bool Player::IsDead(){
     if(m_hp<=0){
@@ -295,21 +304,21 @@ void Player::Shoot(){
         if(m_lookUp==HAUT ){
             if(m_moving==BOUGE){
                 rotation=-45;
-                vely=-141;
-                velx=141;
+                vely=-162;
+                velx=162;
                 if(m_direction==GAUCHE){
                     rotation=45;
-                    velx=-141;
+                    velx=-162;
                 }
             }
             else{
                 rotation=-90;
-                vely=-200;
+                vely=-250;
             }
         }
         else{
-            velx=-200;
-            if(m_direction==DROITE)velx=200;
+            velx=-250;
+            if(m_direction==DROITE)velx=250;
         }
         m_arm->play();
 
@@ -341,7 +350,7 @@ void Player::Shoot(){
                 if(m_direction==DROITE)velx=300;
             }
             m_arm->play();
-            m_listObject->push_back(new GameBullet((g_imgManag)["shot"].img,(g_imgManag)["shot"].nbrCollum,(g_imgManag)["shot"].nbrLine,5,false,this,velx,vely));
+            m_listObject->push_back(new GameBullet((g_imgManag)["shot"].img,(g_imgManag)["shot"].nbrCollum,(g_imgManag)["shot"].nbrLine,3,false,this,velx,vely));
             m_listObject->back()->SetPosition(GetPosition());
             m_listObject->back()->Move(0,4);
             m_listObject->back()->setDelay(0.04);
@@ -391,7 +400,8 @@ void Player::drawing(sf::RenderWindow* app){
 
     if(m_hp>0){
         m_hpBarre.SetPosition(GetPosition().x-3,GetPosition().y-15);
-        m_hpBarre.setAnimRow(10-floor(m_hp/10));
+        if(m_hp<100)m_hpBarre.setAnimRow(10-floor(m_hp/10));
+        else m_hpBarre.setAnimRow(0);
         app->Draw(m_hpBarre);
     }
     if(m_vie<=g_config["startvie"])m_vieBarre.SetPosition(GetPosition().x-3+(-6*(g_config["startvie"]-3)),GetPosition().y-8);

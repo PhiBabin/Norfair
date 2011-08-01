@@ -47,6 +47,7 @@ class Player:public ImgAnim{
         void SetMapObject(vector<GameObject*> *listObject);
     //! Vie et mort
         int GetVie();
+        void SetVie(int nv);
         void Degat(int degats);
         void AddLife();
         bool IsDead();
@@ -54,6 +55,7 @@ class Player:public ImgAnim{
         void RaiseShield();
         void GodInvocation();
         void HellInvocation();
+        void Exchange();
     //! I just want to kill stuff with FIRE!
         void SetOnFire();
     //! Velocité

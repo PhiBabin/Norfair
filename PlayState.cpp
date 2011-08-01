@@ -73,10 +73,11 @@ void PlayState::loop(){
    if(Input.IsKeyDown(sf::Key::Return))pause();
 
     //! Control du joueur 1
-    if (Input.IsKeyDown(sf::Key::M))m_playerOne->Jump();
+    if(Input.IsKeyDown(sf::Key::L))m_playerOne->Degat(-40);
+    if(Input.IsKeyDown(sf::Key::Numpad3))m_playerOne->Jump();
+    if(Input.IsKeyDown(sf::Key::Numpad2))m_playerOne->Shoot();
     m_playerOne->TurnUp(Input.IsKeyDown(sf::Key::Up));
     m_playerOne->Turn(Input.IsKeyDown(sf::Key::Left),Input.IsKeyDown(sf::Key::Right));
-    if(Input.IsKeyDown(sf::Key::N))m_playerOne->Shoot();
 
 
     //! Control du joueur 2

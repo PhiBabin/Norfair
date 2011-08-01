@@ -39,7 +39,7 @@ bool GameItems::isCollision()const{
 }
 bool GameItems::collisionEffect(Player &player){
     m_draw=false;
-    switch(rand() % 5 + 1){
+    switch(rand() % 6 + 1){
         case 1:
             player.AddLife();
             m_gameMessage->AddMessage("New Life");
@@ -55,6 +55,9 @@ bool GameItems::collisionEffect(Player &player){
         case 4:
             player.HellInvocation();
             m_gameMessage->AddMessage("Hell Fire!");
+        case 5:
+            player.Exchange();
+            m_gameMessage->AddMessage("The big exchange");
         break;
         default:
             player.RaiseShield();
