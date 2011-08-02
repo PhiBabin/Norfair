@@ -23,7 +23,7 @@ ImgAnim::ImgAnim(img,3,4)
 ,m_blueShield((g_imgManag)["shield"].img,(g_imgManag)["shield"].nbrCollum,(g_imgManag)["shield"].nbrLine)
 ,m_map(map)
 ,m_hp(g_config["starthp"]),m_vie(g_config["startvie"]),m_velx(0),m_vely(0),m_jumpLock(false),m_colBot(false),m_direction(true),m_lookUp(true),m_moving(true),m_onFire(false)
-,m_machineGun(machineGun),m_shield(false)
+,m_machineGun(machineGun),m_shield(false),m_flashing(false),m_mortalKombat(false)
 {
     setDelay(0.2);
      if(!machineGun)m_arm=new ImgAnim((g_imgManag)["marm"].img,(g_imgManag)["marm"].nbrCollum,(g_imgManag)["marm"].nbrLine);
@@ -238,8 +238,26 @@ void Player::Exchange(){
     m_vie=e;
 
 }
+void Player::MortalKombat(bool launch){
+    m_vie=1;
+    m_hp=1;
+    m_onFire=false;
+
+
+    m_mortalKombat=true;
+
+    if(launch){
+        SetPosition((*m_map)->m_spawnLocationOne);
+        (*m_map)->oppositePlayer(this)->SetPosition((*m_map)->m_spawnLocationTwo);
+        (*m_map)->oppositePlayer(this)->MortalKombat(false);
+    }
+}
 void Player::Degat(int degats){
     if(!m_shield){
+        if(degats>0){
+            m_hurt.Reset();
+            m_flashing=true;
+        }
         m_hp-=degats;
         m_hurtSound.Play();
     }
@@ -249,6 +267,12 @@ int Player::GetVie(){
 }
 void Player::SetVie(int nv){
     m_vie=nv;
+}
+int Player::GetHp(){
+    return m_vie;
+}
+void Player::SetHp(int nhp){
+    m_hp=nhp;
 }
 bool Player::IsDead(){
     if(m_hp<=0){
@@ -360,6 +384,7 @@ void Player::Shoot(){
 }
 
 void Player::drawing(sf::RenderWindow* app){
+    //! On place les bras/armes
     m_arm->SetPosition(GetPosition());
     if(m_machineGun){
         if(m_lastShot.GetElapsedTime()/1000<0.2){
@@ -377,8 +402,10 @@ void Player::drawing(sf::RenderWindow* app){
     }
     app->Draw(*m_arm);
 
+
     if(m_burning.GetElapsedTime()>5000)m_onFire=false;
 
+    //! On affiche le bouclier
     if(m_shieldCoolDown.GetElapsedTime()>8000)m_shield=false;
     if(m_shield){
         m_blueShield.SetPosition(GetPosition());
@@ -386,7 +413,14 @@ void Player::drawing(sf::RenderWindow* app){
         else m_blueShield.Move(-7,-7);
         app->Draw(m_blueShield);
     }
+    //! Si dommage on change la couleur du joueur
+    if(m_hurt.GetElapsedTime()<100 && m_flashing)SetColor(sf::Color::Red);
+    else{
+        m_flashing=false;
+        SetColor(sf::Color::White);
+    }
 
+    //! S'il est en feu on rajoute les sprites de feu
     if(m_onFire){
         if(m_hurt.GetElapsedTime()>1000){
             m_hurt.Reset();
@@ -397,17 +431,19 @@ void Player::drawing(sf::RenderWindow* app){
         m_listObject->back()->setDelay(0.1);
     }
 
-
-    if(m_hp>0){
-        m_hpBarre.SetPosition(GetPosition().x-3,GetPosition().y-15);
-        if(m_hp<100)m_hpBarre.setAnimRow(10-floor(m_hp/10));
-        else m_hpBarre.setAnimRow(0);
-        app->Draw(m_hpBarre);
+    //! Barre de hp et de vie
+    if(!m_mortalKombat){
+        if(m_hp>0){
+            m_hpBarre.SetPosition(GetPosition().x-3,GetPosition().y-15);
+            if(m_hp<100)m_hpBarre.setAnimRow(10-floor(m_hp/10));
+            else m_hpBarre.setAnimRow(0);
+            app->Draw(m_hpBarre);
+        }
+        if(m_vie<=g_config["startvie"])m_vieBarre.SetPosition(GetPosition().x-3+(-6*(g_config["startvie"]-3)),GetPosition().y-8);
+        else m_vieBarre.SetPosition(GetPosition().x-3+(-6*(m_vie-3)),GetPosition().y-8);
+        m_vieBarre.setAnimRow(6-m_vie);
+        app->Draw(m_vieBarre);
     }
-    if(m_vie<=g_config["startvie"])m_vieBarre.SetPosition(GetPosition().x-3+(-6*(g_config["startvie"]-3)),GetPosition().y-8);
-    else m_vieBarre.SetPosition(GetPosition().x-3+(-6*(m_vie-3)),GetPosition().y-8);
-    m_vieBarre.setAnimRow(6-m_vie);
-    app->Draw(m_vieBarre);
 }
 void Player::Pause(){
     m_lastShot.Pause();

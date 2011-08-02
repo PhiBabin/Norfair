@@ -48,6 +48,8 @@ class Player:public ImgAnim{
     //! Vie et mort
         int GetVie();
         void SetVie(int nv);
+        int GetHp();
+        void SetHp(int nhp);
         void Degat(int degats);
         void AddLife();
         bool IsDead();
@@ -56,6 +58,7 @@ class Player:public ImgAnim{
         void GodInvocation();
         void HellInvocation();
         void Exchange();
+        void MortalKombat(bool launch);
     //! I just want to kill stuff with FIRE!
         void SetOnFire();
     //! Velocité
@@ -95,6 +98,8 @@ class Player:public ImgAnim{
         bool m_onFire;
         bool m_machineGun;
         bool m_shield;
+        bool m_flashing;
+        bool m_mortalKombat;
 
         PausableClock m_shieldCoolDown;
         PausableClock m_lastShot;

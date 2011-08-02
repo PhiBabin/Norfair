@@ -49,8 +49,14 @@ bool GameItems::collisionEffect(Player &player){
             m_gameMessage->AddMessage("God hates you!");
         break;
         case 3:
-            player.Degat(200);
-            m_gameMessage->AddMessage("Sudden death");
+            if(rand() % 2 + 1==1){
+                player.MortalKombat(true);
+                m_gameMessage->AddMessage("MORTAL KOMBAT!");
+            }
+            else{
+                player.Degat(200);
+                m_gameMessage->AddMessage("Sudden death");
+            }
         break;
         case 4:
             player.HellInvocation();
