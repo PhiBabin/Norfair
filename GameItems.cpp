@@ -39,7 +39,7 @@ bool GameItems::isCollision()const{
 }
 bool GameItems::collisionEffect(Player &player){
     m_draw=false;
-    switch(rand() % 6 + 1){
+    switch(rand() % 7 + 1){
         case 1:
             player.AddLife();
             m_gameMessage->AddMessage("New Life");
@@ -49,7 +49,7 @@ bool GameItems::collisionEffect(Player &player){
             m_gameMessage->AddMessage("God hates you!");
         break;
         case 3:
-            if(rand() % 2 + 1==1){
+            if(rand() % 4 + 1==1){
                 player.MortalKombat(true);
                 m_gameMessage->AddMessage("MORTAL KOMBAT!");
             }
@@ -64,6 +64,10 @@ bool GameItems::collisionEffect(Player &player){
         case 5:
             player.Exchange();
             m_gameMessage->AddMessage("The big exchange");
+        break;
+        case 6:
+            player.Shuriken();
+            m_gameMessage->AddMessage("Shuriken of lighting");
         break;
         default:
             player.RaiseShield();

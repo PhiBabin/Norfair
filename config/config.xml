@@ -8,6 +8,7 @@
 	<anim name="god" path="img/god.png" nbrCollums="2" nbrLines="1" />
 	<anim name="fire" path="img/fireball2.png" nbrCollums="6" nbrLines="1" />
 	<anim name="shot" path="img/shot2.png" nbrCollums="16" nbrLines="1" />
+	<anim name="shuriken" path="img/shuriken.png" nbrCollums="4" nbrLines="1" />
 	<anim name="mago" path="img/sprite_mago4.png" nbrCollums="3" nbrLines="4" />
 	<anim name="dead" path="img/dead.png" nbrCollums="2" nbrLines="2" />
 	<anim name="squel" path="img/sprite_squel.png" nbrCollums="3" nbrLines="4" />

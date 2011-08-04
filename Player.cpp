@@ -16,14 +16,14 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.*/
 
 #include "Player.hpp"
-Player::Player(sf::Image &img, MapTile **map,bool machineGun=false):
+Player::Player(sf::Image &img, MapTile **map,GameMessage *gameMessage,bool machineGun=false):
 ImgAnim::ImgAnim(img,3,4)
 ,m_vieBarre((g_imgManag)["vie"].img,(g_imgManag)["vie"].nbrCollum,(g_imgManag)["vie"].nbrLine)
 ,m_hpBarre((g_imgManag)["hp"].img,(g_imgManag)["hp"].nbrCollum,(g_imgManag)["hp"].nbrLine)
 ,m_blueShield((g_imgManag)["shield"].img,(g_imgManag)["shield"].nbrCollum,(g_imgManag)["shield"].nbrLine)
-,m_map(map)
+,m_map(map),m_gameMessage(gameMessage)
 ,m_hp(g_config["starthp"]),m_vie(g_config["startvie"]),m_velx(0),m_vely(0),m_jumpLock(false),m_colBot(false),m_direction(true),m_lookUp(true),m_moving(true),m_onFire(false)
-,m_machineGun(machineGun),m_shield(false),m_flashing(false),m_mortalKombat(false)
+,m_machineGun(machineGun),m_shield(false),m_flashing(false),m_mortalKombat(false),m_shuriken(false)
 {
     setDelay(0.2);
      if(!machineGun)m_arm=new ImgAnim((g_imgManag)["marm"].img,(g_imgManag)["marm"].nbrCollum,(g_imgManag)["marm"].nbrLine);
@@ -252,9 +252,18 @@ void Player::MortalKombat(bool launch){
         (*m_map)->oppositePlayer(this)->MortalKombat(false);
     }
 }
+void Player::Shuriken(){
+    m_shuriken=true;
+    m_shurikenOn.Reset();
+}
 void Player::Degat(int degats){
     if(!m_shield){
         if(degats>0){
+            stringstream ss;
+            ss<<degats;
+            string text="-"+ ss.str();
+
+            m_gameMessage->AddText(text,sf::Vector2f(GetPosition().x+3,GetPosition().y-10));
             m_hurt.Reset();
             m_flashing=true;
         }
@@ -346,40 +355,51 @@ void Player::Shoot(){
         }
         m_arm->play();
 
-        m_listObject->push_back(new GameBullet((g_imgManag)["fire"].img,(g_imgManag)["fire"].nbrCollum,(g_imgManag)["fire"].nbrLine,10,true,this,velx,vely));
-        m_listObject->back()->SetPosition(GetPosition());
-        m_listObject->back()->setDelay(0.1);
-        if(!(m_lookUp==HAUT && m_moving==IMMOBILE))m_listObject->back()->FlipX(m_direction);
-        else m_listObject->back()->FlipX(false);
-        m_listObject->back()->SetRotation(rotation);
+        if(m_shuriken){
+            m_listObject->push_back(new GameBullet((g_imgManag)["shuriken"].img,(g_imgManag)["shuriken"].nbrCollum,(g_imgManag)["shuriken"].nbrLine,20,true,this,velx,vely));
+            m_listObject->back()->SetPosition(GetPosition());
+            m_listObject->back()->Move(0,4);
+            m_listObject->back()->setDelay(0.04);
+            m_listObject->back()->loop(true);
+        }
+        else{
+            m_listObject->push_back(new GameBullet((g_imgManag)["fire"].img,(g_imgManag)["fire"].nbrCollum,(g_imgManag)["fire"].nbrLine,10,true,this,velx,vely));
+            m_listObject->back()->SetPosition(GetPosition());
+            m_listObject->back()->setDelay(0.1);
+            if(!(m_lookUp==HAUT && m_moving==IMMOBILE))m_listObject->back()->FlipX(m_direction);
+            else m_listObject->back()->FlipX(false);
+            m_listObject->back()->SetRotation(rotation);
+        }
         m_lastShot.Reset();
     }
     if(m_lastShot.GetElapsedTime()/1000.f>0.2 && m_machineGun){
         m_pafPafSound.Play();
         float velx=0,vely=0;
         if(m_lookUp==HAUT ){
-                if(m_moving==BOUGE){
-                    velx=167;
-                    vely=-167;
-                    if(m_direction==GAUCHE){
-                        velx=-167;
-                    }
-                }
-                else{
-                    vely=-300;
+            if(m_moving==BOUGE){
+                velx=167;
+                vely=-167;
+                if(m_direction==GAUCHE){
+                    velx=-167;
                 }
             }
             else{
-                velx=-300;
-                if(m_direction==DROITE)velx=300;
+                vely=-300;
             }
-            m_arm->play();
-            m_listObject->push_back(new GameBullet((g_imgManag)["shot"].img,(g_imgManag)["shot"].nbrCollum,(g_imgManag)["shot"].nbrLine,3,false,this,velx,vely));
-            m_listObject->back()->SetPosition(GetPosition());
-            m_listObject->back()->Move(0,4);
-            m_listObject->back()->setDelay(0.04);
-            m_listObject->back()->loop(true);
-            m_lastShot.Reset();
+        }
+        else{
+            velx=-300;
+            if(m_direction==DROITE)velx=300;
+        }
+
+        m_arm->play();
+        if(m_shuriken) m_listObject->push_back(new GameBullet((g_imgManag)["shuriken"].img,(g_imgManag)["shuriken"].nbrCollum,(g_imgManag)["shuriken"].nbrLine,10,false,this,velx,vely));
+        else m_listObject->push_back(new GameBullet((g_imgManag)["shot"].img,(g_imgManag)["shot"].nbrCollum,(g_imgManag)["shot"].nbrLine,3,false,this,velx,vely));
+        m_listObject->back()->SetPosition(GetPosition());
+        m_listObject->back()->Move(0,4);
+        m_listObject->back()->setDelay(0.04);
+        m_listObject->back()->loop(true);
+        m_lastShot.Reset();
     }
 }
 
@@ -402,8 +422,8 @@ void Player::drawing(sf::RenderWindow* app){
     }
     app->Draw(*m_arm);
 
-
-    if(m_burning.GetElapsedTime()>5000)m_onFire=false;
+    //!On change l'arme
+    if(m_shurikenOn.GetElapsedTime()>10000)m_shuriken=false;
 
     //! On affiche le bouclier
     if(m_shieldCoolDown.GetElapsedTime()>8000)m_shield=false;
@@ -421,6 +441,7 @@ void Player::drawing(sf::RenderWindow* app){
     }
 
     //! S'il est en feu on rajoute les sprites de feu
+    if(m_burning.GetElapsedTime()>5000)m_onFire=false;
     if(m_onFire){
         if(m_hurt.GetElapsedTime()>1000){
             m_hurt.Reset();

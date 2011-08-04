@@ -26,8 +26,8 @@ PlayState::PlayState(GameEngine* theGameEngine): m_playerOne(0),m_playerTwo(0),m
     m_itemSound.SetBuffer(g_soundManag["item"]);
     m_select.SetBuffer(g_soundManag["select"]);
 
-    m_playerOne= new Player((g_imgManag)["mago"].img, &m_map);
-    m_playerTwo= new Player((g_imgManag)["squel"].img, &m_map, true);
+    m_playerOne= new Player((g_imgManag)["mago"].img, &m_map, &m_gameMessage);
+    m_playerTwo= new Player((g_imgManag)["squel"].img, &m_map, &m_gameMessage, true);
 
     m_map =new MapTile(&(*m_gameEngine).m_app,m_playerOne,m_playerTwo);
 

@@ -127,16 +127,16 @@ void MapTile::loadMap(){
     pElem=hDoc.FirstChild("metadata").FirstChild().Element();
     for(; pElem; pElem=pElem->NextSiblingElement()){
         levelConfig[pElem->Attribute("name")]=string(pElem->Attribute("value"));
-//!       if(pElem->Attribute("name")==string("backbackpath"))backbackCoor=sf::Vector2f(atoi(pElem->Attribute("x")),atoi(pElem->Attribute("y")));
+///       if(pElem->Attribute("name")==string("backbackpath"))backbackCoor=sf::Vector2f(atoi(pElem->Attribute("x")),atoi(pElem->Attribute("y")));
     }
 
     //! Initiation des images temporaire
     sf::Image tilesetImg,backImg ,backbackImg ,image_schemaImg;
     tilesetImg.LoadFromFile(levelConfig["mappath"]);
     backImg.LoadFromFile(levelConfig["backpath"]);
-//!    backbackImg.LoadFromFile(levelConfig["backbackpath"]);
-//!    sf::Sprite backback(backbackImg);
-//!    backback.SetPosition(backbackCoor);
+///    backbackImg.LoadFromFile(levelConfig["backbackpath"]);
+///    sf::Sprite backback(backbackImg);
+///    backback.SetPosition(backbackCoor);
     //! On supprime les vectors
 	m_typeList.erase(m_typeList.begin(),m_typeList.end());
 	m_tileSet.erase(m_tileSet.begin(),m_tileSet.end());

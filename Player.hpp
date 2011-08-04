@@ -21,7 +21,7 @@ class MapTile;
 class Player:public ImgAnim{
     public:
     //! Construteur
-        Player(sf::Image &img, MapTile **map,bool machineGun);
+        Player(sf::Image &img, MapTile **map,GameMessage *gameMessage,bool machineGun);
     //! Affiche
         void drawing(sf::RenderWindow* app);
     //! Retourne le rectangle de Camera
@@ -59,6 +59,7 @@ class Player:public ImgAnim{
         void HellInvocation();
         void Exchange();
         void MortalKombat(bool launch);
+        void Shuriken();
     //! I just want to kill stuff with FIRE!
         void SetOnFire();
     //! Velocité
@@ -85,6 +86,7 @@ class Player:public ImgAnim{
 
         MapTile **m_map;
         vector<GameObject*> *m_listObject;
+        GameMessage *m_gameMessage;
 
         int m_hp;
         int m_vie;
@@ -100,10 +102,12 @@ class Player:public ImgAnim{
         bool m_shield;
         bool m_flashing;
         bool m_mortalKombat;
+        bool m_shuriken;
 
         PausableClock m_shieldCoolDown;
         PausableClock m_lastShot;
         PausableClock m_burning;
         PausableClock m_hurt;
+        PausableClock m_shurikenOn;
 };
 #endif // PLAYER_HPP_INCLUDED
