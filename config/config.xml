@@ -2,6 +2,7 @@
 <img>
 	<anim name="hp" path="img/barre_vie.png" nbrCollums="1" nbrLines="11" />
 	<anim name="vie" path="img/live.png" nbrCollums="1" nbrLines="6" />
+	<anim name="coutdown" path="img/coutdown.png" nbrCollums="1" nbrLines="4" />
 	<anim name="shield" path="img/sheild.png" nbrCollums="1" nbrLines="1" />
 	<anim name="marm" path="img/arm_mago2.png" nbrCollums="3" nbrLines="2" />
 	<anim name="sarm" path="img/arm_squel.png" nbrCollums="3" nbrLines="1" />
@@ -16,11 +17,11 @@
 	<anim name="explosion" path="img/explosion.png" nbrCollums="6" nbrLines="3" />
 	<anim name="explosion2" path="img/explosion2.png" nbrCollums="3" nbrLines="1" />
 	<anim name="explosion3" path="img/fire2.png" nbrCollums="4" nbrLines="1" />
-	<anim name="pause" path="img/pause.png" nbrCollums="0" nbrLines="0" />
-	<anim name="norfair" path="img/norfair.png" nbrCollums="0" nbrLines="0" />
-	<anim name="press" path="img/press_any_key.png" nbrCollums="0" nbrLines="0" />
+	<sprite name="pause" path="img/pause.png" nbrCollums="0" nbrLines="0" />
+	<sprite name="norfair" path="img/norfair.png" nbrCollums="0" nbrLines="0" />
+	<sprite name="press" path="img/press_any_key.png" nbrCollums="0" nbrLines="0" />
 	<anim name="winner" path="img/winner.png" nbrCollums="1" nbrLines="2" />
-	<anim name="retry" path="img/retry.png" nbrCollums="0" nbrLines="0" />
+	<sprite name="retry" path="img/retry.png" nbrCollums="0" nbrLines="0" />
 </img>
 <sound>
 	<wav name="jump" path="sounds/jump.wav" />
@@ -42,7 +43,7 @@
 	<option name="gravity" value="350" />
 	<option name="jump" value="-300" />
 	<option name="itemcooldown" value="5" />
-	<option name="startvie" value="5" />
+	<option name="startvie" value="6" />
 	<option name="starthp" value="100" />
 	<option name="level" value="1" />
 </config>

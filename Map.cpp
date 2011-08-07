@@ -156,7 +156,7 @@ void MapTile::loadMap(){
         int itemX3 =atoi(pElem->Attribute("x3"));
         int itemY3 =atoi(pElem->Attribute("y3"));
 	    m_mapItems.push_back(new GameItems(g_imgManag["item"].img,g_imgManag["item"].nbrCollum,g_imgManag["item"].nbrLine,0,0,0,0,false,itemX,itemY,itemX2,itemY2,itemX3,itemY3));
-	    m_mapItems.back()->SetPosition(itemX*g_config["tileheight"],itemY*g_config["tilewidth"]);
+	    m_mapItems.back()->SetPosition((itemX+0.5)*g_config["tilewidth"],itemY*g_config["tileheight"]);
 	    m_mapItems.back()->setDelay(0.2);
     }
 

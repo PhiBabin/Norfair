@@ -22,7 +22,8 @@ ImgAnim::ImgAnim(img,3,4)
 ,m_hpBarre((g_imgManag)["hp"].img,(g_imgManag)["hp"].nbrCollum,(g_imgManag)["hp"].nbrLine)
 ,m_blueShield((g_imgManag)["shield"].img,(g_imgManag)["shield"].nbrCollum,(g_imgManag)["shield"].nbrLine)
 ,m_map(map),m_gameMessage(gameMessage)
-,m_hp(g_config["starthp"]),m_vie(g_config["startvie"]),m_velx(0),m_vely(0),m_jumpLock(false),m_colBot(false),m_direction(true),m_lookUp(true),m_moving(true),m_onFire(false)
+,m_hp(g_config["starthp"]),m_vie(g_config["startvie"]),m_velx(0),m_vely(0),
+m_jumpLock(false),m_colBot(false),m_direction(false),m_lookUp(false),m_moving(false),m_onFire(false)
 ,m_machineGun(machineGun),m_shield(false),m_flashing(false),m_mortalKombat(false),m_shuriken(false)
 {
     setDelay(0.2);
@@ -54,7 +55,7 @@ void Player::Jump(){
         m_jumpSound.Play();
         m_jumpLock=true;
         m_vely+=g_config["jump"];
-        BottomCollision(false);
+        SetBottomCollision(false);
         cout<<"jump"<<endl;
     }
 }
@@ -266,9 +267,9 @@ void Player::Degat(int degats){
             m_gameMessage->AddText(text,sf::Vector2f(GetPosition().x+3,GetPosition().y-10));
             m_hurt.Reset();
             m_flashing=true;
+            m_hurtSound.Play();
         }
         m_hp-=degats;
-        m_hurtSound.Play();
     }
 }
 int Player::GetVie(){
@@ -311,18 +312,11 @@ void Player::SetVelx(float nx){
 void Player::SetVely(float ny){
     m_vely=ny;
 }
-void Player::BottomCollision(bool is){
+void Player::SetBottomCollision(bool is){
     m_colBot=is;
 }
 bool Player::GetBottomCollision() const{
     return m_colBot;
-}
-
-void Player::ResetVelx(){
-    m_velx=0;
-}
-void Player::ResetVely(){
-    m_vely=0;
 }
 void Player::UnlockJump(){
     m_jumpLock=false;
@@ -471,12 +465,14 @@ void Player::Pause(){
     m_shieldCoolDown.Pause();
     m_burning.Pause();
     m_hurt.Pause();
+    m_shurikenOn.Pause();
 }
 void Player::Resume(){
     m_lastShot.Play();
     m_shieldCoolDown.Play();
     m_burning.Play();
     m_hurt.Play();
+    m_shurikenOn.Play();
 }
 Player::~Player(){
     delete m_arm;

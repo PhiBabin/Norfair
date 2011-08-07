@@ -84,6 +84,7 @@ void MenuState::stop(){
 void MenuState::GetEvents(sf::Event Event){
     if (Event.Type == sf::Event::KeyPressed){
         if(m_start)m_start=false;
+        m_gameEngine->m_gameState[1]->resume();
         m_gameEngine->changeState(1);
     }
 }

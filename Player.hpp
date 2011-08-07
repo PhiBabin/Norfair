@@ -33,7 +33,7 @@ class Player:public ImgAnim{
         bool collisionGeneral(const sf::FloatRect playerRect,bool &kill);
         bool collisionHorizontal(const sf::FloatRect playerRect, bool &gauche, bool &droite,int &solidLimit);
         bool collisionVertical(const sf::FloatRect playerRect, bool &haut, bool &bas,int &solidLimit);
-        void BottomCollision(bool is);
+        void SetBottomCollision(bool is);
         bool GetBottomCollision() const;
     //! Saut
         void Jump();
@@ -68,9 +68,6 @@ class Player:public ImgAnim{
         float GetVely();
         void SetVelx(float nx);
         void SetVely(float ny);
-        void ResetVelx();
-        void ResetVely();
-    //! Pause et arrêt
         void Pause();
         void Resume();
     //! Déconstruteur

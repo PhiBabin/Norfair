@@ -21,7 +21,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 /**
     Construction des éléments du jeu
 **/
-PlayState::PlayState(GameEngine* theGameEngine): m_playerOne(0),m_playerTwo(0),m_map(0), m_gameEngine(theGameEngine){
+PlayState::PlayState(GameEngine* theGameEngine): m_playerOne(0),m_playerTwo(0),m_map(0)
+,m_coutdown((g_imgManag)["coutdown"].img,(g_imgManag)["coutdown"].nbrCollum,(g_imgManag)["coutdown"].nbrLine)
+,m_scaleUp(false),m_start(false)
+,m_gameEngine(theGameEngine){
 
     m_itemSound.SetBuffer(g_soundManag["item"]);
     m_select.SetBuffer(g_soundManag["select"]);
@@ -35,6 +38,12 @@ PlayState::PlayState(GameEngine* theGameEngine): m_playerOne(0),m_playerTwo(0),m
     m_mapItems=m_map->getMapItem();
     m_playerOne->SetMapObject(m_mapObject);
     m_playerTwo->SetMapObject(m_mapObject);
+
+
+
+    m_coutdown.SetScale(2,2);
+    m_coutdown.SetOrigin(g_imgManag["m_coutdown"].img.GetWidth()/2,19/2);
+    m_coutdown.SetPosition(g_config["screenwidth"]/2,g_config["screenheight"]/2);
 }
 /**
     Initialisation des éléments du jeu
@@ -67,25 +76,51 @@ void PlayState::loop(){
 //    m_playerTwo->Turn(sf::Keyboard::IsKeyPressed(sf::Keyboard::A),sf::Keyboard::IsKeyPressed(sf::Keyboard::D));
 //    if(sf::Keyboard::IsKeyPressed(sf::Keyboard::F))m_playerTwo->Shoot();
 
-    const sf::Input &Input =m_gameEngine->m_app.GetInput();
+    if(!m_start){
+        m_startCoutdown.Reset();
+        m_start=true;
+    }
+    if(m_startCoutdown.GetElapsedTime()>4000){
+        const sf::Input &Input =m_gameEngine->m_app.GetInput();
 
-    //! Pauser le jeu
-   if(Input.IsKeyDown(sf::Key::Return))pause();
+        //! Pauser le jeu
+       if(Input.IsKeyDown(sf::Key::Return))pause();
 
-    //! Control du joueur 1
-    if(Input.IsKeyDown(sf::Key::L))m_playerOne->Degat(-40);
-    if(Input.IsKeyDown(sf::Key::Numpad3))m_playerOne->Jump();
-    if(Input.IsKeyDown(sf::Key::Numpad2))m_playerOne->Shoot();
-    m_playerOne->TurnUp(Input.IsKeyDown(sf::Key::Up));
-    m_playerOne->Turn(Input.IsKeyDown(sf::Key::Left),Input.IsKeyDown(sf::Key::Right));
+        //! Control du joueur 1
+        if(Input.IsKeyDown(sf::Key::L))m_playerOne->Degat(-40);
+        if(Input.IsKeyDown(sf::Key::Numpad3))m_playerOne->Jump();
+        if(Input.IsKeyDown(sf::Key::Numpad2))m_playerOne->Shoot();
+        m_playerOne->TurnUp(Input.IsKeyDown(sf::Key::Up));
+        m_playerOne->Turn(Input.IsKeyDown(sf::Key::Left),Input.IsKeyDown(sf::Key::Right));
 
 
-    //! Control du joueur 2
-    if (Input.IsKeyDown(sf::Key::G))m_playerTwo->Jump();
-    m_playerTwo->TurnUp(Input.IsKeyDown(sf::Key::W));
-    m_playerTwo->Turn(Input.IsKeyDown(sf::Key::A),Input.IsKeyDown(sf::Key::D));
-    if(Input.IsKeyDown(sf::Key::F))m_playerTwo->Shoot();
+        //! Control du joueur 2
+        if (Input.IsKeyDown(sf::Key::G))m_playerTwo->Jump();
+        m_playerTwo->TurnUp(Input.IsKeyDown(sf::Key::W));
+        m_playerTwo->Turn(Input.IsKeyDown(sf::Key::A),Input.IsKeyDown(sf::Key::D));
+        if(Input.IsKeyDown(sf::Key::F))m_playerTwo->Shoot();
+    }
+     else{
+        if(m_coutdown.GetScale().x>2)m_scaleUp=false;
+        if(m_coutdown.GetScale().x<1.2)m_scaleUp=true;
 
+        if(m_scaleUp)m_coutdown.SetScale(m_coutdown.GetScale().x+0.002*m_gameEngine->m_app.GetFrameTime(),m_coutdown.GetScale().x+0.002*m_gameEngine->m_app.GetFrameTime());
+        else m_coutdown.SetScale(m_coutdown.GetScale().x-0.002*m_gameEngine->m_app.GetFrameTime(),m_coutdown.GetScale().x-0.002*m_gameEngine->m_app.GetFrameTime());
+
+        if(m_startCoutdown.GetElapsedTime()<=1000){
+            m_coutdown.setAnimRow(0);
+        }
+        else if(m_startCoutdown.GetElapsedTime()<=2000){
+            m_coutdown.setAnimRow(1);
+        }
+        else if(m_startCoutdown.GetElapsedTime()<=3000){
+            m_coutdown.setAnimRow(2);
+        }
+        else{
+            m_coutdown.setAnimRow(3);
+        }
+        m_coutdown.SetOrigin(g_imgManag["coutdown"].img.GetWidth()/2,(g_imgManag["coutdown"].img.GetHeight()/g_imgManag["coutdown"].nbrLine)*(1+m_coutdown.animRow()/2.f));
+    }
     /**
         Gestion des personnages et objets
     */
@@ -95,7 +130,6 @@ void PlayState::loop(){
 
  //! Déplacement du personnage 2
     movePlayer(*m_playerTwo);
-
  //! Vérifie les items
     checkItems();
 
@@ -143,6 +177,7 @@ void PlayState::pause(){
     }
     //! On change le state principale
     m_gameEngine->changeState(2);
+    m_coutdown.pause();
     m_select.Play();
 }
 /**
@@ -154,6 +189,8 @@ void PlayState::resume(){
     for(unsigned int i=0;i<m_mapObject->size();i++){
         if(!m_mapObject->at(i)->isStop())m_mapObject->at(i)->play();
     }
+    m_coutdown.play();
+    m_select.Play();
 }
 /**
     Remet à zéro
@@ -171,6 +208,7 @@ void PlayState::GetEvents(sf::Event){
 void PlayState::draw(){
     m_map->draw();
     m_gameMessage.drawing(&(m_gameEngine->m_app));
+    if(m_startCoutdown.GetElapsedTime()<4000)m_gameEngine->m_app.Draw(m_coutdown);
 }
 
 
@@ -204,17 +242,13 @@ void PlayState::movePlayer(Player &player){
     int limitHor=0;
     float movHorTest=player.GetVelx()*m_gameEngine->m_app.GetFrameTime()/1000.f;
     float movVerTest=player.GetVely()*m_gameEngine->m_app.GetFrameTime()/1000.f;
-    bool bas=false;
-    bool haut=false;
-    bool gauche=false;
-    bool droite=false;
-    bool kill=false;
+    bool bas=false, haut=false, gauche=false, droite=false, kill=false;
     //! On vérifie les collisions horizontals
     if(!player.collisionHorizontal(player.GetMovedPlayerRect(movHorTest,0),gauche,droite,limitHor)){//! Pas de collision
         movHor=movHorTest;
     }
     else{//! Sinon on reposition le joueur
-        player.ResetVelx();
+        player.SetVelx(0);
         if(gauche)movHor=((((limitHor+1)*g_config["tilewidth"]))-player.GetPosition().x)/1000.f;
         if(droite)movHor=((((limitHor)*g_config["tilewidth"]))-g_config["playercollwidth"]-player.GetPosition().x)/1000.f;
     }
@@ -226,18 +260,18 @@ void PlayState::movePlayer(Player &player){
     }
     else{//! Sinon on reposition le joueur
         if(haut){//! Si l'on touche le haut
-            player.ResetVely();
+            player.SetVely(0);
         }
         if(bas){//! Si l'on touche le sol
             if(!player.GetBottomCollision())movVer=(player.GetPosition().y-(limitVer*g_config["tileheight"])+g_config["playercollheight"])/1000.f;
             player.UnlockJump();
-            player.BottomCollision(true);
+            player.SetBottomCollision(true);
         }
     }
 
     //! On vérifie si le mouvement envisagé cause une collision
     if(!player.collisionGeneral(player.GetMovedPlayerRect(movHor,movVer),kill)&&movHor<g_config["tileheight"]&&movVer<g_config["tilewidth"])player.Move(movHor,movVer);
-    else player.ResetVely();
+    else player.SetVely(0);
 
     //! Ouch!
     if(kill)player.Degat(200);

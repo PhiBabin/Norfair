@@ -37,11 +37,15 @@ class PlayState: public GameState {
         MapTile *m_map;
         sf::Sound m_itemSound;
         sf::Sound m_select;
+        PausableClock m_startCoutdown;
+        ImgAnim m_coutdown;
+        bool m_scaleUp;
+        bool m_start;
 
         vector<GameObject*> *m_mapObject;
         vector<GameItems*> *m_mapItems;
-        GameMessage m_gameMessage;
         GameEngine *m_gameEngine;
+        GameMessage m_gameMessage;
 };
 
 #endif // PLAYSTATE_HPP

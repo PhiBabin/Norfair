@@ -63,7 +63,7 @@ bool GameItems::collisionEffect(Player &player){
             m_gameMessage->AddMessage("Hell Fire!");
         case 5:
             player.Exchange();
-            m_gameMessage->AddMessage("The big exchange");
+            m_gameMessage->AddMessage("The blood exchange");
         break;
         case 6:
             player.Shuriken();
@@ -77,13 +77,13 @@ bool GameItems::collisionEffect(Player &player){
     srand((unsigned)time(0)*m_lastSpawn.GetElapsedTime());
     switch(rand() % 3 +1 ){
         case 2:
-            SetPosition(m_x2*g_config["tileheight"],m_y2*g_config["tilewidth"]);
+            SetPosition((m_x2+0.5)*g_config["tilewidth"],m_y2*g_config["tileheight"]);
         break;
         case 3:
-            SetPosition(m_x3*g_config["tileheight"],m_y3*g_config["tilewidth"]);
+            SetPosition((m_x3+0.5)*g_config["tilewidth"],m_y3*g_config["tileheight"]);
         break;
         default:
-            SetPosition(m_x*g_config["tileheight"],m_y*g_config["tilewidth"]);
+            SetPosition((m_x+0.5)*g_config["tilewidth"],m_y*g_config["tileheight"]);
     }
     m_lastSpawn.Reset();
     return true;
