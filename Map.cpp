@@ -20,10 +20,10 @@ MapTile::MapTile():m_app(NULL),m_playerOne(NULL),m_playerTwo(NULL){}
 MapTile::MapTile(sf::RenderWindow *App, Player *playerOne, Player *playerTwo):
 m_width(0),m_height(0),m_app(App),m_playerOne(playerOne),m_playerTwo(playerTwo){
 
-    loadMap();
+    LoadMap();
 }
 
- bool MapTile::collisionTile(float x, float y){
+ bool MapTile::CollisionTile(float x, float y){
     return m_tileSet.at(x).at(y).solid;
  }
 
@@ -31,15 +31,15 @@ Type MapTile::Tile(float x, float y){
     return m_tileSet.at(x).at(y);
  }
 
- vector<GameObject*> * MapTile::getMapObject(){
+ vector<GameObject*> * MapTile::GetMapObject(){
     return &m_mapObject;
  }
 
- vector<GameItems*> * MapTile::getMapItem(){
+ vector<GameItems*> * MapTile::GetMapItem(){
     return &m_mapItems;
  }
 
- bool MapTile::collisionGeneral(const sf::FloatRect playerRect){
+ bool MapTile::CollisionGeneral(const sf::FloatRect playerRect){
     int maxHeight, minHeight, maxWidth, minWidth;
     minHeight=playerRect.Top/g_config["tileheight"];
     minWidth=playerRect.Left/g_config["tilewidth"];
@@ -63,11 +63,11 @@ Type MapTile::Tile(float x, float y){
     return false;
  }
 
- Player* MapTile::oppositePlayer(Player *player){
+ Player* MapTile::OppositePlayer(Player *player){
         if(player==m_playerOne)return m_playerTwo;
         else return m_playerOne;
 }
-void MapTile::draw(){
+void MapTile::Draw(){
     cout<<"FPS="<</*1.f/(m_app->GetFrameTime())*1000<<*/"Joueur 1 x="<<m_playerOne->GetPosition().x<<" y="<<m_playerOne->GetPosition().y<<" vely="<<m_playerOne->GetVely()<<" velx="<<m_playerOne->GetVelx()<<endl;
     //! On affiche les tiles du background
     m_app->Draw(sf::Sprite(m_background.GetImage()));
@@ -75,9 +75,9 @@ void MapTile::draw(){
     m_app->Draw(sf::Sprite(m_map.GetImage()));
     //! On affiche le personnage et ces éléments
     m_app->Draw(*m_playerOne);
-    m_playerOne->drawing(m_app);
+    m_playerOne->Drawing(m_app);
     m_app->Draw(*m_playerTwo);
-    m_playerTwo->drawing(m_app);
+    m_playerTwo->Drawing(m_app);
     //! On affiche les objets de la carte
     for(unsigned int i=0;i<m_mapObject.size();i++){
         if((m_mapObject.at(i))->isDelete()){
@@ -96,7 +96,7 @@ void MapTile::draw(){
 vector<Type> & MapTile::operator [] (int X){
     return m_tileSet.at(X);
 }
- unsigned char MapTile::findType(sf::Color Pix){
+ unsigned char MapTile::FindType(sf::Color Pix){
         for(unsigned char it=0;it<m_typeList.size();it++){
             if(m_typeList[it].colorPix==Pix) return it;
         }
@@ -104,7 +104,7 @@ vector<Type> & MapTile::operator [] (int X){
         exit(0);
         return 0;
  }
-void MapTile::loadMap(){
+void MapTile::LoadMap(){
     map<string,string> levelConfig;
 	int typeSpawn1,typeSpawn2;
 	int theTile;
@@ -191,7 +191,7 @@ void MapTile::loadMap(){
         vector<Type> tileList2;
         m_tileSet.insert(m_tileSet.end(),tileList2);
         for(int it2=0;it2< m_height;it2++){
-            theTile=findType(tilesetImg.GetPixel(it, it2));
+            theTile=FindType(tilesetImg.GetPixel(it, it2));
             if(theTile==typeSpawn1){
                 sf::Vector2f spawnLocationOne(it*g_config["tilewidth"] ,(it2+1)*g_config["tileheight"]-g_config["playercollheight"]);
                 m_spawnLocationOne=spawnLocationOne;
@@ -217,7 +217,7 @@ void MapTile::loadMap(){
 //!    m_background.Draw(backback);
     for(int it=0;it<m_width;it++){
         for(int it2=0;it2< m_height;it2++){
-            theTile=findType(backImg.GetPixel(it, it2));
+            theTile=FindType(backImg.GetPixel(it, it2));
             Type theNewTile= m_typeList[theTile];
             theNewTile.tile.SetPosition(it*g_config["tilewidth"],it2*g_config["tileheight"]);
             theNewTile.tile.SetImage(m_ImgTypeTile);

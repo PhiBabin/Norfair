@@ -17,31 +17,27 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #ifndef MAP_HPP_INCLUDED
 #define MAP_HPP_INCLUDED
 struct Type{
-    //! S'il est visible
-	bool visible;
-	//! S'il est solide
-	bool solid;
-	//! S'il est mortel
-	bool kill;
-	//! La couleur de pixel
+    //! Propriétés
+	bool visible, solid, kill;
+	//! La couleur correspondante
 	sf::Color   colorPix;
-	//! Le rectangle de visible
+	//! Le rectangle visible du tileset
 	sf::IntRect zoneRect;
 	sf::Sprite tile;};
 class MapTile{
 	public:
         MapTile();
         MapTile(sf::RenderWindow *App,Player *playerOne, Player *playerTwo);
-		void loadMap();
-		void draw();
+		void LoadMap();
+		void Draw();
         vector<Type> & operator [] (int X);
-        unsigned char findType(sf::Color Pix);
-        bool collisionTile(float x,float y);
+        unsigned char FindType(sf::Color Pix);
+        bool CollisionTile(float x,float y);
         Type Tile(float x, float y);
-        vector<GameObject*> * getMapObject();
-        vector<GameItems*> * getMapItem();
-        Player* oppositePlayer(Player *player);
-        bool collisionGeneral(const sf::FloatRect playerRect);
+        vector<GameObject*> * GetMapObject();
+        vector<GameItems*> * GetMapItem();
+        Player* OppositePlayer(Player *player);
+        bool CollisionGeneral(const sf::FloatRect playerRect);
         ~MapTile();
 
         //! Public variable
@@ -60,7 +56,6 @@ class MapTile{
 		Player *m_playerTwo;
 		sf::RenderImage m_map;
 		sf::RenderImage m_background;
-
 };
 
 

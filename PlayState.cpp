@@ -34,8 +34,8 @@ PlayState::PlayState(GameEngine* theGameEngine): m_playerOne(0),m_playerTwo(0),m
 
     m_map =new MapTile(&(*m_gameEngine).m_app,m_playerOne,m_playerTwo);
 
-    m_mapObject=m_map->getMapObject();
-    m_mapItems=m_map->getMapItem();
+    m_mapObject=m_map->GetMapObject();
+    m_mapItems=m_map->GetMapItem();
     m_playerOne->SetMapObject(m_mapObject);
     m_playerTwo->SetMapObject(m_mapObject);
 
@@ -138,19 +138,19 @@ void PlayState::loop(){
 
  //! On vérifie si les personnages sont vivant
     if(m_playerOne->IsDead()){
-        m_map->getMapObject()->push_back(new GameAnim(g_imgManag["dead"].img,(g_imgManag)["dead"].nbrCollum,(g_imgManag)["dead"].nbrLine));
-        m_map->getMapObject()->back()->SetPosition(m_playerOne->GetPosition());
-        m_map->getMapObject()->back()->Move(0,9);
-        m_map->getMapObject()->back()->setDelay(35);
+        m_mapObject->push_back(new GameAnim(g_imgManag["dead"].img,(g_imgManag)["dead"].nbrCollum,(g_imgManag)["dead"].nbrLine));
+        m_mapObject->back()->SetPosition(m_playerOne->GetPosition());
+        m_mapObject->back()->Move(0,9);
+        m_mapObject->back()->setDelay(35);
         m_playerOne->SetPosition(m_map->m_spawnLocationOne);
         m_gameMessage.AddMessage("Player 1 has been kill!");
     }
     if(m_playerTwo->IsDead()){
-        m_map->getMapObject()->push_back(new GameAnim(g_imgManag["dead"].img,(g_imgManag)["dead"].nbrCollum,(g_imgManag)["dead"].nbrLine));
-        m_map->getMapObject()->back()->SetPosition(m_playerTwo->GetPosition());
-        m_map->getMapObject()->back()->Move(0,8);
-        m_map->getMapObject()->back()->setDelay(35);
-        m_map->getMapObject()->back()->setAnimRow(1);
+        m_mapObject->push_back(new GameAnim(g_imgManag["dead"].img,(g_imgManag)["dead"].nbrCollum,(g_imgManag)["dead"].nbrLine));
+        m_mapObject->back()->SetPosition(m_playerTwo->GetPosition());
+        m_mapObject->back()->Move(0,8);
+        m_mapObject->back()->setDelay(35);
+        m_mapObject->back()->setAnimRow(1);
         m_playerTwo->SetPosition(m_map->m_spawnLocationTwo);
         m_gameMessage.AddMessage("Player 2 has been kill!");
     }
@@ -206,7 +206,7 @@ void PlayState::GetEvents(sf::Event){
     Affichage des éléments
 **/
 void PlayState::draw(){
-    m_map->draw();
+    m_map->Draw();
     m_gameMessage.drawing(&(m_gameEngine->m_app));
     if(m_startCoutdown.GetElapsedTime()<4000)m_gameEngine->m_app.Draw(m_coutdown);
 }
@@ -244,7 +244,7 @@ void PlayState::movePlayer(Player &player){
     float movVerTest=player.GetVely()*m_gameEngine->m_app.GetFrameTime()/1000.f;
     bool bas=false, haut=false, gauche=false, droite=false, kill=false;
     //! On vérifie les collisions horizontals
-    if(!player.collisionHorizontal(player.GetMovedPlayerRect(movHorTest,0),gauche,droite,limitHor)){//! Pas de collision
+    if(!player.CollisionHorizontal(player.GetMovedPlayerRect(movHorTest,0),gauche,droite,limitHor)){//! Pas de collision
         movHor=movHorTest;
     }
     else{//! Sinon on reposition le joueur
@@ -254,7 +254,7 @@ void PlayState::movePlayer(Player &player){
     }
 
     //! On vérifie les collisions vertical
-    if(!player.collisionVertical(player.GetMovedPlayerRect(0,movVerTest),haut,bas,limitVer)){//! Pas de collision
+    if(!player.CollisionVertical(player.GetMovedPlayerRect(0,movVerTest),haut,bas,limitVer)){//! Pas de collision
         player.Gravity(m_gameEngine->m_app);
         movVer=movVerTest;
     }
@@ -270,7 +270,7 @@ void PlayState::movePlayer(Player &player){
     }
 
     //! On vérifie si le mouvement envisagé cause une collision
-    if(!player.collisionGeneral(player.GetMovedPlayerRect(movHor,movVer),kill)&&movHor<g_config["tileheight"]&&movVer<g_config["tilewidth"])player.Move(movHor,movVer);
+    if(!player.CollisionGeneral(player.GetMovedPlayerRect(movHor,movVer),kill)&&movHor<g_config["tileheight"]&&movVer<g_config["tilewidth"])player.Move(movHor,movVer);
     else player.SetVely(0);
 
     //! Ouch!
@@ -289,7 +289,7 @@ void PlayState::moveObject(){
             if((m_playerOne->GetPlayerRect().Intersects(Rect) && m_mapObject->at(i)->collisionEffect(*m_playerOne))     //! Joueur1
                ||(m_playerTwo->GetPlayerRect().Intersects(Rect) && m_mapObject->at(i)->collisionEffect(*m_playerTwo))){   //! Joueur 2
                 //! On crée l'animation
-                m_map->getMapObject()->push_back(new GameAnim(g_imgManag["explosion"].img,(g_imgManag)["explosion"].nbrCollum,(g_imgManag)["explosion"].nbrLine));
+                m_mapObject->push_back(new GameAnim(g_imgManag["explosion"].img,(g_imgManag)["explosion"].nbrCollum,(g_imgManag)["explosion"].nbrLine));
                 m_mapObject->back()->SetPosition((m_playerTwo->GetPosition()));
                 if(m_playerOne->GetPlayerRect().Intersects(Rect) && m_mapObject->at(i)->collisionEffect(*m_playerOne))
                 m_mapObject->back()->SetPosition(m_playerOne->GetPosition().x+rand() *-3.f /RAND_MAX + 3.f,m_playerOne->GetPosition().y+rand() *-5.f /RAND_MAX + 2.f);
@@ -300,12 +300,12 @@ void PlayState::moveObject(){
                 //! On supprime le pointeur du tableau dynamique
                 m_mapObject->erase( m_mapObject->begin() + i );
             }
-            else if(!m_map->collisionGeneral(Rect))
+            else if(!m_map->CollisionGeneral(Rect))
                 //! On déplace l'objet
                 m_mapObject->at(i)->Move(Rect.Left-m_mapObject->at(i)->GetPosition().x,Rect.Top-m_mapObject->at(i)->GetPosition().y);
             else {
                 //! On crée une explosion
-                m_map->getMapObject()->push_back(new GameAnim(g_imgManag["explosion2"].img,(g_imgManag)["explosion2"].nbrCollum,(g_imgManag)["explosion2"].nbrLine));
+                m_mapObject->push_back(new GameAnim(g_imgManag["explosion2"].img,(g_imgManag)["explosion2"].nbrCollum,(g_imgManag)["explosion2"].nbrLine));
                 m_mapObject->back()->SetPosition(m_mapObject->at(i)->GetPosition().x,m_mapObject->at(i)->GetPosition().y);
                 m_mapObject->back()->setDelay(0.1);
                 delete m_mapObject->at(i);

@@ -104,7 +104,7 @@ void Player::Turn(bool left, bool right){
         m_velx*=0.8;
     }
 }
- bool Player::collisionGeneral(const sf::FloatRect playerRect,bool &kill){
+ bool Player::CollisionGeneral(const sf::FloatRect playerRect,bool &kill){
     int maxHeight, minHeight, maxWidth, minWidth;
     minHeight=playerRect.Top/g_config["tileheight"];
     minWidth=playerRect.Left/g_config["tilewidth"];
@@ -128,7 +128,7 @@ void Player::Turn(bool left, bool right){
     }
     return false;
  }
- bool Player::collisionVertical(const sf::FloatRect playerRect, bool &haut, bool &bas,int &solidLimit){
+ bool Player::CollisionVertical(const sf::FloatRect playerRect, bool &haut, bool &bas,int &solidLimit){
     int maxHeight, minHeight, maxWidth, minWidth;
     bool CollisionVertical=false;
     minHeight=playerRect.Top/g_config["tileheight"];
@@ -161,7 +161,7 @@ void Player::Turn(bool left, bool right){
     }
     return CollisionVertical;
  }
- bool Player::collisionHorizontal(const sf::FloatRect playerRect, bool &gauche, bool &droite,int &solidLimit){
+ bool Player::CollisionHorizontal(const sf::FloatRect playerRect, bool &gauche, bool &droite,int &solidLimit){
     int maxHeight, minHeight, maxWidth, minWidth;
     bool CollisionHorizontal=false;
     minHeight=playerRect.Top/g_config["tileheight"];
@@ -207,35 +207,35 @@ void Player::RaiseShield(){
 void Player::GodInvocation(){
     m_listObject->push_back(new GameAnim((g_imgManag)["god"].img,(g_imgManag)["god"].nbrCollum,(g_imgManag)["god"].nbrLine));
     m_listObject->back()->setDelay(0.3);
-    m_listObject->back()->SetPosition((*m_map)->oppositePlayer(this)->GetPosition().x-7,0);
+    m_listObject->back()->SetPosition((*m_map)->OppositePlayer(this)->GetPosition().x-7,0);
 
     m_listObject->push_back(new GameAnim((g_imgManag)["explosion2"].img,(g_imgManag)["explosion2"].nbrCollum,(g_imgManag)["explosion2"].nbrLine));
-    m_listObject->back()->SetPosition((*m_map)->oppositePlayer(this)->GetPosition());
+    m_listObject->back()->SetPosition((*m_map)->OppositePlayer(this)->GetPosition());
     m_listObject->back()->setDelay(0.3);
     m_listObject->push_back(new GameAnim((g_imgManag)["explosion2"].img,(g_imgManag)["explosion2"].nbrCollum,(g_imgManag)["explosion2"].nbrLine));
-    m_listObject->back()->SetPosition((*m_map)->oppositePlayer(this)->GetPosition());
+    m_listObject->back()->SetPosition((*m_map)->OppositePlayer(this)->GetPosition());
     m_listObject->back()->Move(-3,-5);
     m_listObject->back()->setDelay(0.4);
     m_listObject->push_back(new GameAnim((g_imgManag)["explosion2"].img,(g_imgManag)["explosion2"].nbrCollum,(g_imgManag)["explosion2"].nbrLine));
-    m_listObject->back()->SetPosition((*m_map)->oppositePlayer(this)->GetPosition());
+    m_listObject->back()->SetPosition((*m_map)->OppositePlayer(this)->GetPosition());
     m_listObject->back()->Move(5,-4);
     m_listObject->back()->setDelay(0.5);
 
-    (*m_map)->oppositePlayer(this)->Degat(200);
+    (*m_map)->OppositePlayer(this)->Degat(200);
 }
 void Player::HellInvocation(){
     m_listObject->push_back(new GameAnim(g_imgManag["explosion"].img,(g_imgManag)["explosion"].nbrCollum,(g_imgManag)["explosion"].nbrLine));
     m_listObject->back()->SetScale(3,3);
     m_listObject->back()->setDelay(0.1);
-    m_listObject->back()->SetPosition((*m_map)->oppositePlayer(this)->GetPosition());
+    m_listObject->back()->SetPosition((*m_map)->OppositePlayer(this)->GetPosition());
     m_listObject->back()->Move(-12,-5);
 
-    (*m_map)->oppositePlayer(this)->SetOnFire();
-    (*m_map)->oppositePlayer(this)->Degat(50);
+    (*m_map)->OppositePlayer(this)->SetOnFire();
+    (*m_map)->OppositePlayer(this)->Degat(50);
 }
 void Player::Exchange(){
-    int e=(*m_map)->oppositePlayer(this)->GetVie();
-    (*m_map)->oppositePlayer(this)->SetVie(m_vie);
+    int e=(*m_map)->OppositePlayer(this)->GetVie();
+    (*m_map)->OppositePlayer(this)->SetVie(m_vie);
     m_vie=e;
 
 }
@@ -249,8 +249,8 @@ void Player::MortalKombat(bool launch){
 
     if(launch){
         SetPosition((*m_map)->m_spawnLocationOne);
-        (*m_map)->oppositePlayer(this)->SetPosition((*m_map)->m_spawnLocationTwo);
-        (*m_map)->oppositePlayer(this)->MortalKombat(false);
+        (*m_map)->OppositePlayer(this)->SetPosition((*m_map)->m_spawnLocationTwo);
+        (*m_map)->OppositePlayer(this)->MortalKombat(false);
     }
 }
 void Player::Shuriken(){
@@ -397,7 +397,7 @@ void Player::Shoot(){
     }
 }
 
-void Player::drawing(sf::RenderWindow* app){
+void Player::Drawing(sf::RenderWindow* app){
     //! On place les bras/armes
     m_arm->SetPosition(GetPosition());
     if(m_machineGun){

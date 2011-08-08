@@ -63,7 +63,7 @@ bool GameItems::collisionEffect(Player &player){
             m_gameMessage->AddMessage("Hell Fire!");
         case 5:
             player.Exchange();
-            m_gameMessage->AddMessage("The blood exchange");
+            m_gameMessage->AddMessage("blood exchange");
         break;
         case 6:
             player.Shuriken();

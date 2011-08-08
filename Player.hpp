@@ -23,16 +23,16 @@ class Player:public ImgAnim{
     //! Construteur
         Player(sf::Image &img, MapTile **map,GameMessage *gameMessage,bool machineGun);
     //! Affiche
-        void drawing(sf::RenderWindow* app);
+        void Drawing(sf::RenderWindow* app);
     //! Retourne le rectangle de Camera
         sf::FloatRect GetViewRect();
     //! Retourne le rectangle de collision
         sf::FloatRect GetPlayerRect();
         sf::FloatRect GetMovedPlayerRect(const float moveX,const float moveY);
     //! Collision
-        bool collisionGeneral(const sf::FloatRect playerRect,bool &kill);
-        bool collisionHorizontal(const sf::FloatRect playerRect, bool &gauche, bool &droite,int &solidLimit);
-        bool collisionVertical(const sf::FloatRect playerRect, bool &haut, bool &bas,int &solidLimit);
+        bool CollisionGeneral(const sf::FloatRect playerRect,bool &kill);
+        bool CollisionHorizontal(const sf::FloatRect playerRect, bool &gauche, bool &droite,int &solidLimit);
+        bool CollisionVertical(const sf::FloatRect playerRect, bool &haut, bool &bas,int &solidLimit);
         void SetBottomCollision(bool is);
         bool GetBottomCollision() const;
     //! Saut

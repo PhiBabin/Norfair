@@ -64,7 +64,7 @@ map<string,sf::SoundBuffer> g_soundManag;
 #include "ImgAnim.cpp"
 
 #include "GameMessage.hpp"
-#include "GameObject.hpp"
+#include "GameEntity.hpp"
 #include "GameAnim.hpp"
 #include "GameBullet.hpp"
 #include "GameItems.hpp"
@@ -73,7 +73,7 @@ map<string,sf::SoundBuffer> g_soundManag;
 #include "Map.hpp"
 
 #include "GameMessage.cpp"
-#include "GameObject.cpp"
+#include "GameEntity.cpp"
 #include "GameAnim.cpp"
 #include "GameBullet.cpp"
 #include "GameItems.cpp"
