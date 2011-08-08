@@ -193,7 +193,7 @@ void Player::Turn(bool left, bool right){
     }
     return CollisionHorizontal;
  }
-void Player::SetMapObject(vector<GameObject*> *listObject){
+void Player::SetMapObject(vector<GameEntity*> *listObject){
     m_listObject=listObject;
 }
 void Player::AddLife(){

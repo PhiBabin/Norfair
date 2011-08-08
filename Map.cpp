@@ -31,8 +31,8 @@ Type MapTile::Tile(float x, float y){
     return m_tileSet.at(x).at(y);
  }
 
- vector<GameObject*> * MapTile::GetMapObject(){
-    return &m_mapObject;
+ vector<GameEntity*> * MapTile::GetMapEntity(){
+    return &m_mapEntity;
  }
 
  vector<GameItems*> * MapTile::GetMapItem(){
@@ -79,12 +79,12 @@ void MapTile::Draw(){
     m_app->Draw(*m_playerTwo);
     m_playerTwo->Drawing(m_app);
     //! On affiche les objets de la carte
-    for(unsigned int i=0;i<m_mapObject.size();i++){
-        if((m_mapObject.at(i))->isDelete()){
-            delete m_mapObject.at(i);
-            m_mapObject.erase( m_mapObject.begin() + i );
+    for(unsigned int i=0;i<m_mapEntity.size();i++){
+        if((m_mapEntity.at(i))->isDelete()){
+            delete m_mapEntity.at(i);
+            m_mapEntity.erase( m_mapEntity.begin() + i );
         }
-        else m_app->Draw(*(m_mapObject.at(i)));
+        else m_app->Draw(*(m_mapEntity.at(i)));
     }
     //! On affiche les items
     for(unsigned int i=0;i<m_mapItems.size();i++){
@@ -228,8 +228,8 @@ void MapTile::LoadMap(){
     m_background.Display();
 }
 MapTile::~MapTile(){
-    for(unsigned int i=0;i<m_mapObject.size();i++){
-        delete m_mapObject.at(i);
+    for(unsigned int i=0;i<m_mapEntity.size();i++){
+        delete m_mapEntity.at(i);
     }
     for(unsigned int i=0;i<m_mapItems.size();i++){
         delete m_mapItems.at(i);

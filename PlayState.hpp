@@ -42,7 +42,7 @@ class PlayState: public GameState {
         bool m_scaleUp;
         bool m_start;
 
-        vector<GameObject*> *m_mapObject;
+        vector<GameEntity*> *m_mapEntity;
         vector<GameItems*> *m_mapItems;
         GameEngine *m_gameEngine;
         GameMessage m_gameMessage;

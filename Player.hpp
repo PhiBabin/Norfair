@@ -44,7 +44,7 @@ class Player:public ImgAnim{
         void Turn(bool left, bool right);
         void TurnUp(bool up);
     //! Link la liste des entités
-        void SetMapObject(vector<GameObject*> *listObject);
+        void SetMapObject(vector<GameEntity*> *listObject);
     //! Vie et mort
         int GetVie();
         void SetVie(int nv);
@@ -82,7 +82,7 @@ class Player:public ImgAnim{
         sf::Sound m_pafPafSound;
 
         MapTile **m_map;
-        vector<GameObject*> *m_listObject;
+        vector<GameEntity*> *m_listObject;
         GameMessage *m_gameMessage;
 
         int m_hp;

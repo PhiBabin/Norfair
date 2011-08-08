@@ -34,10 +34,10 @@ PlayState::PlayState(GameEngine* theGameEngine): m_playerOne(0),m_playerTwo(0),m
 
     m_map =new MapTile(&(*m_gameEngine).m_app,m_playerOne,m_playerTwo);
 
-    m_mapObject=m_map->GetMapObject();
+    m_mapEntity=m_map->GetMapEntity();
     m_mapItems=m_map->GetMapItem();
-    m_playerOne->SetMapObject(m_mapObject);
-    m_playerTwo->SetMapObject(m_mapObject);
+    m_playerOne->SetMapObject(m_mapEntity);
+    m_playerTwo->SetMapObject(m_mapEntity);
 
 
 
@@ -138,19 +138,19 @@ void PlayState::loop(){
 
  //! On vérifie si les personnages sont vivant
     if(m_playerOne->IsDead()){
-        m_mapObject->push_back(new GameAnim(g_imgManag["dead"].img,(g_imgManag)["dead"].nbrCollum,(g_imgManag)["dead"].nbrLine));
-        m_mapObject->back()->SetPosition(m_playerOne->GetPosition());
-        m_mapObject->back()->Move(0,9);
-        m_mapObject->back()->setDelay(35);
+        m_mapEntity->push_back(new GameAnim(g_imgManag["dead"].img,(g_imgManag)["dead"].nbrCollum,(g_imgManag)["dead"].nbrLine));
+        m_mapEntity->back()->SetPosition(m_playerOne->GetPosition());
+        m_mapEntity->back()->Move(0,9);
+        m_mapEntity->back()->setDelay(35);
         m_playerOne->SetPosition(m_map->m_spawnLocationOne);
         m_gameMessage.AddMessage("Player 1 has been kill!");
     }
     if(m_playerTwo->IsDead()){
-        m_mapObject->push_back(new GameAnim(g_imgManag["dead"].img,(g_imgManag)["dead"].nbrCollum,(g_imgManag)["dead"].nbrLine));
-        m_mapObject->back()->SetPosition(m_playerTwo->GetPosition());
-        m_mapObject->back()->Move(0,8);
-        m_mapObject->back()->setDelay(35);
-        m_mapObject->back()->setAnimRow(1);
+        m_mapEntity->push_back(new GameAnim(g_imgManag["dead"].img,(g_imgManag)["dead"].nbrCollum,(g_imgManag)["dead"].nbrLine));
+        m_mapEntity->back()->SetPosition(m_playerTwo->GetPosition());
+        m_mapEntity->back()->Move(0,8);
+        m_mapEntity->back()->setDelay(35);
+        m_mapEntity->back()->setAnimRow(1);
         m_playerTwo->SetPosition(m_map->m_spawnLocationTwo);
         m_gameMessage.AddMessage("Player 2 has been kill!");
     }
@@ -172,8 +172,8 @@ void PlayState::loop(){
 void PlayState::pause(){
     m_playerOne->Pause();
     m_playerTwo->Pause();
-    for(unsigned int i=0;i<m_mapObject->size();i++){
-        m_mapObject->at(i)->pause();
+    for(unsigned int i=0;i<m_mapEntity->size();i++){
+        m_mapEntity->at(i)->pause();
     }
     //! On change le state principale
     m_gameEngine->changeState(2);
@@ -186,8 +186,8 @@ void PlayState::pause(){
 void PlayState::resume(){
     m_playerOne->Resume();
     m_playerTwo->Resume();
-    for(unsigned int i=0;i<m_mapObject->size();i++){
-        if(!m_mapObject->at(i)->isStop())m_mapObject->at(i)->play();
+    for(unsigned int i=0;i<m_mapEntity->size();i++){
+        if(!m_mapEntity->at(i)->isStop())m_mapEntity->at(i)->play();
     }
     m_coutdown.play();
     m_select.Play();
@@ -281,35 +281,35 @@ void PlayState::movePlayer(Player &player){
     Déplacement des objets
 **/
 void PlayState::moveObject(){
-    for(unsigned int i=0;i<m_mapObject->size();i++){
-        if(m_mapObject->at(i)->isCollision()){
+    for(unsigned int i=0;i<m_mapEntity->size();i++){
+        if(m_mapEntity->at(i)->isCollision()){
             //! On affiche détermine le rectangle de l'object
-            sf::FloatRect Rect=m_mapObject->at(i)->GetMovedRect(m_mapObject->at(i)->GetVelx()*m_gameEngine->m_app.GetFrameTime()/1000.f,m_mapObject->at(i)->GetVely()*m_gameEngine->m_app.GetFrameTime()/1000.f);
+            sf::FloatRect Rect=m_mapEntity->at(i)->GetMovedRect(m_mapEntity->at(i)->GetVelx()*m_gameEngine->m_app.GetFrameTime()/1000.f,m_mapEntity->at(i)->GetVely()*m_gameEngine->m_app.GetFrameTime()/1000.f);
             //! On vérifie si l'object touche le joueur si oui on supprimer l'objet et crée un animation d'un explosion
-            if((m_playerOne->GetPlayerRect().Intersects(Rect) && m_mapObject->at(i)->collisionEffect(*m_playerOne))     //! Joueur1
-               ||(m_playerTwo->GetPlayerRect().Intersects(Rect) && m_mapObject->at(i)->collisionEffect(*m_playerTwo))){   //! Joueur 2
+            if((m_playerOne->GetPlayerRect().Intersects(Rect) && m_mapEntity->at(i)->collisionEffect(*m_playerOne))     //! Joueur1
+               ||(m_playerTwo->GetPlayerRect().Intersects(Rect) && m_mapEntity->at(i)->collisionEffect(*m_playerTwo))){   //! Joueur 2
                 //! On crée l'animation
-                m_mapObject->push_back(new GameAnim(g_imgManag["explosion"].img,(g_imgManag)["explosion"].nbrCollum,(g_imgManag)["explosion"].nbrLine));
-                m_mapObject->back()->SetPosition((m_playerTwo->GetPosition()));
-                if(m_playerOne->GetPlayerRect().Intersects(Rect) && m_mapObject->at(i)->collisionEffect(*m_playerOne))
-                m_mapObject->back()->SetPosition(m_playerOne->GetPosition().x+rand() *-3.f /RAND_MAX + 3.f,m_playerOne->GetPosition().y+rand() *-5.f /RAND_MAX + 2.f);
-                m_mapObject->back()->Move(0,5);
-                m_mapObject->back()->setDelay(0.1);
+                m_mapEntity->push_back(new GameAnim(g_imgManag["explosion"].img,(g_imgManag)["explosion"].nbrCollum,(g_imgManag)["explosion"].nbrLine));
+                m_mapEntity->back()->SetPosition((m_playerTwo->GetPosition()));
+                if(m_playerOne->GetPlayerRect().Intersects(Rect) && m_mapEntity->at(i)->collisionEffect(*m_playerOne))
+                m_mapEntity->back()->SetPosition(m_playerOne->GetPosition().x+rand() *-3.f /RAND_MAX + 3.f,m_playerOne->GetPosition().y+rand() *-5.f /RAND_MAX + 2.f);
+                m_mapEntity->back()->Move(0,5);
+                m_mapEntity->back()->setDelay(0.1);
                 //! On crée libère la mémoire de le l'instance de l'objet
-                delete m_mapObject->at(i);
+                delete m_mapEntity->at(i);
                 //! On supprime le pointeur du tableau dynamique
-                m_mapObject->erase( m_mapObject->begin() + i );
+                m_mapEntity->erase( m_mapEntity->begin() + i );
             }
             else if(!m_map->CollisionGeneral(Rect))
                 //! On déplace l'objet
-                m_mapObject->at(i)->Move(Rect.Left-m_mapObject->at(i)->GetPosition().x,Rect.Top-m_mapObject->at(i)->GetPosition().y);
+                m_mapEntity->at(i)->Move(Rect.Left-m_mapEntity->at(i)->GetPosition().x,Rect.Top-m_mapEntity->at(i)->GetPosition().y);
             else {
                 //! On crée une explosion
-                m_mapObject->push_back(new GameAnim(g_imgManag["explosion2"].img,(g_imgManag)["explosion2"].nbrCollum,(g_imgManag)["explosion2"].nbrLine));
-                m_mapObject->back()->SetPosition(m_mapObject->at(i)->GetPosition().x,m_mapObject->at(i)->GetPosition().y);
-                m_mapObject->back()->setDelay(0.1);
-                delete m_mapObject->at(i);
-                m_mapObject->erase( m_mapObject->begin() + i );
+                m_mapEntity->push_back(new GameAnim(g_imgManag["explosion2"].img,(g_imgManag)["explosion2"].nbrCollum,(g_imgManag)["explosion2"].nbrLine));
+                m_mapEntity->back()->SetPosition(m_mapEntity->at(i)->GetPosition().x,m_mapEntity->at(i)->GetPosition().y);
+                m_mapEntity->back()->setDelay(0.1);
+                delete m_mapEntity->at(i);
+                m_mapEntity->erase( m_mapEntity->begin() + i );
             }
         }
     }

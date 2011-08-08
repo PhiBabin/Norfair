@@ -18,7 +18,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "Player.hpp"
 
 GameItems::GameItems(sf::Image &img,int nbrFrame,int nbrLigne,float height=0, float width=0,float offsetColX=0,float offsetColY=0,bool col=false,int x=0, int y=0,int x2=0, int y2=0,int x3=0, int y3=0):
- GameObject(img,nbrFrame,nbrLigne,height, width,offsetColX,offsetColY,col),m_draw(true)
+ GameEntity(img,nbrFrame,nbrLigne,height, width,offsetColX,offsetColY,col),m_draw(true)
  ,m_x(x),m_y(y),m_x2(x2),m_y2(y2),m_x3(x3),m_y3(y3){
      m_lastSpawn.Reset();
      if(height==0){

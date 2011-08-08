@@ -34,7 +34,7 @@ class MapTile{
         unsigned char FindType(sf::Color Pix);
         bool CollisionTile(float x,float y);
         Type Tile(float x, float y);
-        vector<GameObject*> * GetMapObject();
+        vector<GameEntity*> * GetMapEntity();
         vector<GameItems*> * GetMapItem();
         Player* OppositePlayer(Player *player);
         bool CollisionGeneral(const sf::FloatRect playerRect);
@@ -50,7 +50,7 @@ class MapTile{
 		sf::Sprite m_drawSprite;
 		vector <vector<Type> > m_tileSet;
 		vector <Type> m_typeList;
-		vector <GameObject*> m_mapObject;
+		vector <GameEntity*> m_mapEntity;
 		vector <GameItems*> m_mapItems;
 		Player *m_playerOne;
 		Player *m_playerTwo;

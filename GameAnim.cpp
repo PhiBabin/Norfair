@@ -17,7 +17,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "GameAnim.hpp"
 
 GameAnim::GameAnim(sf::Image &img,int nbrFrame,int nbrLigne,float time=0.f,float height=0, float width=0,float offsetColX=0,float offsetColY=0,bool col=false):
- GameObject(img,nbrFrame,nbrLigne,height, width,offsetColX,offsetColY,col),m_nbrFrame(nbrFrame){
+ GameEntity(img,nbrFrame,nbrLigne,height, width,offsetColX,offsetColY,col),m_nbrFrame(nbrFrame){
     loop(false);
 }
 bool GameAnim::isDraw(){

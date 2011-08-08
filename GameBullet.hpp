@@ -19,7 +19,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 
 
-class GameBullet: public GameObject{
+class GameBullet: public GameEntity{
     public:
         GameBullet(sf::Image &img,int nbrFrame,int nbrLigne,int degat,bool setOnFire,Player *from, float velx,float vely,float height, float width,float offsetColX,float offsetColY,bool col);
         virtual bool isDraw();

@@ -19,7 +19,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #define GAMEANIM_H
 
 
-class GameAnim: public GameObject{
+class GameAnim: public GameEntity{
     public:
         GameAnim(sf::Image &img,int nbrFrame,int nbrLigne,float time,float height, float width,float offsetColX,float offsetColY,bool col);
         virtual bool isDraw();

@@ -14,22 +14,30 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.*/
-#ifndef GAMEITEMS_H
-#define GAMEITEMS_H
-class GameItems: public GameEntity{
+#ifndef GameEntity_H
+#define GameEntity_H
+class Player;
+
+class GameEntity:public ImgAnim{
     public:
-        GameItems(sf::Image &img,int nbrFrame,int nbrLigne,float height, float width,float offsetColX,float offsetColY,bool col,int x, int y,int x2, int y2,int x3, int y3);
+        GameEntity(sf::Image &img,int nbrFrame,int nbrLigne,float height, float width,float offsetColX,float offsetColY,bool col);
+        sf::FloatRect GetRect()const;
+        sf::FloatRect GetMovedRect(const float moveX,const float moveY)const;
+        float GetVelx()const;
+        float GetVely()const;
         virtual bool isDraw();
         virtual bool isDelete()const;
         virtual bool isCollision()const;
-        virtual bool collisionEffect(Player &player);
-        void setGameMessage(GameMessage *gameMessage);
-        virtual ~GameItems();
-    private:
-        PausableClock m_lastSpawn;
-        bool m_draw;
-        int m_x, m_y, m_x2, m_y2, m_x3, m_y3;
-        GameMessage *m_gameMessage;
+        virtual bool collisionEffect(Player &player)=0;
+        virtual ~GameEntity();
+    protected:
+        float m_velx;
+        float m_vely;
+        bool m_col;
+        float m_offsetColX;
+        float m_offsetColY;
+        float m_colWidth;
+        float m_colHeight;
 };
 
-#endif // GAMEITEMS_H
+#endif // GameEntity_H
