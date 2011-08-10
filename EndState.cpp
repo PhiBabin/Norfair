@@ -22,24 +22,31 @@ with this program; if not, write to the Free Software Foundation, Inc.,
     Construction des éléments du menu
 **/
 EndState::EndState(GameEngine* theGameEngine):m_scaleUp(true),m_start(false)
-,m_winner((g_imgManag)["winner"].img,(g_imgManag)["winner"].nbrCollum,(g_imgManag)["winner"].nbrLine){
+,m_winner(GameConfig::GameConfig::g_imgManag["winner"].img,GameConfig::GameConfig::g_imgManag["winner"].nbrCollum,GameConfig::GameConfig::g_imgManag["winner"].nbrLine){
     m_gameEngine=theGameEngine;
 
     m_winner.SetScale(4,4);
-    m_winner.SetPosition(g_config["screenwidth"]/2,g_config["screenheight"]/3);
-    m_winner.SetOrigin(g_imgManag["winner"].img.GetWidth()/2,g_imgManag["winner"].img.GetHeight()/2);
+    m_winner.SetPosition(GameConfig::g_config["screenwidth"]/2,GameConfig::g_config["screenheight"]/3);
+    m_winner.SetOrigin(GameConfig::g_imgManag["winner"].img.GetWidth()/2,GameConfig::g_imgManag["winner"].img.GetHeight()/2);
 
-    m_retry.SetImage(g_imgManag["retry"].img);
+    m_trophie.SetImage(GameConfig::g_imgManag["trophie"].img);
+    m_trophie.SetScale(5,5);
+    m_trophie.SetPosition(GameConfig::g_config["screenwidth"]/2,GameConfig::g_config["screenheight"]*0.5);
+    m_trophie.SetOrigin(GameConfig::g_imgManag["trophie"].img.GetWidth()/2,GameConfig::g_imgManag["trophie"].img.GetHeight()/2);
+
+    m_retry.SetImage(GameConfig::g_imgManag["retry"].img);
     m_retry.SetScale(3,3);
-    m_retry.SetPosition(g_config["screenwidth"]/2,g_config["screenheight"]*0.75);
-    m_retry.SetOrigin(g_imgManag["retry"].img.GetWidth()/2,g_imgManag["retry"].img.GetHeight()/2);
+    m_retry.SetPosition(GameConfig::g_config["screenwidth"]/2,GameConfig::g_config["screenheight"]*0.75);
+    m_retry.SetOrigin(GameConfig::g_imgManag["retry"].img.GetWidth()/2,GameConfig::g_imgManag["retry"].img.GetHeight()/2);
 }
 /**
     Initialisation des éléments du menu
     Cette méthode est appelé lors démarrage ou du redémarrage du state
 **/
 void EndState::init(){
-     m_winner.setAnimRow(1);
+    m_winner.setAnimRow(1);
+    m_continue.Reset();
+    m_party.Reset();
 }
 /**
     Exécution des éléments
@@ -72,7 +79,9 @@ void EndState::resume(){
     Remet à zéro
 **/
 void EndState::stop(){
-     m_winner.setAnimRow(0);
+    m_winner.setAnimRow(0);
+    m_continue.Reset();
+    m_party.Reset();
 }
 /**
     Utilisation des entrés
@@ -90,19 +99,20 @@ void EndState::GetEvents(sf::Event Event){
 void EndState::draw(){
     if(m_continue.GetElapsedTime()<3000){
         if(m_party.GetElapsedTime()>125){
-            (*m_gameEngine).m_app.Draw(sf::Shape::Rectangle(0,0,g_config["screenwidth"], g_config["screenheight"], sf::Color(55,84,207)));
-            (*m_gameEngine).m_app.Draw(m_winner);
             if(m_party.GetElapsedTime()>250)m_party.Reset();
+            m_gameEngine->m_app.Draw(sf::Shape::Rectangle(0,0,GameConfig::g_config["screenwidth"], GameConfig::g_config["screenheight"], sf::Color(55,84,207)));
         }
         else {
-            (*m_gameEngine).m_app.Draw(sf::Shape::Rectangle(0,0,g_config["screenwidth"], g_config["screenheight"], sf::Color(239,89,78)));
-            (*m_gameEngine).m_app.Draw(m_winner);
+            m_gameEngine->m_app.Draw(sf::Shape::Rectangle(0,0,GameConfig::g_config["screenwidth"], GameConfig::g_config["screenheight"], sf::Color(239,89,78)));
         }
+        m_gameEngine->m_app.Draw(m_winner);
+        m_gameEngine->m_app.Draw(m_trophie);
     }
     else{
-        (*m_gameEngine).m_app.Draw(sf::Shape::Rectangle(0,0,g_config["screenwidth"], g_config["screenheight"], sf::Color(0,0,0)));
-        (*m_gameEngine).m_app.Draw(m_winner);
-        (*m_gameEngine).m_app.Draw(m_retry);
+        m_gameEngine->m_app.Draw(sf::Shape::Rectangle(0,0,GameConfig::g_config["screenwidth"], GameConfig::g_config["screenheight"],sf::Color::Black));
+        m_gameEngine->m_app.Draw(m_winner);
+        m_gameEngine->m_app.Draw(m_trophie);
+        m_gameEngine->m_app.Draw(m_retry);
     }
 }
 

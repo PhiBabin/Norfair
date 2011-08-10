@@ -51,18 +51,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 sf::Clock Clock;
 using namespace std;
 
-struct imgAnim{
-    sf::Image img;
-    int nbrCollum;
-    int nbrLine;
-};
-map<string,int> g_config;
-map<string,imgAnim> g_imgManag;
-map<string,sf::SoundBuffer> g_soundManag;
 
 #include "Anim.cpp"
 #include "ImgAnim.cpp"
 
+#include "GameConfig.hpp"
 #include "GameMessage.hpp"
 #include "GameEntity.hpp"
 #include "GameAnim.hpp"
@@ -72,6 +65,7 @@ map<string,sf::SoundBuffer> g_soundManag;
 #include "Player.hpp"
 #include "Map.hpp"
 
+#include "GameConfig.cpp"
 #include "GameMessage.cpp"
 #include "GameEntity.cpp"
 #include "GameAnim.cpp"

@@ -26,7 +26,7 @@ void GameMessage::drawing(sf::RenderWindow* app){
     }
     for(unsigned int i=0;i<m_message.size();i++){
        m_principal.SetString(m_message.at(i));
-        m_principal.SetPosition(5,g_config["screenheight"]-20+i*-20);
+        m_principal.SetPosition(5,GameConfig::g_config["screenheight"]-20+i*-20);
         app->Draw(m_principal);
     }
     for(unsigned int i=0;i<m_text.size();i++){

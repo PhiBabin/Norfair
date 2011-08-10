@@ -22,15 +22,15 @@ with this program; if not, write to the Free Software Foundation, Inc.,
     Construction des éléments du jeu
 **/
 PlayState::PlayState(GameEngine* theGameEngine): m_playerOne(0),m_playerTwo(0),m_map(0)
-,m_coutdown((g_imgManag)["coutdown"].img,(g_imgManag)["coutdown"].nbrCollum,(g_imgManag)["coutdown"].nbrLine)
+,m_coutdown(GameConfig::GameConfig::g_imgManag["coutdown"].img,GameConfig::GameConfig::g_imgManag["coutdown"].nbrCollum,GameConfig::GameConfig::g_imgManag["coutdown"].nbrLine)
 ,m_scaleUp(false),m_start(false)
 ,m_gameEngine(theGameEngine){
 
-    m_itemSound.SetBuffer(g_soundManag["item"]);
-    m_select.SetBuffer(g_soundManag["select"]);
+    m_itemSound.SetBuffer(GameConfig::g_soundManag["item"]);
+    m_select.SetBuffer(GameConfig::g_soundManag["select"]);
 
-    m_playerOne= new Player((g_imgManag)["mago"].img, &m_map, &m_gameMessage);
-    m_playerTwo= new Player((g_imgManag)["squel"].img, &m_map, &m_gameMessage, true);
+    m_playerOne= new Player(GameConfig::GameConfig::g_imgManag["mago"].img, &m_map, &m_gameMessage);
+    m_playerTwo= new Player(GameConfig::GameConfig::g_imgManag["squel"].img, &m_map, &m_gameMessage, true);
 
     m_map =new MapTile(&(*m_gameEngine).m_app,m_playerOne,m_playerTwo);
 
@@ -42,8 +42,8 @@ PlayState::PlayState(GameEngine* theGameEngine): m_playerOne(0),m_playerTwo(0),m
 
 
     m_coutdown.SetScale(2,2);
-    m_coutdown.SetOrigin(g_imgManag["m_coutdown"].img.GetWidth()/2,19/2);
-    m_coutdown.SetPosition(g_config["screenwidth"]/2,g_config["screenheight"]/2);
+    m_coutdown.SetOrigin(GameConfig::g_imgManag["m_coutdown"].img.GetWidth()/2,19/2);
+    m_coutdown.SetPosition(GameConfig::g_config["screenwidth"]/2,GameConfig::g_config["screenheight"]/2);
 }
 /**
     Initialisation des éléments du jeu
@@ -119,7 +119,7 @@ void PlayState::loop(){
         else{
             m_coutdown.setAnimRow(3);
         }
-        m_coutdown.SetOrigin(g_imgManag["coutdown"].img.GetWidth()/2,(g_imgManag["coutdown"].img.GetHeight()/g_imgManag["coutdown"].nbrLine)*(1+m_coutdown.animRow()/2.f));
+        m_coutdown.SetOrigin(GameConfig::g_imgManag["coutdown"].img.GetWidth()/2,(GameConfig::g_imgManag["coutdown"].img.GetHeight()/GameConfig::g_imgManag["coutdown"].nbrLine)*(1+m_coutdown.animRow()/2.f));
     }
     /**
         Gestion des personnages et objets
@@ -138,7 +138,7 @@ void PlayState::loop(){
 
  //! On vérifie si les personnages sont vivant
     if(m_playerOne->IsDead()){
-        m_mapEntity->push_back(new GameAnim(g_imgManag["dead"].img,(g_imgManag)["dead"].nbrCollum,(g_imgManag)["dead"].nbrLine));
+        m_mapEntity->push_back(new GameAnim(GameConfig::g_imgManag["dead"].img,GameConfig::GameConfig::g_imgManag["dead"].nbrCollum,GameConfig::GameConfig::g_imgManag["dead"].nbrLine));
         m_mapEntity->back()->SetPosition(m_playerOne->GetPosition());
         m_mapEntity->back()->Move(0,9);
         m_mapEntity->back()->setDelay(35);
@@ -146,7 +146,7 @@ void PlayState::loop(){
         m_gameMessage.AddMessage("Player 1 has been kill!");
     }
     if(m_playerTwo->IsDead()){
-        m_mapEntity->push_back(new GameAnim(g_imgManag["dead"].img,(g_imgManag)["dead"].nbrCollum,(g_imgManag)["dead"].nbrLine));
+        m_mapEntity->push_back(new GameAnim(GameConfig::g_imgManag["dead"].img,GameConfig::GameConfig::g_imgManag["dead"].nbrCollum,GameConfig::GameConfig::g_imgManag["dead"].nbrLine));
         m_mapEntity->back()->SetPosition(m_playerTwo->GetPosition());
         m_mapEntity->back()->Move(0,8);
         m_mapEntity->back()->setDelay(35);
@@ -249,8 +249,8 @@ void PlayState::movePlayer(Player &player){
     }
     else{//! Sinon on reposition le joueur
         player.SetVelx(0);
-        if(gauche)movHor=((((limitHor+1)*g_config["tilewidth"]))-player.GetPosition().x)/1000.f;
-        if(droite)movHor=((((limitHor)*g_config["tilewidth"]))-g_config["playercollwidth"]-player.GetPosition().x)/1000.f;
+        if(gauche)movHor=((((limitHor+1)*GameConfig::g_config["tilewidth"]))-player.GetPosition().x)/1000.f;
+        if(droite)movHor=((((limitHor)*GameConfig::g_config["tilewidth"]))-GameConfig::g_config["playercollwidth"]-player.GetPosition().x)/1000.f;
     }
 
     //! On vérifie les collisions vertical
@@ -263,14 +263,14 @@ void PlayState::movePlayer(Player &player){
             player.SetVely(0);
         }
         if(bas){//! Si l'on touche le sol
-            if(!player.GetBottomCollision())movVer=(player.GetPosition().y-(limitVer*g_config["tileheight"])+g_config["playercollheight"])/1000.f;
+            if(!player.GetBottomCollision())movVer=(player.GetPosition().y-(limitVer*GameConfig::g_config["tileheight"])+GameConfig::g_config["playercollheight"])/1000.f;
             player.UnlockJump();
             player.SetBottomCollision(true);
         }
     }
 
     //! On vérifie si le mouvement envisagé cause une collision
-    if(!player.CollisionGeneral(player.GetMovedPlayerRect(movHor,movVer),kill)&&movHor<g_config["tileheight"]&&movVer<g_config["tilewidth"])player.Move(movHor,movVer);
+    if(!player.CollisionGeneral(player.GetMovedPlayerRect(movHor,movVer),kill)&&movHor<GameConfig::g_config["tileheight"]&&movVer<GameConfig::g_config["tilewidth"])player.Move(movHor,movVer);
     else player.SetVely(0);
 
     //! Ouch!
@@ -289,7 +289,7 @@ void PlayState::moveObject(){
             if((m_playerOne->GetPlayerRect().Intersects(Rect) && m_mapEntity->at(i)->collisionEffect(*m_playerOne))     //! Joueur1
                ||(m_playerTwo->GetPlayerRect().Intersects(Rect) && m_mapEntity->at(i)->collisionEffect(*m_playerTwo))){   //! Joueur 2
                 //! On crée l'animation
-                m_mapEntity->push_back(new GameAnim(g_imgManag["explosion"].img,(g_imgManag)["explosion"].nbrCollum,(g_imgManag)["explosion"].nbrLine));
+                m_mapEntity->push_back(new GameAnim(GameConfig::g_imgManag["explosion"].img,GameConfig::GameConfig::g_imgManag["explosion"].nbrCollum,GameConfig::GameConfig::g_imgManag["explosion"].nbrLine));
                 m_mapEntity->back()->SetPosition((m_playerTwo->GetPosition()));
                 if(m_playerOne->GetPlayerRect().Intersects(Rect) && m_mapEntity->at(i)->collisionEffect(*m_playerOne))
                 m_mapEntity->back()->SetPosition(m_playerOne->GetPosition().x+rand() *-3.f /RAND_MAX + 3.f,m_playerOne->GetPosition().y+rand() *-5.f /RAND_MAX + 2.f);
@@ -305,12 +305,15 @@ void PlayState::moveObject(){
                 m_mapEntity->at(i)->Move(Rect.Left-m_mapEntity->at(i)->GetPosition().x,Rect.Top-m_mapEntity->at(i)->GetPosition().y);
             else {
                 //! On crée une explosion
-                m_mapEntity->push_back(new GameAnim(g_imgManag["explosion2"].img,(g_imgManag)["explosion2"].nbrCollum,(g_imgManag)["explosion2"].nbrLine));
+                m_mapEntity->push_back(new GameAnim(GameConfig::g_imgManag["explosion2"].img,GameConfig::GameConfig::g_imgManag["explosion2"].nbrCollum,GameConfig::GameConfig::g_imgManag["explosion2"].nbrLine));
                 m_mapEntity->back()->SetPosition(m_mapEntity->at(i)->GetPosition().x,m_mapEntity->at(i)->GetPosition().y);
                 m_mapEntity->back()->setDelay(0.1);
                 delete m_mapEntity->at(i);
                 m_mapEntity->erase( m_mapEntity->begin() + i );
             }
+        }
+        else{
+            m_mapEntity->at(i)->Move(m_mapEntity->at(i)->GetVelx()*m_gameEngine->m_app.GetFrameTime(),m_mapEntity->at(i)->GetVely()*m_gameEngine->m_app.GetFrameTime());
         }
     }
 }

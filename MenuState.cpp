@@ -23,19 +23,19 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 **/
 MenuState::MenuState(GameEngine* theGameEngine):m_start(true),m_scaleUp(true){
     m_gameEngine=theGameEngine;
-    m_norfair.SetImage(g_imgManag["norfair"].img);
+    m_norfair.SetImage(GameConfig::g_imgManag["norfair"].img);
     m_norfair.SetScale(4,4);
-    m_norfair.SetOrigin(g_imgManag["norfair"].img.GetWidth()/2,g_imgManag["norfair"].img.GetHeight()/2);
-    m_norfair.SetPosition(g_config["screenwidth"]/2,g_config["screenheight"]/4);
+    m_norfair.SetOrigin(GameConfig::g_imgManag["norfair"].img.GetWidth()/2,GameConfig::g_imgManag["norfair"].img.GetHeight()/2);
+    m_norfair.SetPosition(GameConfig::g_config["screenwidth"]/2,GameConfig::g_config["screenheight"]/4);
 
-    m_press.SetImage(g_imgManag["press"].img);
-    m_press.SetOrigin(g_imgManag["press"].img.GetWidth()/2,g_imgManag["press"].img.GetHeight()/2);
-    m_press.SetPosition(g_config["screenwidth"]/2,g_config["screenheight"]*0.75);
+    m_press.SetImage(GameConfig::g_imgManag["press"].img);
+    m_press.SetOrigin(GameConfig::g_imgManag["press"].img.GetWidth()/2,GameConfig::g_imgManag["press"].img.GetHeight()/2);
+    m_press.SetPosition(GameConfig::g_config["screenwidth"]/2,GameConfig::g_config["screenheight"]*0.75);
 
-    m_pause.SetImage(g_imgManag["pause"].img);
+    m_pause.SetImage(GameConfig::g_imgManag["pause"].img);
     m_pause.SetScale(3,3);
-    m_pause.SetPosition(g_config["screenwidth"]/2,g_config["screenheight"]/2);
-    m_pause.SetOrigin(g_imgManag["pause"].img.GetWidth()/2,g_imgManag["pause"].img.GetHeight()/2);
+    m_pause.SetPosition(GameConfig::g_config["screenwidth"]/2,GameConfig::g_config["screenheight"]/2);
+    m_pause.SetOrigin(GameConfig::g_imgManag["pause"].img.GetWidth()/2,GameConfig::g_imgManag["pause"].img.GetHeight()/2);
 }
 /**
     Initialisation des éléments du menu
@@ -93,11 +93,11 @@ void MenuState::GetEvents(sf::Event Event){
 **/
 void MenuState::draw(){
     if(!m_start){
-        (*m_gameEngine).m_app.Draw(sf::Shape::Rectangle(0,0,g_config["screenwidth"], g_config["screenheight"], sf::Color(255,255,255)));
+        (*m_gameEngine).m_app.Draw(sf::Shape::Rectangle(0,0,GameConfig::g_config["screenwidth"], GameConfig::g_config["screenheight"], sf::Color(255,255,255)));
         (*m_gameEngine).m_app.Draw(m_pause);
     }
     else {
-        (*m_gameEngine).m_app.Draw(sf::Shape::Rectangle(0,0,g_config["screenwidth"], g_config["screenheight"], sf::Color(0,0,0)));
+        (*m_gameEngine).m_app.Draw(sf::Shape::Rectangle(0,0,GameConfig::g_config["screenwidth"], GameConfig::g_config["screenheight"], sf::Color(0,0,0)));
         (*m_gameEngine).m_app.Draw(m_norfair);
         (*m_gameEngine).m_app.Draw(m_press);
     }

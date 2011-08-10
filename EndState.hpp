@@ -18,6 +18,7 @@ class EndState: public GameState {
         bool m_start;
         ImgAnim m_winner;
         sf::Sprite m_retry;
+        sf::Sprite m_trophie;
         PausableClock m_party;
         PausableClock m_continue;
 };

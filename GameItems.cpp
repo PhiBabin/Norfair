@@ -27,7 +27,7 @@ GameItems::GameItems(sf::Image &img,int nbrFrame,int nbrLigne,float height=0, fl
      }
 }
 bool GameItems::isDraw(){
-   if(m_lastSpawn.GetElapsedTime()/1000>g_config["itemcooldown"])m_draw=true;
+   if(m_lastSpawn.GetElapsedTime()/1000>GameConfig::GameConfig::g_config["itemcooldown"])m_draw=true;
    else m_draw=false;
     return m_draw;
 }
@@ -77,13 +77,13 @@ bool GameItems::collisionEffect(Player &player){
     srand((unsigned)time(0)*m_lastSpawn.GetElapsedTime());
     switch(rand() % 3 +1 ){
         case 2:
-            SetPosition((m_x2+0.5)*g_config["tilewidth"],m_y2*g_config["tileheight"]);
+            SetPosition((m_x2+0.5)*GameConfig::g_config["tilewidth"],m_y2*GameConfig::g_config["tileheight"]);
         break;
         case 3:
-            SetPosition((m_x3+0.5)*g_config["tilewidth"],m_y3*g_config["tileheight"]);
+            SetPosition((m_x3+0.5)*GameConfig::g_config["tilewidth"],m_y3*GameConfig::g_config["tileheight"]);
         break;
         default:
-            SetPosition((m_x+0.5)*g_config["tilewidth"],m_y*g_config["tileheight"]);
+            SetPosition((m_x+0.5)*GameConfig::g_config["tilewidth"],m_y*GameConfig::g_config["tileheight"]);
     }
     m_lastSpawn.Reset();
     return true;

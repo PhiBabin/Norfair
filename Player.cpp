@@ -18,43 +18,43 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "Player.hpp"
 Player::Player(sf::Image &img, MapTile **map,GameMessage *gameMessage,bool machineGun=false):
 ImgAnim::ImgAnim(img,3,4)
-,m_vieBarre((g_imgManag)["vie"].img,(g_imgManag)["vie"].nbrCollum,(g_imgManag)["vie"].nbrLine)
-,m_hpBarre((g_imgManag)["hp"].img,(g_imgManag)["hp"].nbrCollum,(g_imgManag)["hp"].nbrLine)
-,m_blueShield((g_imgManag)["shield"].img,(g_imgManag)["shield"].nbrCollum,(g_imgManag)["shield"].nbrLine)
+,m_vieBarre(GameConfig::GameConfig::g_imgManag["vie"].img,GameConfig::GameConfig::g_imgManag["vie"].nbrCollum,GameConfig::GameConfig::g_imgManag["vie"].nbrLine)
+,m_hpBarre(GameConfig::GameConfig::g_imgManag["hp"].img,GameConfig::GameConfig::g_imgManag["hp"].nbrCollum,GameConfig::GameConfig::g_imgManag["hp"].nbrLine)
+,m_blueShield(GameConfig::GameConfig::g_imgManag["shield"].img,GameConfig::GameConfig::g_imgManag["shield"].nbrCollum,GameConfig::GameConfig::g_imgManag["shield"].nbrLine)
 ,m_map(map),m_gameMessage(gameMessage)
-,m_hp(g_config["starthp"]),m_vie(g_config["startvie"]),m_velx(0),m_vely(0),
+,m_hp(GameConfig::g_config["starthp"]),m_vie(GameConfig::g_config["startvie"]),m_velx(0),m_vely(0),
 m_jumpLock(false),m_colBot(false),m_direction(false),m_lookUp(false),m_moving(false),m_onFire(false)
 ,m_machineGun(machineGun),m_shield(false),m_flashing(false),m_mortalKombat(false),m_shuriken(false)
 {
     setDelay(0.2);
-     if(!machineGun)m_arm=new ImgAnim((g_imgManag)["marm"].img,(g_imgManag)["marm"].nbrCollum,(g_imgManag)["marm"].nbrLine);
-     else m_arm=new ImgAnim((g_imgManag)["sarm"].img,(g_imgManag)["sarm"].nbrCollum,(g_imgManag)["sarm"].nbrLine);
+     if(!machineGun)m_arm=new ImgAnim(GameConfig::GameConfig::g_imgManag["marm"].img,GameConfig::GameConfig::g_imgManag["marm"].nbrCollum,GameConfig::GameConfig::g_imgManag["marm"].nbrLine);
+     else m_arm=new ImgAnim(GameConfig::GameConfig::g_imgManag["sarm"].img,GameConfig::GameConfig::g_imgManag["sarm"].nbrCollum,GameConfig::GameConfig::g_imgManag["sarm"].nbrLine);
     m_arm->setDelay(0.2);
 
-    m_jumpSound.SetBuffer(g_soundManag["jump"]);
-    m_hurtSound.SetBuffer(g_soundManag["hurt"]);
-    if(m_machineGun)m_pafPafSound.SetBuffer(g_soundManag["shot"]);
-    else m_pafPafSound.SetBuffer(g_soundManag["fireball"]);
+    m_jumpSound.SetBuffer(GameConfig::g_soundManag["jump"]);
+    m_hurtSound.SetBuffer(GameConfig::g_soundManag["hurt"]);
+    if(m_machineGun)m_pafPafSound.SetBuffer(GameConfig::g_soundManag["shot"]);
+    else m_pafPafSound.SetBuffer(GameConfig::g_soundManag["fireball"]);
 }
 
 sf::FloatRect Player::GetPlayerRect(){
-    return sf::FloatRect(GetPosition().x,GetPosition().y,g_config["playercollwidth"],g_config["playercollheight"]);
+    return sf::FloatRect(GetPosition().x,GetPosition().y,GameConfig::g_config["playercollwidth"],GameConfig::g_config["playercollheight"]);
 }
 sf::FloatRect Player::GetMovedPlayerRect(const float moveX,const float moveY){
-  return sf::FloatRect(GetPosition().x+moveX,GetPosition().y+moveY,g_config["playercollwidth"],g_config["playercollheight"]);
+  return sf::FloatRect(GetPosition().x+moveX,GetPosition().y+moveY,GameConfig::g_config["playercollwidth"],GameConfig::g_config["playercollheight"]);
 }
 sf::FloatRect Player::GetViewRect(){
-   return sf::FloatRect(GetPosition().x-g_config["screenwidth"]/8,GetPosition().y-g_config["screenheight"]/8,GetPosition().x+g_config["screenheight"]/8,GetPosition().y+g_config["screenheight"]/8);
+   return sf::FloatRect(GetPosition().x-GameConfig::g_config["screenwidth"]/8,GetPosition().y-GameConfig::g_config["screenheight"]/8,GetPosition().x+GameConfig::g_config["screenheight"]/8,GetPosition().y+GameConfig::g_config["screenheight"]/8);
 }
 
 void Player::Gravity(sf::RenderWindow &app){
-        m_vely+=g_config["gravity"]/1000.f*app.GetFrameTime();
+        m_vely+=GameConfig::g_config["gravity"]/1000.f*app.GetFrameTime();
 }
 void Player::Jump(){
     if(!m_jumpLock){
         m_jumpSound.Play();
         m_jumpLock=true;
-        m_vely+=g_config["jump"];
+        m_vely+=GameConfig::g_config["jump"];
         SetBottomCollision(false);
         cout<<"jump"<<endl;
     }
@@ -106,10 +106,10 @@ void Player::Turn(bool left, bool right){
 }
  bool Player::CollisionGeneral(const sf::FloatRect playerRect,bool &kill){
     int maxHeight, minHeight, maxWidth, minWidth;
-    minHeight=playerRect.Top/g_config["tileheight"];
-    minWidth=playerRect.Left/g_config["tilewidth"];
-    maxHeight=(playerRect.Top+playerRect.Height-1)/g_config["tileheight"];
-    maxWidth=(playerRect.Left+playerRect.Width-1)/g_config["tilewidth"];
+    minHeight=playerRect.Top/GameConfig::g_config["tileheight"];
+    minWidth=playerRect.Left/GameConfig::g_config["tilewidth"];
+    maxHeight=(playerRect.Top+playerRect.Height-1)/GameConfig::g_config["tileheight"];
+    maxWidth=(playerRect.Left+playerRect.Width-1)/GameConfig::g_config["tilewidth"];
 
     if(minHeight<0)minHeight=0;
     if(maxHeight>(*m_map)->m_height)maxHeight=(*m_map)->m_height;
@@ -120,7 +120,7 @@ void Player::Turn(bool left, bool right){
             if(!(x>=(*m_map)->m_width or y>=(*m_map)->m_height)){
                 if((*m_map)->Tile(x,y).kill)kill=true;
                 if((*m_map)->Tile(x,y).solid){
-                    sf::FloatRect  theTile(x*g_config["tilewidth"],y*g_config["tileheight"],g_config["tilewidth"],g_config["tileheight"]);
+                    sf::FloatRect  theTile(x*GameConfig::g_config["tilewidth"],y*GameConfig::g_config["tileheight"],GameConfig::g_config["tilewidth"],GameConfig::g_config["tileheight"]);
                     if(playerRect.Intersects(theTile)||theTile.Intersects(playerRect)) return true;
                 }
             }
@@ -131,10 +131,10 @@ void Player::Turn(bool left, bool right){
  bool Player::CollisionVertical(const sf::FloatRect playerRect, bool &haut, bool &bas,int &solidLimit){
     int maxHeight, minHeight, maxWidth, minWidth;
     bool CollisionVertical=false;
-    minHeight=playerRect.Top/g_config["tileheight"];
-    minWidth=playerRect.Left/g_config["tilewidth"];
-    maxHeight=(playerRect.Top+playerRect.Height-1)/g_config["tileheight"];
-    maxWidth=(playerRect.Left+playerRect.Width-1)/g_config["tilewidth"];
+    minHeight=playerRect.Top/GameConfig::g_config["tileheight"];
+    minWidth=playerRect.Left/GameConfig::g_config["tilewidth"];
+    maxHeight=(playerRect.Top+playerRect.Height-1)/GameConfig::g_config["tileheight"];
+    maxWidth=(playerRect.Left+playerRect.Width-1)/GameConfig::g_config["tilewidth"];
 
     if(minHeight<0)minHeight=0;
     if(maxHeight>(*m_map)->m_height)maxHeight=(*m_map)->m_height;
@@ -144,14 +144,14 @@ void Player::Turn(bool left, bool right){
         for(int x=minWidth;x<=maxWidth;x++){
             if(!(x>=(*m_map)->m_width or y>=(*m_map)->m_height)){
                 if((*m_map)->Tile(x,y).solid){
-                    sf::FloatRect  theTile(x*g_config["tilewidth"],y*g_config["tileheight"],g_config["tilewidth"],g_config["tileheight"]);
+                    sf::FloatRect  theTile(x*GameConfig::g_config["tilewidth"],y*GameConfig::g_config["tileheight"],GameConfig::g_config["tilewidth"],GameConfig::g_config["tileheight"]);
                     if(playerRect.Intersects(theTile)||theTile.Intersects(playerRect)){
                         CollisionVertical=true;
-                        if(y*g_config["tileheight"]<=playerRect.Top+playerRect.Height&&y*g_config["tileheight"]>=playerRect.Top){
+                        if(y*GameConfig::g_config["tileheight"]<=playerRect.Top+playerRect.Height&&y*GameConfig::g_config["tileheight"]>=playerRect.Top){
                             bas=true;
                             solidLimit=y;
                         }
-                        if((y+1)*g_config["tileheight"]>=playerRect.Top&&(y+1)*g_config["tileheight"]<=playerRect.Top+playerRect.Height){
+                        if((y+1)*GameConfig::g_config["tileheight"]>=playerRect.Top&&(y+1)*GameConfig::g_config["tileheight"]<=playerRect.Top+playerRect.Height){
                             haut=true;
                         }
                     }
@@ -164,10 +164,10 @@ void Player::Turn(bool left, bool right){
  bool Player::CollisionHorizontal(const sf::FloatRect playerRect, bool &gauche, bool &droite,int &solidLimit){
     int maxHeight, minHeight, maxWidth, minWidth;
     bool CollisionHorizontal=false;
-    minHeight=playerRect.Top/g_config["tileheight"];
-    minWidth=playerRect.Left/g_config["tilewidth"];
-    maxHeight=(playerRect.Top+playerRect.Height-1)/g_config["tileheight"];
-    maxWidth=(playerRect.Left+playerRect.Width-1)/g_config["tilewidth"];
+    minHeight=playerRect.Top/GameConfig::g_config["tileheight"];
+    minWidth=playerRect.Left/GameConfig::g_config["tilewidth"];
+    maxHeight=(playerRect.Top+playerRect.Height-1)/GameConfig::g_config["tileheight"];
+    maxWidth=(playerRect.Left+playerRect.Width-1)/GameConfig::g_config["tilewidth"];
 
     if(minHeight<0)minHeight=0;
     if(maxHeight>(*m_map)->m_height)maxHeight=(*m_map)->m_height;
@@ -176,14 +176,14 @@ void Player::Turn(bool left, bool right){
     for(int y=minHeight;y<=maxHeight;y++){
         for(int x=minWidth;x<=maxWidth;x++){
             if(!(x>=(*m_map)->m_width or y>=(*m_map)->m_height)&&(*m_map)->Tile(x,y).solid){
-                sf::FloatRect  theTile(x*g_config["tilewidth"],y*g_config["tileheight"],g_config["tilewidth"],g_config["tileheight"]);
+                sf::FloatRect  theTile(x*GameConfig::g_config["tilewidth"],y*GameConfig::g_config["tileheight"],GameConfig::g_config["tilewidth"],GameConfig::g_config["tileheight"]);
                 if(playerRect.Intersects(theTile)||theTile.Intersects(playerRect)){
                     CollisionHorizontal= true;
-                    if(x*g_config["tilewidth"]>=playerRect.Left&&x*g_config["tilewidth"]<=playerRect.Left+playerRect.Width){
+                    if(x*GameConfig::g_config["tilewidth"]>=playerRect.Left&&x*GameConfig::g_config["tilewidth"]<=playerRect.Left+playerRect.Width){
                         droite=true;
                         solidLimit=x;
                     }
-                    if((x+1)*g_config["tilewidth"]<=playerRect.Left+playerRect.Width&&(x+1)*g_config["tilewidth"]>=playerRect.Left){
+                    if((x+1)*GameConfig::g_config["tilewidth"]<=playerRect.Left+playerRect.Width&&(x+1)*GameConfig::g_config["tilewidth"]>=playerRect.Left){
                         gauche=true;
                         solidLimit=x;
                     }
@@ -205,18 +205,18 @@ void Player::RaiseShield(){
     m_shieldCoolDown.Reset();
 }
 void Player::GodInvocation(){
-    m_listObject->push_back(new GameAnim((g_imgManag)["god"].img,(g_imgManag)["god"].nbrCollum,(g_imgManag)["god"].nbrLine));
+    m_listObject->push_back(new GameAnim(GameConfig::GameConfig::g_imgManag["god"].img,GameConfig::GameConfig::g_imgManag["god"].nbrCollum,GameConfig::GameConfig::g_imgManag["god"].nbrLine));
     m_listObject->back()->setDelay(0.3);
     m_listObject->back()->SetPosition((*m_map)->OppositePlayer(this)->GetPosition().x-7,0);
 
-    m_listObject->push_back(new GameAnim((g_imgManag)["explosion2"].img,(g_imgManag)["explosion2"].nbrCollum,(g_imgManag)["explosion2"].nbrLine));
+    m_listObject->push_back(new GameAnim(GameConfig::GameConfig::g_imgManag["explosion2"].img,GameConfig::GameConfig::g_imgManag["explosion2"].nbrCollum,GameConfig::GameConfig::g_imgManag["explosion2"].nbrLine));
     m_listObject->back()->SetPosition((*m_map)->OppositePlayer(this)->GetPosition());
     m_listObject->back()->setDelay(0.3);
-    m_listObject->push_back(new GameAnim((g_imgManag)["explosion2"].img,(g_imgManag)["explosion2"].nbrCollum,(g_imgManag)["explosion2"].nbrLine));
+    m_listObject->push_back(new GameAnim(GameConfig::GameConfig::g_imgManag["explosion2"].img,GameConfig::GameConfig::g_imgManag["explosion2"].nbrCollum,GameConfig::GameConfig::g_imgManag["explosion2"].nbrLine));
     m_listObject->back()->SetPosition((*m_map)->OppositePlayer(this)->GetPosition());
     m_listObject->back()->Move(-3,-5);
     m_listObject->back()->setDelay(0.4);
-    m_listObject->push_back(new GameAnim((g_imgManag)["explosion2"].img,(g_imgManag)["explosion2"].nbrCollum,(g_imgManag)["explosion2"].nbrLine));
+    m_listObject->push_back(new GameAnim(GameConfig::GameConfig::g_imgManag["explosion2"].img,GameConfig::GameConfig::g_imgManag["explosion2"].nbrCollum,GameConfig::GameConfig::g_imgManag["explosion2"].nbrLine));
     m_listObject->back()->SetPosition((*m_map)->OppositePlayer(this)->GetPosition());
     m_listObject->back()->Move(5,-4);
     m_listObject->back()->setDelay(0.5);
@@ -224,7 +224,7 @@ void Player::GodInvocation(){
     (*m_map)->OppositePlayer(this)->Degat(200);
 }
 void Player::HellInvocation(){
-    m_listObject->push_back(new GameAnim(g_imgManag["explosion"].img,(g_imgManag)["explosion"].nbrCollum,(g_imgManag)["explosion"].nbrLine));
+    m_listObject->push_back(new GameAnim(GameConfig::g_imgManag["explosion"].img,GameConfig::GameConfig::g_imgManag["explosion"].nbrCollum,GameConfig::GameConfig::g_imgManag["explosion"].nbrLine));
     m_listObject->back()->SetScale(3,3);
     m_listObject->back()->setDelay(0.1);
     m_listObject->back()->SetPosition((*m_map)->OppositePlayer(this)->GetPosition());
@@ -350,14 +350,14 @@ void Player::Shoot(){
         m_arm->play();
 
         if(m_shuriken){
-            m_listObject->push_back(new GameBullet((g_imgManag)["shuriken"].img,(g_imgManag)["shuriken"].nbrCollum,(g_imgManag)["shuriken"].nbrLine,20,true,this,velx,vely));
+            m_listObject->push_back(new GameBullet(GameConfig::GameConfig::g_imgManag["shuriken"].img,GameConfig::GameConfig::g_imgManag["shuriken"].nbrCollum,GameConfig::GameConfig::g_imgManag["shuriken"].nbrLine,20,true,this,velx,vely));
             m_listObject->back()->SetPosition(GetPosition());
             m_listObject->back()->Move(0,4);
             m_listObject->back()->setDelay(0.04);
             m_listObject->back()->loop(true);
         }
         else{
-            m_listObject->push_back(new GameBullet((g_imgManag)["fire"].img,(g_imgManag)["fire"].nbrCollum,(g_imgManag)["fire"].nbrLine,10,true,this,velx,vely));
+            m_listObject->push_back(new GameBullet(GameConfig::GameConfig::g_imgManag["fire"].img,GameConfig::GameConfig::g_imgManag["fire"].nbrCollum,GameConfig::GameConfig::g_imgManag["fire"].nbrLine,10,true,this,velx,vely));
             m_listObject->back()->SetPosition(GetPosition());
             m_listObject->back()->setDelay(0.1);
             if(!(m_lookUp==HAUT && m_moving==IMMOBILE))m_listObject->back()->FlipX(m_direction);
@@ -387,8 +387,8 @@ void Player::Shoot(){
         }
 
         m_arm->play();
-        if(m_shuriken) m_listObject->push_back(new GameBullet((g_imgManag)["shuriken"].img,(g_imgManag)["shuriken"].nbrCollum,(g_imgManag)["shuriken"].nbrLine,10,false,this,velx,vely));
-        else m_listObject->push_back(new GameBullet((g_imgManag)["shot"].img,(g_imgManag)["shot"].nbrCollum,(g_imgManag)["shot"].nbrLine,3,false,this,velx,vely));
+        if(m_shuriken) m_listObject->push_back(new GameBullet(GameConfig::GameConfig::g_imgManag["shuriken"].img,GameConfig::GameConfig::g_imgManag["shuriken"].nbrCollum,GameConfig::GameConfig::g_imgManag["shuriken"].nbrLine,10,false,this,velx,vely));
+        else m_listObject->push_back(new GameBullet(GameConfig::GameConfig::g_imgManag["shot"].img,GameConfig::GameConfig::g_imgManag["shot"].nbrCollum,GameConfig::GameConfig::g_imgManag["shot"].nbrLine,3,false,this,velx,vely));
         m_listObject->back()->SetPosition(GetPosition());
         m_listObject->back()->Move(0,4);
         m_listObject->back()->setDelay(0.04);
@@ -441,7 +441,7 @@ void Player::Drawing(sf::RenderWindow* app){
             m_hurt.Reset();
             Degat(5);
         }
-        m_listObject->push_back(new GameAnim((g_imgManag)["explosion3"].img,(g_imgManag)["explosion3"].nbrCollum,(g_imgManag)["explosion3"].nbrLine));
+        m_listObject->push_back(new GameAnim(GameConfig::GameConfig::g_imgManag["explosion3"].img,GameConfig::GameConfig::g_imgManag["explosion3"].nbrCollum,GameConfig::GameConfig::g_imgManag["explosion3"].nbrLine));
         m_listObject->back()->SetPosition(GetPosition().x+1.f +rand() *-4.f /RAND_MAX + 3.f,GetPosition().y+3.f+rand() *-8.f /RAND_MAX + 8.f);
         m_listObject->back()->setDelay(0.1);
     }
@@ -454,7 +454,7 @@ void Player::Drawing(sf::RenderWindow* app){
             else m_hpBarre.setAnimRow(0);
             app->Draw(m_hpBarre);
         }
-        if(m_vie<=g_config["startvie"])m_vieBarre.SetPosition(GetPosition().x-3+(-6*(g_config["startvie"]-3)),GetPosition().y-8);
+        if(m_vie<=GameConfig::g_config["startvie"])m_vieBarre.SetPosition(GetPosition().x-3+(-6*(GameConfig::g_config["startvie"]-3)),GetPosition().y-8);
         else m_vieBarre.SetPosition(GetPosition().x-3+(-6*(m_vie-3)),GetPosition().y-8);
         m_vieBarre.setAnimRow(6-m_vie);
         app->Draw(m_vieBarre);

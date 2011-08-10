@@ -22,6 +22,7 @@
 	<sprite name="press" path="img/press_any_key.png" nbrCollums="0" nbrLines="0" />
 	<anim name="winner" path="img/winner.png" nbrCollums="1" nbrLines="2" />
 	<sprite name="retry" path="img/retry.png" nbrCollums="0" nbrLines="0" />
+	<sprite name="trophie" path="img/trophie.png" nbrCollums="0" nbrLines="0" />
 </img>
 <sound>
 	<wav name="jump" path="sounds/jump.wav" />
@@ -43,7 +44,7 @@
 	<option name="gravity" value="350" />
 	<option name="jump" value="-300" />
 	<option name="itemcooldown" value="5" />
-	<option name="startvie" value="6" />
+	<option name="startvie" value="5" />
 	<option name="starthp" value="100" />
 	<option name="level" value="1" />
 </config>

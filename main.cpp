@@ -17,47 +17,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "includes.hpp"
 
-/**
-    Chargement de la configuration
-**/
-void loadConfig(){
-    TiXmlDocument doc("config/config.xml");
-    doc.LoadFile();
-
-    TiXmlHandle hDoc(&doc);
-    TiXmlHandle hRoot(0);
-    TiXmlElement* pElem;
-
-    pElem=hDoc.FirstChild("img").FirstChild().Element();
-    for(; pElem; pElem=pElem->NextSiblingElement()){
-        imgAnim newAnim;
-        sf::Image newImg;
-        newImg.LoadFromFile(pElem->Attribute("path"));
-        newAnim.img=newImg;
-        newAnim.nbrCollum=atoi(pElem->Attribute("nbrCollums"));
-        newAnim.nbrLine=atoi(pElem->Attribute("nbrLines"));
-        g_imgManag[pElem->Attribute("name")]=newAnim;
-    }
-    pElem=hDoc.FirstChild("sound").FirstChild().Element();
-    for(; pElem; pElem=pElem->NextSiblingElement()){
-        sf::SoundBuffer newSound;
-        newSound.LoadFromFile(pElem->Attribute("path"));
-        g_soundManag[pElem->Attribute("name")]=newSound;
-    }
-    pElem=hDoc.FirstChild("config").FirstChild().Element();
-    for(; pElem; pElem=pElem->NextSiblingElement()){
-        g_config[pElem->Attribute("name")]=atoi(pElem->Attribute("value"));
-    }
-}
-
 int main(){
    cout<<"  /App Start"<<endl;
 
    cout<<"  /App Load Configuration"<<endl;
+   GameConfig::LoadConfig();
 
-   loadConfig();
-
-    sf::RenderWindow App(sf::VideoMode(g_config["screenwidth"], g_config["screenheight"], 32), "Norfair", sf::Style::Close | sf::Style::Titlebar );
+    sf::RenderWindow App(sf::VideoMode(GameConfig::g_config["screenwidth"], GameConfig::g_config["screenheight"], 32), "Norfair", sf::Style::Close | sf::Style::Titlebar );
 
     App.EnableVerticalSync(true);
 
