@@ -29,12 +29,12 @@ EndState::EndState(GameEngine* theGameEngine):m_scaleUp(true),m_start(false)
     m_winner.SetPosition(GameConfig::g_config["screenwidth"]/2,GameConfig::g_config["screenheight"]/3);
     m_winner.SetOrigin(GameConfig::g_imgManag["winner"].img.GetWidth()/2,GameConfig::g_imgManag["winner"].img.GetHeight()/2);
 
-    m_trophie.SetImage(GameConfig::g_imgManag["trophie"].img);
+    m_trophie.SetTexture(GameConfig::g_imgManag["trophie"].img);
     m_trophie.SetScale(5,5);
     m_trophie.SetPosition(GameConfig::g_config["screenwidth"]/2,GameConfig::g_config["screenheight"]*0.5);
     m_trophie.SetOrigin(GameConfig::g_imgManag["trophie"].img.GetWidth()/2,GameConfig::g_imgManag["trophie"].img.GetHeight()/2);
 
-    m_retry.SetImage(GameConfig::g_imgManag["retry"].img);
+    m_retry.SetTexture(GameConfig::g_imgManag["retry"].img);
     m_retry.SetScale(3,3);
     m_retry.SetPosition(GameConfig::g_config["screenwidth"]/2,GameConfig::g_config["screenheight"]*0.75);
     m_retry.SetOrigin(GameConfig::g_imgManag["retry"].img.GetWidth()/2,GameConfig::g_imgManag["retry"].img.GetHeight()/2);

@@ -29,7 +29,7 @@ void GameConfig::LoadConfig(){
     pElem=hDoc.FirstChild("img").FirstChild().Element();
     for(; pElem; pElem=pElem->NextSiblingElement()){
         imgAnim newAnim;
-        sf::Image newImg;
+        sf::Texture newImg;
         newImg.LoadFromFile(pElem->Attribute("path"));
         newAnim.img=newImg;
         newAnim.nbrCollum=atoi(pElem->Attribute("nbrCollums"));

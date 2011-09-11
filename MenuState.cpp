@@ -23,16 +23,16 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 **/
 MenuState::MenuState(GameEngine* theGameEngine):m_start(true),m_scaleUp(true){
     m_gameEngine=theGameEngine;
-    m_norfair.SetImage(GameConfig::g_imgManag["norfair"].img);
+    m_norfair.SetTexture(GameConfig::g_imgManag["norfair"].img);
     m_norfair.SetScale(4,4);
     m_norfair.SetOrigin(GameConfig::g_imgManag["norfair"].img.GetWidth()/2,GameConfig::g_imgManag["norfair"].img.GetHeight()/2);
     m_norfair.SetPosition(GameConfig::g_config["screenwidth"]/2,GameConfig::g_config["screenheight"]/4);
 
-    m_press.SetImage(GameConfig::g_imgManag["press"].img);
+    m_press.SetTexture(GameConfig::g_imgManag["press"].img);
     m_press.SetOrigin(GameConfig::g_imgManag["press"].img.GetWidth()/2,GameConfig::g_imgManag["press"].img.GetHeight()/2);
     m_press.SetPosition(GameConfig::g_config["screenwidth"]/2,GameConfig::g_config["screenheight"]*0.75);
 
-    m_pause.SetImage(GameConfig::g_imgManag["pause"].img);
+    m_pause.SetTexture(GameConfig::g_imgManag["pause"].img);
     m_pause.SetScale(3,3);
     m_pause.SetPosition(GameConfig::g_config["screenwidth"]/2,GameConfig::g_config["screenheight"]/2);
     m_pause.SetOrigin(GameConfig::g_imgManag["pause"].img.GetWidth()/2,GameConfig::g_imgManag["pause"].img.GetHeight()/2);

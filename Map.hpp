@@ -46,16 +46,17 @@ class MapTile{
 		sf::Vector2f m_spawnLocationTwo;
 	private:
         sf::RenderWindow *m_app;
-		sf::Image m_ImgTypeTile;
+		sf::Texture m_ImgTypeTile;
 		sf::Sprite m_drawSprite;
 		vector <vector<Type> > m_tileSet;
+		vector <vector<Type> > m_tileSetBack;
 		vector <Type> m_typeList;
 		vector <GameEntity*> m_mapEntity;
 		vector <GameItems*> m_mapItems;
 		Player *m_playerOne;
 		Player *m_playerTwo;
-		sf::RenderImage m_map;
-		sf::RenderImage m_background;
+		sf::RenderTexture m_map;
+		sf::RenderTexture m_background;
 };
 
 

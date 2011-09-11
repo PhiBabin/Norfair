@@ -81,24 +81,36 @@ void PlayState::loop(){
         m_start=true;
     }
     if(m_startCoutdown.GetElapsedTime()>4000){
-        const sf::Input &Input =m_gameEngine->m_app.GetInput();
+        if (sf::Keyboard::IsKeyPressed(sf::Keyboard::Return))pause();
 
-        //! Pauser le jeu
-       if(Input.IsKeyDown(sf::Key::Return))pause();
+        if (sf::Keyboard::IsKeyPressed(sf::Keyboard::L))m_playerTwo->Degat(-40);
+        if (sf::Keyboard::IsKeyPressed(sf::Keyboard::Numpad3))m_playerOne->Jump();
+        if (sf::Keyboard::IsKeyPressed(sf::Keyboard::Numpad2))m_playerOne->Shoot();
+        m_playerOne->TurnUp(sf::Keyboard::IsKeyPressed(sf::Keyboard::Up));
+        m_playerOne->Turn(sf::Keyboard::IsKeyPressed(sf::Keyboard::Left),sf::Keyboard::IsKeyPressed(sf::Keyboard::Right));
 
-        //! Control du joueur 1
-        if(Input.IsKeyDown(sf::Key::L))m_playerOne->Degat(-40);
-        if(Input.IsKeyDown(sf::Key::Numpad3))m_playerOne->Jump();
-        if(Input.IsKeyDown(sf::Key::Numpad2))m_playerOne->Shoot();
-        m_playerOne->TurnUp(Input.IsKeyDown(sf::Key::Up));
-        m_playerOne->Turn(Input.IsKeyDown(sf::Key::Left),Input.IsKeyDown(sf::Key::Right));
-
-
-        //! Control du joueur 2
-        if (Input.IsKeyDown(sf::Key::G))m_playerTwo->Jump();
-        m_playerTwo->TurnUp(Input.IsKeyDown(sf::Key::W));
-        m_playerTwo->Turn(Input.IsKeyDown(sf::Key::A),Input.IsKeyDown(sf::Key::D));
-        if(Input.IsKeyDown(sf::Key::F))m_playerTwo->Shoot();
+        if (sf::Keyboard::IsKeyPressed(sf::Keyboard::G))m_playerTwo->Jump();
+        if (sf::Keyboard::IsKeyPressed(sf::Keyboard::F))m_playerTwo->Shoot();
+        m_playerTwo->TurnUp(sf::Keyboard::IsKeyPressed(sf::Keyboard::W));
+        m_playerTwo->Turn(sf::Keyboard::IsKeyPressed(sf::Keyboard::A),sf::Keyboard::IsKeyPressed(sf::Keyboard::D));
+//        const sf::Input &Input =m_gameEngine->m_app.GetInput();
+//
+//        //! Pauser le jeu
+//       if(Input.IsKeyDown(sf::Key::Return))pause();
+//
+//        //! Control du joueur 1
+//        if(Input.IsKeyDown(sf::Key::L))m_playerOne->Degat(-40);
+//        if(Input.IsKeyDown(sf::Key::Numpad3))m_playerOne->Jump();
+//        if(Input.IsKeyDown(sf::Key::Numpad2))m_playerOne->Shoot();
+//        m_playerOne->TurnUp(Input.IsKeyDown(sf::Key::Up));
+//        m_playerOne->Turn(Input.IsKeyDown(sf::Key::Left),Input.IsKeyDown(sf::Key::Right));
+//
+//
+//        //! Control du joueur 2
+//        if (Input.IsKeyDown(sf::Key::G))m_playerTwo->Jump();
+//        m_playerTwo->TurnUp(Input.IsKeyDown(sf::Key::W));
+//        m_playerTwo->Turn(Input.IsKeyDown(sf::Key::A),Input.IsKeyDown(sf::Key::D));
+//        if(Input.IsKeyDown(sf::Key::F))m_playerTwo->Shoot();
     }
      else{
         if(m_coutdown.GetScale().x>2)m_scaleUp=false;

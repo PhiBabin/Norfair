@@ -43,7 +43,7 @@
 	<option name="playercollheight" value="18" />
 	<option name="gravity" value="350" />
 	<option name="jump" value="-300" />
-	<option name="itemcooldown" value="5" />
+	<option name="itemcooldown" value="15" />
 	<option name="startvie" value="5" />
 	<option name="starthp" value="100" />
 	<option name="level" value="1" />

@@ -16,7 +16,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.*/
 
 #include "Player.hpp"
-Player::Player(sf::Image &img, MapTile **map,GameMessage *gameMessage,bool machineGun=false):
+Player::Player(sf::Texture &img, MapTile **map,GameMessage *gameMessage,bool machineGun=false):
 ImgAnim::ImgAnim(img,3,4)
 ,m_vieBarre(GameConfig::GameConfig::g_imgManag["vie"].img,GameConfig::GameConfig::g_imgManag["vie"].nbrCollum,GameConfig::GameConfig::g_imgManag["vie"].nbrLine)
 ,m_hpBarre(GameConfig::GameConfig::g_imgManag["hp"].img,GameConfig::GameConfig::g_imgManag["hp"].nbrCollum,GameConfig::GameConfig::g_imgManag["hp"].nbrLine)
